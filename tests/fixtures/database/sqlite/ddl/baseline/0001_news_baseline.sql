@@ -836,7 +836,7 @@ CREATE INDEX idx_news_live_event_item_event_rank ON news_live_event_item (tenant
 CREATE TABLE news_story (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT,
+  organization_id TEXT NOT NULL DEFAULT '0',
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   summary TEXT,
