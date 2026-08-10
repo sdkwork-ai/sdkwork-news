@@ -124,7 +124,7 @@ CREATE INDEX IF NOT EXISTS idx_news_editorial_audit_item ON news_editorial_audit
 CREATE TABLE IF NOT EXISTS news_source (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   source_type TEXT NOT NULL DEFAULT 'publisher',
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS news_source (
 CREATE TABLE IF NOT EXISTS news_author (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   source_id TEXT,
   user_id TEXT,
   slug TEXT NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS news_item_version (
 CREATE TABLE IF NOT EXISTS news_media_asset (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   media_kind TEXT NOT NULL,
   media_source TEXT NOT NULL,
   uri TEXT,
@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS news_item_media (
 CREATE TABLE IF NOT EXISTS news_topic (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS news_item_topic (
 CREATE TABLE IF NOT EXISTS news_channel (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS news_channel_item (
 CREATE TABLE IF NOT EXISTS news_feed_stream (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   stream_key TEXT NOT NULL,
   stream_type TEXT NOT NULL,
   title TEXT NOT NULL,
@@ -638,7 +638,7 @@ CREATE TABLE IF NOT EXISTS news_notification_subscription (
 CREATE TABLE IF NOT EXISTS news_breaking_alert (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   item_id TEXT,
   title TEXT NOT NULL,
   summary TEXT NOT NULL,
@@ -773,7 +773,7 @@ CREATE INDEX IF NOT EXISTS idx_news_item_trust_snapshot_risk ON news_item_trust_
 CREATE TABLE IF NOT EXISTS news_live_event (
   id TEXT PRIMARY KEY,
   tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
+  organization_id TEXT NOT NULL DEFAULT '0',
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   summary TEXT NOT NULL,
