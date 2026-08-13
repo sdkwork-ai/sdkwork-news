@@ -80,19 +80,6 @@ pub struct NewNewsChannelItem {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct NewNewsRecommendationEvent {
-    pub id: String,
-    pub tenant_id: String,
-    pub user_id: Option<String>,
-    pub item_id: String,
-    pub channel_id: Option<String>,
-    pub event_type: String,
-    pub dwell_ms: Option<i64>,
-    pub trace_id: Option<String>,
-    pub occurred_at: String,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct NewNewsUserFeedback {
     pub id: String,
     pub tenant_id: String,
@@ -155,59 +142,6 @@ pub struct NewsStoredUserInterestSignal {
     pub confidence: i64,
     pub source: String,
     pub updated_at: String,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct NewNewsFeedCandidate {
-    pub id: String,
-    pub tenant_id: String,
-    pub user_id: Option<String>,
-    pub stream_key: String,
-    pub item_id: String,
-    pub score: i64,
-    pub reason_code: String,
-    pub trace_id: Option<String>,
-    pub generated_at: String,
-    pub expires_at: Option<String>,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct NewsStoredFeedCandidate {
-    pub item_id: String,
-    pub score: i64,
-    pub reason_code: String,
-    pub trace_id: Option<String>,
-    pub generated_at: String,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct NewNewsItemMetricSnapshot {
-    pub id: String,
-    pub tenant_id: String,
-    pub item_id: String,
-    pub impression_count: i64,
-    pub click_count: i64,
-    pub share_count: i64,
-    pub comment_count: i64,
-    pub favorite_count: i64,
-    pub reaction_count: i64,
-    pub report_count: i64,
-    pub hot_score: i64,
-    pub computed_at: String,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct NewsStoredItemMetricSnapshot {
-    pub item_id: String,
-    pub impression_count: i64,
-    pub click_count: i64,
-    pub share_count: i64,
-    pub comment_count: i64,
-    pub favorite_count: i64,
-    pub reaction_count: i64,
-    pub report_count: i64,
-    pub hot_score: i64,
-    pub computed_at: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

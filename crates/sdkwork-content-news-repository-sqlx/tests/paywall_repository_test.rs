@@ -18,7 +18,7 @@ async fn setup_repo() -> NewsPaywallRepository {
         include_str!("../migrations/0006_news_live_coverage_foundation.sql"),
         include_str!("../migrations/0007_news_professional_newsroom_foundation.sql"),
     ] {
-        sqlx::raw_sql(migration).execute(&pool).await.unwrap();
+        sqlx::raw_sql(sqlx::AssertSqlSafe(*migration)).execute(&pool).await.unwrap();
     }
     NewsPaywallRepository::new(pool)
 }

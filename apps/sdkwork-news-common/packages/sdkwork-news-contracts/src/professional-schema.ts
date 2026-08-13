@@ -86,9 +86,6 @@ const implementedTableNames = [
   "news_item_topic",
   "news_channel",
   "news_channel_item",
-  "news_feed_stream",
-  "news_feed_cursor",
-  "news_recommendation_event",
   "news_user_feedback",
   "news_trending_metric",
   "news_search_projection",
@@ -105,8 +102,6 @@ const implementedTableNames = [
   "news_content_risk_signal",
   "news_takedown_event",
   "news_user_interest_signal",
-  "news_feed_candidate",
-  "news_item_metric_snapshot",
   "news_search_suggestion",
   "news_search_event",
   "news_notification_subscription",
@@ -298,19 +293,6 @@ export const NEWS_PROFESSIONAL_TABLES: readonly NewsTableDefinition[] = [
     index("uk_news_channel_item", ["tenant_id", "channel_id", "item_id"], true),
     index("idx_news_channel_item_channel_rank", ["tenant_id", "channel_id", "status", "rank", "updated_at"]),
   ]),
-  table("implemented", "news_feed_stream", "distribution", "dictionary_entity", ["id", "tenant_id", "organization_id", "stream_key", "stream_type", "title", "status", "created_at", "updated_at", "version"], [
-    index("uk_news_feed_stream_key", ["tenant_id", "stream_key"], true),
-    index("idx_news_feed_stream_tenant_type", ["tenant_id", "stream_type", "status"]),
-  ]),
-  table("implemented", "news_feed_cursor", "distribution", "user_entity", ["id", "tenant_id", "user_id", "stream_key", "cursor_value", "updated_at"], [
-    index("uk_news_feed_cursor_user_stream", ["tenant_id", "user_id", "stream_key"], true),
-    index("idx_news_feed_cursor_user_stream", ["tenant_id", "user_id", "stream_key"]),
-  ]),
-  table("implemented", "news_recommendation_event", "personalization", "event_log", ["id", "tenant_id", "user_id", "item_id", "channel_id", "event_type", "dwell_ms", "trace_id", "occurred_at", "idempotency_key", "payload_hash"], [
-    index("uk_news_recommendation_event_idempotency", ["tenant_id", "idempotency_key"], true),
-    index("idx_news_recommendation_event_user_time", ["tenant_id", "user_id", "occurred_at"]),
-    index("idx_news_recommendation_event_item_type", ["tenant_id", "item_id", "event_type", "occurred_at"]),
-  ], { lifecycle: "append_only", complianceLevel: "L3" }),
   table("implemented", "news_user_feedback", "personalization", "event_log", ["id", "tenant_id", "user_id", "target_type", "target_id", "feedback_type", "reason", "created_at"], [
     index("idx_news_user_feedback_user_target", ["tenant_id", "user_id", "target_type", "target_id"]),
   ]),
@@ -368,15 +350,6 @@ export const NEWS_PROFESSIONAL_TABLES: readonly NewsTableDefinition[] = [
     index("uk_news_user_interest_signal", ["tenant_id", "user_id", "target_type", "target_id"], true),
     index("idx_news_user_interest_signal_user_target", ["tenant_id", "user_id", "status", "affinity_score", "updated_at"]),
   ]),
-  table("implemented", "news_feed_candidate", "personalization", "projection", ["id", "tenant_id", "user_id", "stream_key", "item_id", "score", "reason_code", "trace_id", "status", "generated_at", "expires_at", "updated_at"], [
-    index("uk_news_feed_candidate", ["tenant_id", "user_id", "stream_key", "item_id"], true),
-    index("idx_news_feed_candidate_stream_score", ["tenant_id", "stream_key", "status", "score", "generated_at"]),
-    index("idx_news_feed_candidate_user_stream_score", ["tenant_id", "user_id", "stream_key", "status", "score"]),
-  ], { systemOfRecord: false, writeOwner: "news.recommendation.worker" }),
-  table("implemented", "news_item_metric_snapshot", "metrics", "snapshot", ["id", "tenant_id", "item_id", "impression_count", "click_count", "share_count", "comment_count", "favorite_count", "reaction_count", "report_count", "hot_score", "computed_at", "updated_at"], [
-    index("uk_news_item_metric_snapshot", ["tenant_id", "item_id"], true),
-    index("idx_news_item_metric_snapshot_hot", ["tenant_id", "hot_score", "computed_at"]),
-  ], { systemOfRecord: false }),
   table("implemented", "news_search_suggestion", "search", "projection", ["id", "tenant_id", "normalized_query", "display_query", "suggestion_type", "rank", "score", "locale", "status", "computed_at", "updated_at"], [
     index("uk_news_search_suggestion", ["tenant_id", "normalized_query", "suggestion_type", "locale"], true),
     index("idx_news_search_suggestion_query_rank", ["tenant_id", "status", "normalized_query", "rank", "score"]),

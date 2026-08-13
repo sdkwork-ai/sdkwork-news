@@ -43,10 +43,6 @@ UPDATE news_channel SET organization_id = '0' WHERE organization_id IS NULL;
 ALTER TABLE news_channel ALTER COLUMN organization_id SET DEFAULT '0';
 ALTER TABLE news_channel ALTER COLUMN organization_id SET NOT NULL;
 
-ALTER TABLE news_feed_stream ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
-UPDATE news_feed_stream SET organization_id = '0' WHERE organization_id IS NULL;
-ALTER TABLE news_feed_stream ALTER COLUMN organization_id SET DEFAULT '0';
-ALTER TABLE news_feed_stream ALTER COLUMN organization_id SET NOT NULL;
 
 ALTER TABLE news_breaking_alert ADD COLUMN IF NOT EXISTS organization_id TEXT NOT NULL DEFAULT '0';
 UPDATE news_breaking_alert SET organization_id = '0' WHERE organization_id IS NULL;

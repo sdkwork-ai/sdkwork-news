@@ -19,6 +19,10 @@ pub fn gateway_mount(state: Arc<NewsHttpState>) -> Router {
             get(handlers::app::list_categories),
         )
         .route(
+            "/app/v3/api/news/channels/{channelId}/feed",
+            get(handlers::app::list_channel_feed),
+        )
+        .route(
             "/app/v3/api/news/feed/personalized",
             get(handlers::app::get_personalized_feed),
         )

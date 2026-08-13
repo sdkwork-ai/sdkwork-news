@@ -217,49 +217,18 @@ pub async fn list_channel_feed(
     Query(params): Query<ListParams>,
 ) -> Json<Value> {
     let limit = params.page_size.unwrap_or(20).min(100);
-
-    let result = sqlx::query(
-        "SELECT i.id, i.tenant_id, i.category_id, i.slug, i.title, i.summary, 
-                i.status, i.author_name, i.featured, i.priority, 
-                i.estimated_read_minutes, i.published_at, i.updated_at
-         FROM news_channel_item ci
-         JOIN news_item i ON i.id = ci.item_id
-         WHERE ci.channel_id = $1 AND ci.status = 'active' AND i.status = 'published' AND i.deleted_at IS NULL
-         ORDER BY ci.rank ASC, i.published_at DESC
-         LIMIT $2"
+    match crate::feed_pages::list_channel_feed_page(
+        &state.pool,
+        &channel_id,
+        params.cursor,
+        limit,
     )
-    .bind(&channel_id)
-    .bind(limit)
-    .fetch_all(&state.pool)
-    .await;
-
-    match result {
-        Ok(rows) => {
-            let items: Vec<Value> = rows
-                .iter()
-                .map(|row| {
-                    json!({
-                        "id": row.get::<String, _>("id"),
-                        "tenantId": row.get::<String, _>("tenant_id"),
-                        "categoryId": row.get::<String, _>("category_id"),
-                        "slug": row.get::<String, _>("slug"),
-                        "title": row.get::<String, _>("title"),
-                        "summary": row.get::<String, _>("summary"),
-                        "status": row.get::<String, _>("status"),
-                        "authorName": row.get::<Option<String>, _>("author_name"),
-                        "featured": row.get::<bool, _>("featured"),
-                        "priority": row.get::<i32, _>("priority"),
-                        "estimatedReadMinutes": row.get::<i32, _>("estimated_read_minutes"),
-                        "publishedAt": row.get::<Option<String>, _>("published_at"),
-                        "updatedAt": row.get::<String, _>("updated_at"),
-                    })
-                })
-                .collect();
-            Json(json!(items))
-        }
-        Err(e) => {
-            tracing::error!("Failed to list channel feed: {}", e);
-            Json(json!([]))
+    .await
+    {
+        Ok(page) => Json(page),
+        Err(error) => {
+            tracing::error!("Failed to list channel feed: {}", error);
+            Json(json!({ "items": [], "pageInfo": { "mode": "cursor", "pageSize": limit, "hasMore": false } }))
         }
     }
 }

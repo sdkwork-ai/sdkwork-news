@@ -47,8 +47,6 @@ function apiRegistry() {
     ["stories.list", "open-api"],
     ["stories.retrieve", "open-api"],
     ["items.schemaOrg.retrieve", "open-api"],
-    ["feed.following.list", "app-api"],
-    ["feed.latest.list", "app-api"],
     ["items.shareEvents.create", "app-api"],
     ["stories.create", "backend-api"],
     ["imports.ninjs.create", "backend-api"],

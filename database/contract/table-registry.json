@@ -117,24 +117,6 @@
       "lifecycle_status": "active"
     },
     {
-      "table_name": "news_feed_stream",
-      "owner": "news-platform",
-      "compliance_level": "L2",
-      "lifecycle_status": "active"
-    },
-    {
-      "table_name": "news_feed_cursor",
-      "owner": "news-platform",
-      "compliance_level": "L2",
-      "lifecycle_status": "active"
-    },
-    {
-      "table_name": "news_recommendation_event",
-      "owner": "news-platform",
-      "compliance_level": "L2",
-      "lifecycle_status": "active"
-    },
-    {
       "table_name": "news_user_feedback",
       "owner": "news-platform",
       "compliance_level": "L2",
@@ -226,18 +208,6 @@
     },
     {
       "table_name": "news_user_interest_signal",
-      "owner": "news-platform",
-      "compliance_level": "L2",
-      "lifecycle_status": "active"
-    },
-    {
-      "table_name": "news_feed_candidate",
-      "owner": "news-platform",
-      "compliance_level": "L2",
-      "lifecycle_status": "active"
-    },
-    {
-      "table_name": "news_item_metric_snapshot",
       "owner": "news-platform",
       "compliance_level": "L2",
       "lifecycle_status": "active"

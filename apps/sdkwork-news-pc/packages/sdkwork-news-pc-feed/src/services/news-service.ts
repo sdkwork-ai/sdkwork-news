@@ -42,7 +42,7 @@ export class NewsService {
     return this.newsApi.channels.list(params);
   }
 
-  async getChannelFeed(channelId: string, params?: { cursor?: string; limit?: string; traceId?: string }) {
+) {
     return this.newsApi.channels.feed.list(channelId, params);
   }
 
@@ -54,7 +54,7 @@ export class NewsService {
     return this.newsApi.topics.items.list(topicId, params);
   }
 
-  async getPersonalizedFeed(params?: { cursor?: string; limit?: string; traceId?: string }) {
+) {
     return this.newsApi.feed.personalized.list(params);
   }
 

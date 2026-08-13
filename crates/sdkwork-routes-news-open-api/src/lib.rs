@@ -1,6 +1,7 @@
 pub mod handlers;
 pub mod http_route_manifest;
 pub mod routes;
+pub mod feed_pages;
 pub mod state;
 pub mod web_bootstrap;
 

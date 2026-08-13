@@ -106,8 +106,6 @@ const appOperationSeeds: readonly OperationSeed[] = [
   ["GET", "/app/v3/api/news/live/events", "live.events.list", "live.events", "NewsLiveEventListResponse", "List live events."],
   ["GET", "/app/v3/api/news/live/events/{eventId}", "live.events.retrieve", "live.events", "NewsLiveEvent", "Retrieve live event."],
   ["GET", "/app/v3/api/news/live/events/{eventId}/updates", "live.updates.list", "live.updates", "NewsLiveUpdateListResponse", "List live updates."],
-  ["GET", "/app/v3/api/news/feed/following", "feed.following.list", "feed.following", "NewsFeedPage", "List following feed."],
-  ["GET", "/app/v3/api/news/feed/latest", "feed.latest.list", "feed.latest", "NewsFeedPage", "List latest feed."],
   ["GET", "/app/v3/api/news/feed/local", "feed.local.list", "feed.local", "NewsFeedPage", "List local feed."],
   ["GET", "/app/v3/api/news/stories", "stories.list", "stories", "NewsStoryPage", "List app story packages."],
   ["GET", "/app/v3/api/news/stories/{storyId}", "stories.retrieve", "stories", "NewsStory", "Retrieve app story package."],

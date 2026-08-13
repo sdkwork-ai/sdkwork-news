@@ -152,61 +152,23 @@ pub struct FeedParams {
 }
 
 pub async fn get_personalized_feed(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<sdkwork_routes_news_open_api::state::NewsHttpState>>,
     Query(params): Query<FeedParams>,
 ) -> Json<Value> {
     let limit = params.page_size.unwrap_or(20).min(100);
-
-    // Simple personalized feed - returns published items ordered by priority
-    let result = sqlx::query(
-        "SELECT id, tenant_id, category_id, slug, title, summary, status, author_name, 
-                featured, priority, estimated_read_minutes, published_at, updated_at
-         FROM news_item
-         WHERE status = 'published' AND deleted_at IS NULL
-         ORDER BY featured DESC, priority ASC, published_at DESC
-         LIMIT ?"
+    match sdkwork_routes_news_open_api::feed_pages::list_personalized_feed_page(
+        &state.pool,
+        params.cursor,
+        limit,
     )
-    .bind(limit)
-    .fetch_all(&state.pool)
-    .await;
-
-    match result {
-        Ok(rows) => {
-            let items: Vec<Value> = rows
-                .iter()
-                .map(|row| {
-                    json!({
-                        "id": row.get::<String, _>("id"),
-                        "tenantId": row.get::<String, _>("tenant_id"),
-                        "categoryId": row.get::<String, _>("category_id"),
-                        "slug": row.get::<String, _>("slug"),
-                        "title": row.get::<String, _>("title"),
-                        "summary": row.get::<String, _>("summary"),
-                        "status": row.get::<String, _>("status"),
-                        "authorName": row.get::<Option<String>, _>("author_name"),
-                        "featured": row.get::<bool, _>("featured"),
-                        "priority": row.get::<i32, _>("priority"),
-                        "estimatedReadMinutes": row.get::<i32, _>("estimated_read_minutes"),
-                        "publishedAt": row.get::<Option<String>, _>("published_at"),
-                        "updatedAt": row.get::<String, _>("updated_at"),
-                    })
-                })
-                .collect();
-            Json(json!(items))
-        }
-        Err(e) => {
-            tracing::error!("Failed to get personalized feed: {}", e);
-            Json(json!([]))
+    .await
+    {
+        Ok(page) => Json(page),
+        Err(error) => {
+            tracing::error!("Failed to get personalized feed: {}", error);
+            Json(json!({ "items": [], "pageInfo": { "mode": "cursor", "pageSize": limit, "hasMore": false } }))
         }
     }
-}
-
-#[derive(Deserialize)]
-pub struct CreateEventRequest {
-    pub item_id: String,
-    pub event_type: String,
-    pub dwell_ms: Option<i64>,
-    pub trace_id: Option<String>,
 }
 
 pub async fn create_event(

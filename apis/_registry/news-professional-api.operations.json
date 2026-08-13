@@ -13,10 +13,10 @@
   ],
   "operationCount": {
     "currentRuntimeRoutes": 152,
-    "professionalBlueprint": 198,
+    "professionalBlueprint": 196,
     "bySurface": {
       "open-api": 30,
-      "app-api": 48,
+      "app-api": 46,
       "backend-api": 120
     },
     "todo": "TODO(news-api): keep runtime route materialization explicitly separate from the professional blueprint until OpenAPI generation is scheduled."
@@ -1117,40 +1117,6 @@
       "tenantScope": "tenant",
       "auditEvent": "content.news.live_updates.list",
       "todo": "TODO(news-api): materialize live.updates.list into OpenAPI, route manifests, SDK generation, service validation, and problem-detail tests."
-    },
-    {
-      "authMode": "dual-token",
-      "dataScope": "organization",
-      "idempotent": false,
-      "method": "GET",
-      "operationId": "feed.following.list",
-      "path": "/app/v3/api/news/feed/following",
-      "permission": "content.news.feed_following.read",
-      "public": false,
-      "resource": "feed.following",
-      "responseSchema": "NewsFeedPage",
-      "summary": "List following feed.",
-      "surface": "app-api",
-      "tenantScope": "tenant",
-      "auditEvent": "content.news.feed_following.list",
-      "todo": "TODO(news-api): materialize feed.following.list into OpenAPI, route manifests, SDK generation, service validation, and problem-detail tests."
-    },
-    {
-      "authMode": "dual-token",
-      "dataScope": "organization",
-      "idempotent": false,
-      "method": "GET",
-      "operationId": "feed.latest.list",
-      "path": "/app/v3/api/news/feed/latest",
-      "permission": "content.news.feed_latest.read",
-      "public": false,
-      "resource": "feed.latest",
-      "responseSchema": "NewsFeedPage",
-      "summary": "List latest feed.",
-      "surface": "app-api",
-      "tenantScope": "tenant",
-      "auditEvent": "content.news.feed_latest.list",
-      "todo": "TODO(news-api): materialize feed.latest.list into OpenAPI, route manifests, SDK generation, service validation, and problem-detail tests."
     },
     {
       "authMode": "dual-token",
@@ -3412,40 +3378,6 @@
     {
       "authMode": "dual-token",
       "dataScope": "organization",
-      "idempotent": false,
-      "method": "GET",
-      "operationId": "feed.following.list",
-      "path": "/app/v3/api/news/feed/following",
-      "permission": "content.news.feed_following.read",
-      "public": false,
-      "resource": "feed.following",
-      "responseSchema": "NewsFeedPage",
-      "summary": "List following feed.",
-      "surface": "app-api",
-      "tenantScope": "tenant",
-      "auditEvent": "content.news.feed_following.list",
-      "todo": "TODO(news-api): materialize feed.following.list into OpenAPI, route manifests, SDK generation, service validation, and problem-detail tests."
-    },
-    {
-      "authMode": "dual-token",
-      "dataScope": "organization",
-      "idempotent": false,
-      "method": "GET",
-      "operationId": "feed.latest.list",
-      "path": "/app/v3/api/news/feed/latest",
-      "permission": "content.news.feed_latest.read",
-      "public": false,
-      "resource": "feed.latest",
-      "responseSchema": "NewsFeedPage",
-      "summary": "List latest feed.",
-      "surface": "app-api",
-      "tenantScope": "tenant",
-      "auditEvent": "content.news.feed_latest.list",
-      "todo": "TODO(news-api): materialize feed.latest.list into OpenAPI, route manifests, SDK generation, service validation, and problem-detail tests."
-    },
-    {
-      "authMode": "dual-token",
-      "dataScope": "organization",
       "idempotent": true,
       "method": "POST",
       "operationId": "items.shareEvents.create",
@@ -3733,27 +3665,6 @@
       "className": "NewsPaywallRepository",
       "methodCount": 2,
       "todo": "TODO(news-module): create NewsPaywallRepository in crates/sdkwork-content-news-repository-sqlx/src/repository/paywall_repository.rs and wire it through the SDKWork service boundary."
-    },
-    {
-      "layer": "api-handler",
-      "filePath": "crates/sdkwork-routes-news-backend-api/src/handlers/professional_handlers.rs",
-      "className": "NewsProfessionalBackendApiHandler",
-      "methodCount": 3,
-      "todo": "TODO(news-module): create NewsProfessionalBackendApiHandler in crates/sdkwork-routes-news-backend-api/src/handlers/professional_handlers.rs and wire it through the SDKWork service boundary."
-    },
-    {
-      "layer": "api-handler",
-      "filePath": "crates/sdkwork-routes-news-app-api/src/handlers/professional_handlers.rs",
-      "className": "NewsProfessionalAppApiHandler",
-      "methodCount": 2,
-      "todo": "TODO(news-module): create NewsProfessionalAppApiHandler in crates/sdkwork-routes-news-app-api/src/handlers/professional_handlers.rs and wire it through the SDKWork service boundary."
-    },
-    {
-      "layer": "api-handler",
-      "filePath": "crates/sdkwork-routes-news-open-api/src/handlers/professional_handlers.rs",
-      "className": "NewsProfessionalOpenApiHandler",
-      "methodCount": 2,
-      "todo": "TODO(news-module): create NewsProfessionalOpenApiHandler in crates/sdkwork-routes-news-open-api/src/handlers/professional_handlers.rs and wire it through the SDKWork service boundary."
     },
     {
       "layer": "worker",

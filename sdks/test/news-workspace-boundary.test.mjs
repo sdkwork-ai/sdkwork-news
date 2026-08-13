@@ -20,7 +20,7 @@ test("news workspace references only approved appbase composition packages", () 
     for (const reference of appbaseReferences) {
       assert.match(
         reference,
-        /(?:sdkwork-runtime-bootstrap|(?:sdkwork-)?appbase-pc-react|sdkwork-i18n-pc-react)/u,
+        /(?:sdkwork-runtime-bootstrap|(?:sdkwork-)?appbase-pc-react|sdkwork-i18n-pc-react|sdkwork-base-data-backend-sdk)/u,
         `${fileName} contains an unapproved appbase package: ${reference}`,
       );
       assert.doesNotMatch(reference, /apps[\\/]+sdkwork-appbase/iu, `${fileName} must not import an appbase app root`);

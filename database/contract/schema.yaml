@@ -66,15 +66,6 @@ tables:
   - name: news_channel_item
     lifecycle_status: active
     owner: news-platform
-  - name: news_feed_stream
-    lifecycle_status: active
-    owner: news-platform
-  - name: news_feed_cursor
-    lifecycle_status: active
-    owner: news-platform
-  - name: news_recommendation_event
-    lifecycle_status: active
-    owner: news-platform
   - name: news_user_feedback
     lifecycle_status: active
     owner: news-platform
@@ -121,12 +112,6 @@ tables:
     lifecycle_status: active
     owner: news-platform
   - name: news_user_interest_signal
-    lifecycle_status: active
-    owner: news-platform
-  - name: news_feed_candidate
-    lifecycle_status: active
-    owner: news-platform
-  - name: news_item_metric_snapshot
     lifecycle_status: active
     owner: news-platform
   - name: news_search_suggestion

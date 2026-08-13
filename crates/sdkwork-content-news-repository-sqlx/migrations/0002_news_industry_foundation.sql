@@ -146,44 +146,8 @@ CREATE TABLE news_channel_item (
   UNIQUE (tenant_id, channel_id, item_id)
 );
 
-CREATE TABLE news_feed_stream (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  organization_id TEXT NOT NULL DEFAULT '',
-  stream_key TEXT NOT NULL,
-  stream_type TEXT NOT NULL,
-  title TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'active',
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  version INTEGER NOT NULL DEFAULT 0,
-  UNIQUE (tenant_id, stream_key)
-);
 
-CREATE TABLE news_feed_cursor (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  user_id TEXT NOT NULL,
-  stream_key TEXT NOT NULL,
-  cursor_value TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  UNIQUE (tenant_id, user_id, stream_key)
-);
 
-CREATE TABLE news_recommendation_event (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  user_id TEXT,
-  item_id TEXT NOT NULL,
-  channel_id TEXT,
-  event_type TEXT NOT NULL,
-  dwell_ms INTEGER,
-  trace_id TEXT,
-  occurred_at TEXT NOT NULL,
-  idempotency_key TEXT,
-  payload_hash TEXT,
-  UNIQUE (tenant_id, idempotency_key)
-);
 
 CREATE TABLE news_user_feedback (
   id TEXT PRIMARY KEY,
@@ -381,10 +345,6 @@ CREATE INDEX idx_news_topic_tenant_status_priority ON news_topic (tenant_id, sta
 CREATE INDEX idx_news_item_topic_topic ON news_item_topic (tenant_id, topic_id, item_id);
 CREATE INDEX idx_news_channel_tenant_status_priority ON news_channel (tenant_id, status, priority);
 CREATE INDEX idx_news_channel_item_channel_rank ON news_channel_item (tenant_id, channel_id, status, rank, updated_at DESC);
-CREATE INDEX idx_news_feed_stream_tenant_type ON news_feed_stream (tenant_id, stream_type, status);
-CREATE INDEX idx_news_feed_cursor_user_stream ON news_feed_cursor (tenant_id, user_id, stream_key);
-CREATE INDEX idx_news_recommendation_event_user_time ON news_recommendation_event (tenant_id, user_id, occurred_at DESC);
-CREATE INDEX idx_news_recommendation_event_item_type ON news_recommendation_event (tenant_id, item_id, event_type, occurred_at DESC);
 CREATE INDEX idx_news_user_feedback_user_target ON news_user_feedback (tenant_id, user_id, target_type, target_id);
 CREATE INDEX idx_news_trending_metric_window_rank ON news_trending_metric (tenant_id, metric_window, rank, score DESC);
 CREATE INDEX idx_news_search_projection_status ON news_search_projection (tenant_id, status, rebuilt_at DESC);
