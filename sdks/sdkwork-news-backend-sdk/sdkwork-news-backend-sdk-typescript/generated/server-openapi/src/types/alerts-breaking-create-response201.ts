@@ -1,8 +1,8 @@
 import type { NewsBreakingAlert } from './news-breaking-alert';
 
-export interface AlertsBreakingCreateResponse {
+export interface AlertsBreakingCreateResponse201 {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsBreakingAlert; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

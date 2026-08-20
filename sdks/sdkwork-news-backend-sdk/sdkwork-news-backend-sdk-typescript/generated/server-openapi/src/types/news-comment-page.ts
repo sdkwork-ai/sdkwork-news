@@ -2,7 +2,5 @@ import type { NewsComment } from './news-comment';
 
 export interface NewsCommentPage {
   items: NewsComment[];
-  cursor?: string;
-  hasMore: boolean;
-  limit: number;
+  pageInfo: { mode: 'cursor'; pageSize: number; hasMore: boolean; nextCursor?: string | null; };
 }

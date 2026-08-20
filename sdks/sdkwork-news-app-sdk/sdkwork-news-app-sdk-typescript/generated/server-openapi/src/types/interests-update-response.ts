@@ -1,8 +1,8 @@
 import type { NewsUserInterestSignal } from './news-user-interest-signal';
 
-export interface InterestsUpsertResponse {
+export interface InterestsUpdateResponse {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsUserInterestSignal; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

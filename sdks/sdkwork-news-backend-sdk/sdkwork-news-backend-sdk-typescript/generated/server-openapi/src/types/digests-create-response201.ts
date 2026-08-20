@@ -1,8 +1,8 @@
 import type { NewsDigestIssue } from './news-digest-issue';
 
-export interface DigestsCreateResponse {
+export interface DigestsCreateResponse201 {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsDigestIssue; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

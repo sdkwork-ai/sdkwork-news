@@ -2,7 +2,5 @@ import type { NewsFavorite } from './news-favorite';
 
 export interface NewsFavoritePage {
   items: NewsFavorite[];
-  cursor?: string;
-  hasMore: boolean;
-  limit: number;
+  pageInfo: { mode: 'cursor'; pageSize: number; hasMore: boolean; nextCursor?: string | null; };
 }

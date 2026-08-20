@@ -12,7 +12,7 @@
   "generatedFiles": [
     {
       "path": "bin/publish-core.mjs",
-      "sha256": "98ad0918a78bfbe22bf8f12fec709b0bed545b9e01edd40f5e4abf31a23378a5"
+      "sha256": "a47e95119bf3eafcbcb2102f7024c147f967924e4e3f343d1a29effb4b6765df"
     },
     {
       "path": "bin/publish.ps1",
@@ -40,11 +40,11 @@
     },
     {
       "path": "package.json",
-      "sha256": "33749f8f242caad4af314213195371617f5b6552094429df48c3a2919a0974bf"
+      "sha256": "387e8927103ff2a86c08133541c5dfa5d03328a65a556d803d81c0f58963878b"
     },
     {
       "path": "README.md",
-      "sha256": "e35ba090927b097164cb4eabd074ca6c15cdb10cad62bb351adec142edc02f80"
+      "sha256": "2db24349027779ca3124f28cdfdb485482c36569fae1e863de1e415fcd14e73c"
     },
     {
       "path": "sdkwork-sdk.json",
@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/base.ts",
-      "sha256": "02ad25e6bf331ff241ba387c2947ddf1900dd849038e08c2757416a3aa788a04"
+      "sha256": "94d136c54a008dfe7602e373a0b2c79176bbf2fc6e7c899fc23b1f12f750380f"
     },
     {
       "path": "src/api/index.ts",
@@ -60,7 +60,7 @@
     },
     {
       "path": "src/api/news.ts",
-      "sha256": "e7ed6735d91a229390a7a40062300e892dea110420f0a52b1faa610cafd58581"
+      "sha256": "67375b5a4e9ee3423f4550f71c33a75e1d95c2ffe3407f87e912903e998862f8"
     },
     {
       "path": "src/api/paths.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "902ecbf9b15072c147ac9716f22209cd50b770e517b55d1ce1583671ab4d2c3e"
+      "sha256": "868b7785497a93658b628de2d9b520d9d2456406bcf2ef717319beaa6913146d"
     },
     {
       "path": "src/http/index.ts",
@@ -88,83 +88,83 @@
     },
     {
       "path": "src/types/categories-list-response.ts",
-      "sha256": "6a2f3374fbb643d3959b7df774ac1d21862ebd717d27804f4f3e9ca56bb0bb9a"
+      "sha256": "0f3795d01bf3dbe4c817292eb1a95cc09289a124954ab13b9d14d1b292a36f12"
     },
     {
       "path": "src/types/channels-feed-list-response.ts",
-      "sha256": "973eef09e366e1fc9a669d8f1c543fd2384e457e512f2ae281142160f66e3c5b"
+      "sha256": "0e31fc4793a6f768428d2234d01ba33de330bc97c9ad763556aa43d05606efa9"
     },
     {
       "path": "src/types/channels-list-response.ts",
-      "sha256": "c81f2f952f18ce0c7a137a2658065315765f2dc29c4bf1d9de11c61035919d3c"
+      "sha256": "4142959a2ebaf5db80f98f871e2b12bcdd0c377a108732112c2948e6b4f9f1b5"
     },
     {
-      "path": "src/types/comments-create-response.ts",
-      "sha256": "57a5f9a1d551c18da60ce9d884a5ef8ab07376abc466a8cb259c6ce21ff892a7"
+      "path": "src/types/comments-create-response201.ts",
+      "sha256": "ab247b2e6849879269ef65f05a5e090a26f7f590bdab536616f7d40c8fe23a0d"
     },
     {
       "path": "src/types/comments-list-response.ts",
-      "sha256": "45c43a06d6f586bf339df21d7a2d94925a65a1272a6c1713629c60ae29a073b8"
+      "sha256": "a200abb31c10908b09d0b41f35483ff2b5856fefb7a4fa0aee4fd2109ccde7b4"
     },
     {
       "path": "src/types/common.ts",
       "sha256": "d2506be8c4bdbe8e7059393467e6e71d75ef1d8c018dbf997bb0ab2a77b6c7b6"
     },
     {
-      "path": "src/types/favorites-create-response.ts",
-      "sha256": "e7838a7fb656cd2401bc0c6abf894c2b83679dbafc9de247eecccc992859d2f0"
+      "path": "src/types/favorites-create-response201.ts",
+      "sha256": "11b03db95a6c9f064936bcc4b96000110a2966983a29cdd676e91ffa466570d8"
     },
     {
       "path": "src/types/favorites-list-response.ts",
-      "sha256": "5f51ed1d8169e0f546bee526ef77b06131d34be249f03728d40e64e11b6b9b46"
+      "sha256": "bf73f9f62941849aa5098354d32a6a0f7534864643b0b435410ef0836761dbea"
     },
     {
       "path": "src/types/feed-personalized-list-response.ts",
-      "sha256": "bde12187ffe1c62c4af166feba950fd4555931e6fc084274597fdee4fdaf3c2b"
+      "sha256": "4130f4dd66ccdc41c5d5193ac7dde2c1c1bd0812434b9f914433dac179e01a2f"
     },
     {
       "path": "src/types/field-error.ts",
-      "sha256": "df70e331e6bff0817bc35428286fa8de5d7274ab83a6c60d7184759bf680a088"
+      "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
-      "path": "src/types/follows-create-response.ts",
-      "sha256": "5c00e393c4691d6734438a0004e6aec4748b02fd360d6a35256f7a7424ba13ca"
+      "path": "src/types/follows-create-response201.ts",
+      "sha256": "34bcc2657c5392a674c211c7795a1bcf1492e1d36cbd55c54325ecacfc5487b1"
     },
     {
       "path": "src/types/follows-list-response.ts",
-      "sha256": "73aefd3dbffd9b604616a8767c30f70f6471527d054cdb1f5f3164b4c87a27c1"
+      "sha256": "b90ecc91b4569cf982f0305103b5dc5f1383a460ef8b57702d9f84f947e5dcc8"
     },
     {
       "path": "src/types/history-list-response.ts",
-      "sha256": "0cdb94cd0696c951162ab93d61a31a78dcecea90343ff1947159b268ec2aa24e"
+      "sha256": "b5547efc7c67e02066f7c832132824925895095e31ce1a809900d4a2ad75c81d"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "0e779020468af37a689ad94da9e9f1f7b4a9e6b75df6d3c77387cc03fcfee617"
+      "sha256": "2a9400644edeb3cabfa6058f05d6c876da27771cc42b8117700bcafc6e5599bb"
     },
     {
-      "path": "src/types/interests-upsert-response.ts",
-      "sha256": "7218d254e63a4773f2729b8c8c21ebda03ab193bc818ab210d49f3179687681a"
+      "path": "src/types/interests-update-response.ts",
+      "sha256": "24fe364f7dbe1c38b467406b1643bb865a4f08eed6189636f092e9230578706c"
     },
     {
       "path": "src/types/items-by-slug-retrieve-response.ts",
-      "sha256": "5b0ec4b4b5756858135595009269e66803253a59c064fe3901ccc7e80d076d3b"
+      "sha256": "8d1cc85af07889447e08c71a8d85649cb1e2a1b3eb70fa83a1b38587922916a1"
     },
     {
       "path": "src/types/items-list-response.ts",
-      "sha256": "e27d094e5abf3327e4af71ba4d607eeb18a520b728e3c519e3841ae9db86b9d4"
+      "sha256": "12066e3fb36026cc7ab9118d59e46e0c7e33e44a31e7816240bfd13934312c8f"
     },
     {
       "path": "src/types/items-related-list-response.ts",
-      "sha256": "af4c6f9eff04b6a1968a4fc6db62dee28e835a6392f0e558fc8660bb6e129b58"
+      "sha256": "dffee9b5677a98c57780bdccac54725634a7095b498ff64ca74d05ebbd311d44"
     },
     {
       "path": "src/types/items-retrieve-response.ts",
-      "sha256": "110d5eb8981aa4768d993f59ce55ca074cb4eabde73c9e651c8a17601b0ce952"
+      "sha256": "b70e83e8992be86f5d3d17211f6b8370a3415095ebfe01a0b165af87868fb801"
     },
     {
       "path": "src/types/live-events-retrieve-response.ts",
-      "sha256": "47dbf037c833cb50a702e5e19c75491547cc7a0c65dbe039ba7281899d3e4946"
+      "sha256": "36e9e8ae211b9840a4bf70a074167e79cceb05402d9b00f8681b86c1e8763ee9"
     },
     {
       "path": "src/types/media-resource.ts",
@@ -204,7 +204,7 @@
     },
     {
       "path": "src/types/news-comment-page.ts",
-      "sha256": "6cb7c0ee9606bcdbccddee799acb6b78721e5f7cfaeb9b53ba1631150818df9e"
+      "sha256": "152decaef405f70f4481ca7ed26a8929021d96e4aa04e9f03e6a21417847f3fb"
     },
     {
       "path": "src/types/news-comment.ts",
@@ -260,7 +260,7 @@
     },
     {
       "path": "src/types/news-favorite-page.ts",
-      "sha256": "538833e9e3f7ed5dbb6695d6a9007702e24fe361f9f0c9481780f52608c2219d"
+      "sha256": "393037706969866666227dc96b8e8cefcfa664148bc9eb5c7c5786e34d14ef4c"
     },
     {
       "path": "src/types/news-favorite.ts",
@@ -284,7 +284,7 @@
     },
     {
       "path": "src/types/news-feed-page.ts",
-      "sha256": "beeee9b1ff964e1932b2c90c65e226ac7bbeadc4e1cbbffd5da5dd0a12d62699"
+      "sha256": "25bd1ca9edad3ed088f26c3382215b75a3ec27c85243608c9b469c1fc97bc6d4"
     },
     {
       "path": "src/types/news-follow-command.ts",
@@ -292,7 +292,7 @@
     },
     {
       "path": "src/types/news-follow-page.ts",
-      "sha256": "97b861a50639ef2ed7c6c8e6712fdae50a4b18d3fc083483de05b76229f9fcdf"
+      "sha256": "5591c747faac9a67c992c8cbacf6b980d9266f983539b7497f0707c702eaa786"
     },
     {
       "path": "src/types/news-follow.ts",
@@ -312,7 +312,7 @@
     },
     {
       "path": "src/types/news-item-page.ts",
-      "sha256": "c984aca589a97592197df41e9bfd32f97340834bb1aebfd3d2b1cdae5c5433d1"
+      "sha256": "8b96a4f859526839f322b2e96b0fb67088c5ec12d572cffa07e249539b18170a"
     },
     {
       "path": "src/types/news-item-status.ts",
@@ -404,7 +404,7 @@
     },
     {
       "path": "src/types/news-search-result-page.ts",
-      "sha256": "1538829b6a930b2df866ce478b41c6f3ca4cacff7264b60b9eae8a5f16f43b37"
+      "sha256": "1d5352bf4b2c1a53ba81a2eb91211c9debb6963754b5a385e6fca34b56c59ee3"
     },
     {
       "path": "src/types/news-search-result.ts",
@@ -463,12 +463,12 @@
       "sha256": "e23d49c43aea0255e0b750a2946e0b404c72eef337388b6aabc231f56521c163"
     },
     {
-      "path": "src/types/notification-subscriptions-upsert-response.ts",
-      "sha256": "fe1ac57ceb6f96125d28534f6c33aba0f00dcaa97226f39af278429923b686eb"
+      "path": "src/types/notification-subscriptions-update-response.ts",
+      "sha256": "b648de3b6dc451503710d65405a7fa9c6f2a8586ad602c1ec242822ea867147d"
     },
     {
       "path": "src/types/overview-retrieve-response.ts",
-      "sha256": "02597ea68ee2afaf5c68f7bb740abc2c97c80f6a51d156cd7106fec321959daf"
+      "sha256": "4511df1dd3781a860816515818ddb431e7a5331f7ade19e59a333e66b7c65647"
     },
     {
       "path": "src/types/page-info.ts",
@@ -476,11 +476,11 @@
     },
     {
       "path": "src/types/problem-detail.ts",
-      "sha256": "deca621176487754cbfa2012aa3eab046131ced5829ddf7cff64de692f8bcb0e"
+      "sha256": "c41fdf6433e1167d2fb1f3ac38fd13eb77178f4c0633c9e27824f1e1687ee4f6"
     },
     {
-      "path": "src/types/reactions-upsert-response.ts",
-      "sha256": "ffe59995460d9931dbff75fcc0e8f0251fcf76c4d90f58a95844ec560b4b7fb8"
+      "path": "src/types/reactions-update-response.ts",
+      "sha256": "291d20134b3c7a3327132b9c3b646742ef3ac048abe02de3d6fca4b01140869c"
     },
     {
       "path": "src/types/sdk-work-api-response.ts",
@@ -516,23 +516,23 @@
     },
     {
       "path": "src/types/search-list-response.ts",
-      "sha256": "eacc06783eb433ee1dd6b229377841faaa907ad855e5c7bb1c28a6823f787cb0"
+      "sha256": "dea7d3b7d55852eeb905a657cf3cfcd23ac90092cd19a540caafbb92bfded5e6"
     },
     {
       "path": "src/types/topics-items-list-response.ts",
-      "sha256": "4e2d5e0903da6a03d1af1dd643ea6063b385cc49819f146bd1ea609333f2b4c6"
+      "sha256": "cf27402c1efef7ec3006e655954a68a69220ffbd143414dff6fabcd6e2390f4e"
     },
     {
       "path": "src/types/topics-list-response.ts",
-      "sha256": "b3642c9c9a6052a1bcfab53d6da0316d2debbf9d58dd0defe16520754784585b"
+      "sha256": "7c9e2b5a6c67b4f76b8cd06369e139acc88c664cd09e136d97b9d67671e4d046"
     },
     {
       "path": "src/types/trending-list-response.ts",
-      "sha256": "ac0f2f7427a1f17441ba41398b7c2686e96c4f608282c691cad6b7f8fa73bc12"
+      "sha256": "ddd7d69b61a9b34e7b90624f7a8e6a5ef2354b442e9cab8decf47cdfd6d5df77"
     },
     {
       "path": "src/types/trust-item-retrieve-response.ts",
-      "sha256": "47410856c5a7506f3b717218888a4605b36a95bef27501593d6a9afbb47bd568"
+      "sha256": "923776396756f83f1cd9b8fe0daedf094d09acebd4e397fd66dffdf018a9215b"
     },
     {
       "path": "tsconfig.json",

@@ -1,8 +1,8 @@
 import type { NewsItem } from './news-item';
 
-export interface ItemsCreateResponse {
+export interface ItemsVersionsCreateResponse201 {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsItem; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

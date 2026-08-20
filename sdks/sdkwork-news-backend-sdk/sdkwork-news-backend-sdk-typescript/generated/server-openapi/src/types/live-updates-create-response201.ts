@@ -1,8 +1,8 @@
 import type { NewsLiveUpdate } from './news-live-update';
 
-export interface LiveUpdatesCreateResponse {
+export interface LiveUpdatesCreateResponse201 {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsLiveUpdate; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

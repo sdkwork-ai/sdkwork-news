@@ -143,7 +143,7 @@
     },
     {
       "method": "POST",
-      "operationId": "digests.items.attach",
+      "operationId": "digests.items.create",
       "path": "/backend/v3/api/news/digests/{digestId}/items"
     },
     {
@@ -208,7 +208,7 @@
     },
     {
       "method": "PUT",
-      "operationId": "feed.candidates.upsert",
+      "operationId": "feed.candidates.update",
       "path": "/backend/v3/api/news/feed/candidates"
     },
     {
@@ -258,7 +258,7 @@
     },
     {
       "method": "POST",
-      "operationId": "items.media.attach",
+      "operationId": "items.media.create",
       "path": "/backend/v3/api/news/items/{itemId}/media"
     },
     {
@@ -338,7 +338,7 @@
     },
     {
       "method": "POST",
-      "operationId": "live.items.attach",
+      "operationId": "live.items.create",
       "path": "/backend/v3/api/news/live/events/{eventId}/items"
     },
     {
@@ -413,7 +413,7 @@
     },
     {
       "method": "PUT",
-      "operationId": "search.suggestions.upsert",
+      "operationId": "search.suggestions.update",
       "path": "/backend/v3/api/news/search/suggestions"
     },
     {
@@ -463,7 +463,7 @@
     },
     {
       "method": "PUT",
-      "operationId": "trending.metrics.upsert",
+      "operationId": "trending.metrics.update",
       "path": "/backend/v3/api/news/trending/metrics"
     },
     {
@@ -473,7 +473,7 @@
     },
     {
       "method": "PUT",
-      "operationId": "trust.items.upsert",
+      "operationId": "trust.items.update",
       "path": "/backend/v3/api/news/trust/items/{itemId}"
     },
     {
@@ -483,7 +483,7 @@
     },
     {
       "method": "PUT",
-      "operationId": "trust.sources.upsert",
+      "operationId": "trust.sources.update",
       "path": "/backend/v3/api/news/trust/sources"
     }
   ],

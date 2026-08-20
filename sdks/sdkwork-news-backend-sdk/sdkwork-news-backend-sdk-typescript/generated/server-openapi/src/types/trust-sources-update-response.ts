@@ -1,8 +1,8 @@
 import type { NewsSourceTrustProfile } from './news-source-trust-profile';
 
-export interface TrustSourcesUpsertResponse {
+export interface TrustSourcesUpdateResponse {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsSourceTrustProfile; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

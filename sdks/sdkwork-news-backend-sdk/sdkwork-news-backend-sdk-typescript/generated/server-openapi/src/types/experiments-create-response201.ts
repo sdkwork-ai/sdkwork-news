@@ -1,8 +1,8 @@
 import type { NewsExperiment } from './news-experiment';
 
-export interface ExperimentsCreateResponse {
+export interface ExperimentsCreateResponse201 {
   code: 0;
-  data: unknown & Record<string, unknown>;
+  data: unknown & { item: NewsExperiment; };
   /** Server-owned request correlation id. */
   traceId: string;
 }

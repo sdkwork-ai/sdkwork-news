@@ -28,7 +28,7 @@ client.setApiKey('your-api-key');
 // Use the SDK
 const params = {
   cursor: 'cursor',
-  limit: 'limit',
+  page_size: 2,
 };
 const result = await client.news.channels.list(params);
 ```
@@ -84,7 +84,7 @@ const client = new SdkworkCustomClient({
 // News channels.list
 const params = {
   cursor: 'cursor',
-  limit: 'limit',
+  page_size: 2,
 };
 const result = await client.news.channels.list(params);
 ```
@@ -97,7 +97,7 @@ import { SdkworkCustomClient, NetworkError, TimeoutError, AuthenticationError } 
 try {
   const params = {
     cursor: 'cursor',
-    limit: 'limit',
+    page_size: 2,
   };
   const result = await client.news.channels.list(params);
 } catch (error) {
@@ -119,6 +119,8 @@ This SDK includes cross-platform publish scripts in `bin/`:
 - `bin/publish-core.mjs`
 - `bin/publish.sh`
 - `bin/publish.ps1`
+
+TypeScript check and publish commands use pnpm to materialize workspace dependency versions in a temporary tarball. They reject local-only dependency protocols before npm publication and do not rewrite the source `package.json`.
 
 ### Check
 
