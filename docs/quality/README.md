@@ -90,7 +90,7 @@ pages emitted no console errors.
    declarations. The source configuration chain also lacks
    `etc/client-env.materialization.json`; manifest-driven preview/package/upload
    cannot run until these reviewed release declarations are added.
-3. Root topology still points at retired `configs/topology/**`. Its production
+3. Root topology still points at retired `etc/topology/**`. Its production
    cloud gateway allows any CORS origin with an empty allowlist, while
    standalone profiles incorrectly declare a platform API gateway. Migrating
    these production settings to `etc/` requires configuration and security

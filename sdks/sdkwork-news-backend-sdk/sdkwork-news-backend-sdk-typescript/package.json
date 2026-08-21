@@ -1,6 +1,6 @@
 {
   "name": "@sdkwork/news-backend-sdk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "SDKWork News Backend SDK composed consumer facade.",
   "type": "module",
   "private": false,
