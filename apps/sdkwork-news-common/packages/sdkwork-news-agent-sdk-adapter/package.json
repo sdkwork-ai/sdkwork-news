@@ -5,7 +5,8 @@
   "type": "module",
   "dependencies": {
     "@sdkwork/agents-app-sdk": "workspace:*",
-    "@sdkwork/news-agent-contracts": "workspace:*"
+    "@sdkwork/news-agent-contracts": "workspace:*",
+    "@sdkwork/utils": "workspace:*"
   },
   "exports": {
     ".": {

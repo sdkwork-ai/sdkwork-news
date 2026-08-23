@@ -11,6 +11,7 @@ import {
   type NewsReadingSchedule,
   type UpdateNewsReadingAgentInput,
 } from "@sdkwork/news-agent-contracts";
+import { uuid } from "@sdkwork/utils/id";
 
 const MANIFEST_KIND = "sdkwork.news.reader-agent";
 const MANIFEST_VERSION = 1;
@@ -187,8 +188,7 @@ function mapPageInfo(
 }
 
 function createAgentId(): string {
-  const suffix = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  return `news-reader-${suffix.toLowerCase()}`;
+  return `news-reader-${uuid().toLowerCase()}`;
 }
 
 function asRecord(value: unknown): Record<string, unknown> | undefined {
