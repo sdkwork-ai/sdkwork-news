@@ -77,7 +77,15 @@
             "news-dev.dtupay.com",
             "news-dev.sdkwork.cn",
             "news-dev.birdcoder.cn",
-            "news-dev.dtupay.cn"
+            "news-dev.dtupay.cn",
+            "news-dev.skubc.com",
+            "news-dev.skubc.cn",
+            "news-dev.zowalk.com",
+            "news-dev.zowalk.cn",
+            "news-dev.offer86.com",
+            "news-dev.offer86.cn",
+            "news-dev.86offer.com",
+            "news-dev.86offer.cn"
           ]
         },
         "test": {
@@ -87,7 +95,15 @@
             "news-test.dtupay.com",
             "news-test.sdkwork.cn",
             "news-test.birdcoder.cn",
-            "news-test.dtupay.cn"
+            "news-test.dtupay.cn",
+            "news-test.skubc.com",
+            "news-test.skubc.cn",
+            "news-test.zowalk.com",
+            "news-test.zowalk.cn",
+            "news-test.offer86.com",
+            "news-test.offer86.cn",
+            "news-test.86offer.com",
+            "news-test.86offer.cn"
           ]
         },
         "staging": {
@@ -97,7 +113,15 @@
             "news-staging.dtupay.com",
             "news-staging.sdkwork.cn",
             "news-staging.birdcoder.cn",
-            "news-staging.dtupay.cn"
+            "news-staging.dtupay.cn",
+            "news-staging.skubc.com",
+            "news-staging.skubc.cn",
+            "news-staging.zowalk.com",
+            "news-staging.zowalk.cn",
+            "news-staging.offer86.com",
+            "news-staging.offer86.cn",
+            "news-staging.86offer.com",
+            "news-staging.86offer.cn"
           ]
         }
       },
@@ -107,7 +131,15 @@
         "news.dtupay.com",
         "news.sdkwork.cn",
         "news.birdcoder.cn",
-        "news.dtupay.cn"
+        "news.dtupay.cn",
+        "news.skubc.com",
+        "news.skubc.cn",
+        "news.zowalk.com",
+        "news.zowalk.cn",
+        "news.offer86.com",
+        "news.offer86.cn",
+        "news.86offer.com",
+        "news.86offer.cn"
       ]
     },
     "platform.api-gateway": {
@@ -120,7 +152,15 @@
             "api-dev.dtupay.com",
             "api-dev.sdkwork.cn",
             "api-dev.birdcoder.cn",
-            "api-dev.dtupay.cn"
+            "api-dev.dtupay.cn",
+            "api-dev.skubc.com",
+            "api-dev.skubc.cn",
+            "api-dev.zowalk.com",
+            "api-dev.zowalk.cn",
+            "api-dev.offer86.com",
+            "api-dev.offer86.cn",
+            "api-dev.86offer.com",
+            "api-dev.86offer.cn"
           ]
         },
         "test": {
@@ -130,7 +170,15 @@
             "api-test.dtupay.com",
             "api-test.sdkwork.cn",
             "api-test.birdcoder.cn",
-            "api-test.dtupay.cn"
+            "api-test.dtupay.cn",
+            "api-test.skubc.com",
+            "api-test.skubc.cn",
+            "api-test.zowalk.com",
+            "api-test.zowalk.cn",
+            "api-test.offer86.com",
+            "api-test.offer86.cn",
+            "api-test.86offer.com",
+            "api-test.86offer.cn"
           ]
         },
         "staging": {
@@ -140,7 +188,15 @@
             "api-staging.dtupay.com",
             "api-staging.sdkwork.cn",
             "api-staging.birdcoder.cn",
-            "api-staging.dtupay.cn"
+            "api-staging.dtupay.cn",
+            "api-staging.skubc.com",
+            "api-staging.skubc.cn",
+            "api-staging.zowalk.com",
+            "api-staging.zowalk.cn",
+            "api-staging.offer86.com",
+            "api-staging.offer86.cn",
+            "api-staging.86offer.com",
+            "api-staging.86offer.cn"
           ]
         }
       },
@@ -150,7 +206,15 @@
         "api.dtupay.com",
         "api.sdkwork.cn",
         "api.birdcoder.cn",
-        "api.dtupay.cn"
+        "api.dtupay.cn",
+        "api.skubc.com",
+        "api.skubc.cn",
+        "api.zowalk.com",
+        "api.zowalk.cn",
+        "api.offer86.com",
+        "api.offer86.cn",
+        "api.86offer.com",
+        "api.86offer.cn"
       ]
     }
   },
