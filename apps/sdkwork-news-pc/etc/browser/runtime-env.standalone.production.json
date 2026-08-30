@@ -1,0 +1,23 @@
+{
+  "environment": "production",
+  "deploymentProfile": "standalone",
+  "profileId": "standalone.production",
+  "runtimeTarget": "browser",
+  "browserOriginMode": "same-origin",
+  "news": {
+    "applicationPublicHttpUrl": "/"
+  },
+  "agents": {
+    "appApiBaseUrl": "/"
+  },
+  "im": {
+    "applicationPublicWebSocketUrl": "ws://127.0.0.1:8080"
+  },
+  "appApiBaseUrl": "/",
+  "backendApiBaseUrl": "/",
+  "driveAppApiBaseUrl": "/",
+  "appbaseAppApiBaseUrl": "/",
+  "deployAppApiBaseUrl": "/",
+  "openApiBaseUrl": "/",
+  "sdkBaseUrl": "/"
+}
