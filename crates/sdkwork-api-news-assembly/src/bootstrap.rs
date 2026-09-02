@@ -5,7 +5,7 @@ use std::sync::Arc;
 use axum::Router;
 use sdkwork_database_sqlx::DatabasePool;
 use sdkwork_routes_news_open_api::state::NewsHttpState;
-use sdkwork_web_bootstrap::{ApiAssemblyContribution, PgPoolReadinessCheck, ReadinessCheck};
+use sdkwork_web_bootstrap::{ApiAssemblyContribution, PgPoolReadinessCheck, ReadinessCheck, WebModule};
 use sdkwork_web_core::HttpRouteManifest;
 
 pub type ApiAssembly = ApiAssemblyContribution;
@@ -104,6 +104,19 @@ fn openapi_documents() -> Result<Vec<serde_json::Value>, String> {
         serde_json::from_str(source).map_err(|error| format!("invalid {owner} OpenAPI: {error}"))
     })
     .collect()
+}
+
+/// Canonical Web Module definition for this application
+/// (API_ASSEMBLY_SPEC §4.1.1): the complete HTTP surface — every route,
+/// manifest, and OpenAPI document of this owner — as one installable module.
+pub async fn web_module() -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router().await?))
+}
+
+/// Same as [`web_module`] but composed on a process-shared database pool
+/// (platform gateways, API_ASSEMBLY_SPEC §4.1.1).
+pub async fn web_module_with_pool(pool: DatabasePool) -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router_with_pool(pool).await?))
 }
 
 #[cfg(test)]

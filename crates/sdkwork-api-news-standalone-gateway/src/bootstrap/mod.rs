@@ -1,11 +1,11 @@
 use axum::Router;
+use sdkwork_web_bootstrap::{ApiModuleRegistry, infra_public_path_prefixes};
 use tower_http::trace::TraceLayer;
 
 use sdkwork_api_news_assembly::assemble_api_router;
 use sdkwork_iam_web_adapter::{
     build_web_framework_builder, iam_web_request_context_resolver_from_env,
 };
-use sdkwork_web_bootstrap::{infra_public_path_prefixes, ComposedApiAssembly};
 
 pub async fn create_app() -> Result<Router, anyhow::Error> {
     let _ = dotenvy::dotenv();
@@ -16,7 +16,10 @@ pub async fn create_app() -> Result<Router, anyhow::Error> {
         assembly.route_manifest.clone(),
         infra_public_path_prefixes(),
     );
-    let hosted = ComposedApiAssembly::try_compose("SDKWork News API", vec![assembly])
+    let mut module_registry = ApiModuleRegistry::new();
+    module_registry.add_modules(vec![assembly]);
+    let hosted = module_registry
+        .try_compose("SDKWork News API")
         .map_err(anyhow::Error::msg)?
         .into_hosted(framework);
     Ok(hosted
