@@ -1,3 +1,5 @@
+import {resolveBaseUrlWithAlignProtocol} from "@sdkwork/sdk-common";
+
 export type NewsClientLifecycleEnvironment =
   | "development"
   | "production"
@@ -44,10 +46,15 @@ export function resolveNewsAgentBootstrap(
   }
 
   const gatewayBaseUrl = readFirst(environment, [PLATFORM_GATEWAY_KEY]);
+  // Shared §6.3 fallback: resolve through @sdkwork/sdk-common resolveBaseUrl
+  // (SDKWORK_API_BASE_URL candidates matched against the page host, else
+  // derived from it). Empty outside a browser, so the dev demo/throw
+  // behavior below is preserved when no origin can be resolved.
+  const sharedApiOrigin = resolveBaseUrlWithAlignProtocol({ baseUrls: gatewayBaseUrl }).url || undefined;
   const agentsAppApiBaseUrl = readFirst(environment, AGENTS_APP_API_BASE_URL_KEYS)
-    ?? gatewayBaseUrl;
+    ?? sharedApiOrigin;
   const imApiBaseUrl = readFirst(environment, IM_API_BASE_URL_KEYS)
-    ?? gatewayBaseUrl;
+    ?? sharedApiOrigin;
 
   if (!agentsAppApiBaseUrl || !imApiBaseUrl) {
     if (demoMode !== false && lifecycleEnvironment === "development") {
