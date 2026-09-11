@@ -1,9 +1,13 @@
 [package]
+rust-version.workspace = true
 name = "sdkwork-news-database-host"
 version.workspace = true
 edition.workspace = true
 description = "SDKWork News database lifecycle bootstrap."
 
+
+[lints]
+workspace = true
 [lib]
 name = "sdkwork_news_database_host"
 path = "src/lib.rs"
