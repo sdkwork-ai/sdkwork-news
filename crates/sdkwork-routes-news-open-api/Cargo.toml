@@ -24,3 +24,4 @@ sdkwork-web-bootstrap = { workspace = true }
 
 [dev-dependencies]
 sdkwork-web-core = { workspace = true }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

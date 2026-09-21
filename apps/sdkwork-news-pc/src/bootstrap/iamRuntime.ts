@@ -19,16 +19,18 @@ export function createIamRuntime(): IamRuntime {
 
   return {
     async login(username: string, password: string) {
-      // In a real implementation, this would call the auth API
-      // For now, simulate a successful login
-      currentUser = {
-        id: 'user1',
-        username,
-        email: `${username}@example.com`,
-        tenantId: 'tenant1',
-      };
-      accessToken = 'mock-access-token';
-      refreshToken = 'mock-refresh-token';
+      // SECURITY_SPEC.md: login success MUST NOT be mocked or synthesized from
+      // user input. This runtime has no IAM transport wired yet, so it must fail
+      // closed instead of manufacturing an authenticated state — a fabricated
+      // `accessToken` here would make an unauthenticated browser report itself as
+      // logged in.
+      void username;
+      void password;
+      throw new Error(
+        'sdkwork-news IAM runtime is not wired to an authentication transport. '
+        + 'Implement the appbase IAM login exchange before enabling sign-in; '
+        + 'authentication state cannot be synthesized (SECURITY_SPEC.md).',
+      );
     },
     async logout() {
       currentUser = null;
@@ -42,8 +44,12 @@ export function createIamRuntime(): IamRuntime {
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
-      // In a real implementation, this would call the auth API
-      accessToken = 'mock-refreshed-access-token';
+      // Refreshing also requires the real IAM transport; fail closed rather than
+      // inventing a replacement credential.
+      throw new Error(
+        'sdkwork-news IAM token refresh is not wired to an authentication '
+        + 'transport (SECURITY_SPEC.md).',
+      );
     },
   };
 }

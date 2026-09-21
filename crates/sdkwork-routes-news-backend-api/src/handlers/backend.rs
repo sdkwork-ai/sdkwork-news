@@ -23,7 +23,7 @@ pub async fn list_items(
         "SELECT id, tenant_id, category_id, slug, title, summary, status, author_name, 
                 featured, priority, estimated_read_minutes, published_at, updated_at
          FROM news_item
-         WHERE deleted_at IS NULL
+         WHERE archived_at IS NULL
          ORDER BY updated_at DESC
          LIMIT $1",
     )
@@ -135,7 +135,7 @@ pub async fn list_stories(
     let result = sqlx::query(
         "SELECT id, tenant_id, slug, title, summary, story_type, status, published_at, updated_at
          FROM news_story
-         WHERE deleted_at IS NULL
+         WHERE archived_at IS NULL
          ORDER BY updated_at DESC
          LIMIT $1",
     )
@@ -224,7 +224,7 @@ pub async fn get_story(
     let result = sqlx::query(
         "SELECT id, tenant_id, slug, title, summary, story_type, status, published_at, updated_at
          FROM news_story
-         WHERE id = $1 AND deleted_at IS NULL",
+         WHERE id = $1 AND archived_at IS NULL",
     )
     .bind(&story_id)
     .fetch_optional(&state.pool)
@@ -262,7 +262,7 @@ pub async fn publish_story(
              published_at = COALESCE(published_at, $1),
              updated_at = $2,
              version = version + 1
-         WHERE id = $3 AND deleted_at IS NULL AND status IN ('draft', 'review')",
+         WHERE id = $3 AND archived_at IS NULL AND status IN ('draft', 'review')",
     )
     .bind(&now)
     .bind(&now)

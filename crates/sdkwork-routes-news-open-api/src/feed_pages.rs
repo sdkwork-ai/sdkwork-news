@@ -76,7 +76,7 @@ pub async fn list_personalized_feed_page(
         SELECT id, tenant_id, category_id, slug, title, summary, status, author_name,
                featured, priority, estimated_read_minutes, published_at, updated_at
         FROM news_item
-        WHERE status = 'published' AND deleted_at IS NULL
+        WHERE status = 'published' AND archived_at IS NULL
           AND (
             $1::boolean IS NULL
             OR featured < $1
@@ -130,7 +130,7 @@ pub async fn list_channel_feed_page(
                i.estimated_read_minutes, i.published_at, i.updated_at
         FROM news_channel_item ci
         JOIN news_item i ON i.id = ci.item_id
-        WHERE ci.channel_id = $1 AND ci.status = 'active' AND i.status = 'published' AND i.deleted_at IS NULL
+        WHERE ci.channel_id = $1 AND ci.status = 'active' AND i.status = 'published' AND i.archived_at IS NULL
           AND (
             ci.rank > $2
             OR (ci.rank = $2 AND i.published_at < $3)

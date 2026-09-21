@@ -25,7 +25,7 @@ pub async fn list_items(
         "SELECT id, tenant_id, category_id, slug, title, summary, status, author_name, 
                 featured, priority, estimated_read_minutes, published_at, updated_at
          FROM news_item
-         WHERE status = $1 AND deleted_at IS NULL
+         WHERE status = $1 AND archived_at IS NULL
          ORDER BY published_at DESC, priority ASC
          LIMIT $2",
     )
@@ -73,7 +73,7 @@ pub async fn get_item(
         "SELECT id, tenant_id, category_id, slug, title, summary, status, author_name, 
                 featured, priority, estimated_read_minutes, published_at, updated_at
          FROM news_item
-         WHERE id = $1 AND deleted_at IS NULL",
+         WHERE id = $1 AND archived_at IS NULL",
     )
     .bind(&item_id)
     .fetch_optional(&state.pool)
