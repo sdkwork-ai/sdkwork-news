@@ -1,33 +1,27 @@
 {
   "schemaVersion": 3,
-  "kind": "sdkwork.app",
+  "kind": "agent.app",
   "app": {
-    "key": "news-flutter-mobile",
-    "name": "SDKWork News Mobile",
+    "key": "news-h5",
+    "name": "SDKWork News H5",
     "displayName": "SDKWork News",
-    "description": "Native Flutter phone client for AI-assisted news reading.",
-    "officialWebsiteUrl": "https://sdkwork.com/apps/news-mobile",
-    "appType": "APP_FLUTTER",
-    "versionSource": "pubspec.yaml",
-    "identifiers": {
-      "packageName": "com.sdkwork.news.mobile",
-      "bundleId": "com.sdkwork.news.mobile",
-      "desktopAppId": null,
-      "containerImage": "registry.sdkwork.com/apps/news-flutter-mobile"
-    }
+    "description": "Mobile web client for AI-assisted news reading.",
+    "officialWebsiteUrl": "https://sdkwork.com/apps/news-h5",
+    "appType": "APP_REACT",
+    "versionSource": "package.json"
   },
   "backend": {
-    "platform": "APP",
+    "platform": "H5",
     "appId": "sdkwork-news",
     "organizationId": "0",
     "tenantId": "100001"
   },
   "runtime": {
     "family": "mobile",
-    "framework": "flutter",
-    "runtimes": ["APP", "APP_ANDROID", "APP_IOS"],
-    "deliveryModes": ["DIRECT_DOWNLOAD"],
-    "defaultPlatform": "APP_ANDROID",
+    "framework": "react-h5",
+    "runtimes": ["H5"],
+    "deliveryModes": ["WEB_URL"],
+    "defaultPlatform": "H5",
     "defaultArchitecture": "universal",
     "supportedDeploymentProfiles": ["standalone", "cloud"],
     "defaultDeploymentProfile": "standalone"
@@ -35,10 +29,10 @@
   "media": {
     "icons": {
       "primary": {
-        "id": "news-flutter-mobile-primary-icon",
+        "id": "news-h5-primary-icon",
         "type": "ICON",
         "purpose": "PRIMARY",
-        "platform": "APP",
+        "platform": "H5",
         "format": "PNG",
         "width": 1024,
         "height": 1024,
@@ -53,8 +47,8 @@
   },
   "publish": {
     "status": "DRAFT",
-    "platforms": ["APP", "APP_ANDROID", "APP_IOS"],
-    "installPlatforms": ["APP", "APP_ANDROID", "APP_IOS"],
+    "platforms": ["H5"],
+    "installPlatforms": ["H5"],
     "installSkill": false
   },
   "artifacts": { "installConfig": { "packages": [] } },

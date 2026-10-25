@@ -28,7 +28,7 @@ const SOURCE_GROUPS = {
   flutter: [
     'apps/sdkwork-news-flutter-mobile/pubspec.yaml',
     'apps/sdkwork-news-flutter-mobile/pubspec.lock',
-    'apps/sdkwork-news-flutter-mobile/sdkwork.app.config.json',
+    'apps/sdkwork-news-flutter-mobile/agent.app.config.json',
     'apps/sdkwork-news-flutter-mobile/config/app/runtime-env.development.example.json',
     'apps/sdkwork-news-flutter-mobile/lib/main.dart',
     'apps/sdkwork-news-flutter-mobile/lib/bootstrap/runtime.dart',

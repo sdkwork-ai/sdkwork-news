@@ -6,7 +6,7 @@
     "name": "sdkwork-news",
     "repository": "sdkwork-ai/sdkwork-news",
     "sourcePath": ".",
-    "configPath": "sdkwork.app.config.json"
+    "configPath": "agent.app.config.json"
   },
   "release": {
     "artifactPrefix": "sdkwork-news",

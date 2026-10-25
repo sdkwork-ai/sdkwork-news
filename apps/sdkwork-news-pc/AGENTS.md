@@ -2,7 +2,7 @@
 
 Read `../../AGENTS.md` first and resolve all standards through `../../../sdkwork-specs/`. This root owns the PC client composition, browser host, feature packages, and public application identity.
 
-Read `sdkwork.app.config.json` for identity and release metadata, `specs/component.spec.json` for local ownership, and `etc/sdkwork.deployment.config.json` for parent deployment delegation. Runtime values belong to materialized environment files, not the application manifest.
+Read `agent.app.config.json` for identity and release metadata, `specs/component.spec.json` for local ownership, and `etc/sdkwork.deployment.config.json` for parent deployment delegation. Runtime values belong to materialized environment files, not the application manifest.
 
 For TypeScript and UI changes, load `CODE_STYLE_SPEC.md`, `NAMING_SPEC.md`, `TYPESCRIPT_CODE_SPEC.md`, `FRONTEND_CODE_SPEC.md`, `FRONTEND_SPEC.md`, `UI_ARCHITECTURE_SPEC.md`, and `APP_PC_ARCHITECTURE_SPEC.md`. Consume Agents and IM only through their public composed SDKs and application-owned adapters. Do not introduce raw HTTP, manual authorization headers, generated transport imports, private sibling source imports, or a second global navigation rail.
 
