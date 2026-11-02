@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.client-env-materialization",
+  "application": "sdkwork-news",
+  "command": "pnpm workflow:materialize-client-env",
+  "deploymentConfig": "sdkwork.deployment.config.json",
+  "sourceIdentity": {
+    "deploymentProfileKeys": [
+      "SDKWORK_NEWS_DEPLOYMENT_PROFILE",
+      "SDKWORK_DEPLOYMENT_PROFILE"
+    ],
+    "environmentKeys": [
+      "SDKWORK_NEWS_ENVIRONMENT",
+      "SDKWORK_ENVIRONMENT"
+    ],
+    "profileIdKeys": [
+      "SDKWORK_NEWS_PROFILE_ID",
+      "SDKWORK_PROFILE_ID"
+    ]
+  },
+  "profiles": [
+    "standalone.development",
+    "standalone.production",
+    "standalone.demo",
+    "cloud.development",
+    "cloud.production",
+    "cloud.demo",
+    "standalone.test",
+    "standalone.staging",
+    "cloud.test",
+    "cloud.staging"
+  ],
+  "surfaces": [
+    {
+      "id": "sdkwork-news-h5",
+      "root": "apps/sdkwork-news-h5",
+      "format": "vite",
+      "runtimeTarget": "browser",
+      "includePrefixes": [],
+      "includeKeys": [],
+      "bindings": {
+        "VITE_SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL": {
+          "sources": [
+            "SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL"
+          ],
+          "required": false
+        },
+        "VITE_SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL": {
+          "sources": [
+            "SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL"
+          ],
+          "required": false
+        },
+        "VITE_SDKWORK_CORS_ALLOWED_ORIGINS": {
+          "sources": [
+            "SDKWORK_CORS_ALLOWED_ORIGINS"
+          ],
+          "required": false
+        }
+      },
+      "constants": {
+        "VITE_SDKWORK_APPLICATION_CODE": "news",
+        "VITE_SDKWORK_SURFACE": "h5"
+      },
+      "requiredOutputKeys": [
+        "VITE_SDKWORK_ENVIRONMENT",
+        "VITE_SDKWORK_DEPLOYMENT_PROFILE",
+        "VITE_SDKWORK_PROFILE_ID",
+        "VITE_SDKWORK_RUNTIME_TARGET"
+      ]
+    },
+    {
+      "id": "sdkwork-news-pc",
+      "root": "apps/sdkwork-news-pc",
+      "format": "vite",
+      "runtimeTarget": "browser",
+      "includePrefixes": [],
+      "includeKeys": [],
+      "bindings": {
+        "VITE_SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL": {
+          "sources": [
+            "SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL"
+          ],
+          "required": false
+        },
+        "VITE_SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL": {
+          "sources": [
+            "SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL"
+          ],
+          "required": false
+        },
+        "VITE_SDKWORK_CORS_ALLOWED_ORIGINS": {
+          "sources": [
+            "SDKWORK_CORS_ALLOWED_ORIGINS"
+          ],
+          "required": false
+        }
+      },
+      "constants": {
+        "VITE_SDKWORK_APPLICATION_CODE": "news",
+        "VITE_SDKWORK_SURFACE": "pc"
+      },
+      "requiredOutputKeys": [
+        "VITE_SDKWORK_ENVIRONMENT",
+        "VITE_SDKWORK_DEPLOYMENT_PROFILE",
+        "VITE_SDKWORK_PROFILE_ID",
+        "VITE_SDKWORK_RUNTIME_TARGET"
+      ]
+    }
+  ]
+}
