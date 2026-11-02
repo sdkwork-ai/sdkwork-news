@@ -44,8 +44,8 @@ class NewsMobileShell extends StatelessWidget {
                       label: strings.text('nav.assistant'),
                     ),
                     NavigationDestination(
-                      icon: const Icon(Icons.newspaper_outlined),
-                      selectedIcon: const Icon(Icons.newspaper_rounded),
+                      icon: const Icon(Icons.article_outlined),
+                      selectedIcon: const Icon(Icons.article),
                       label: strings.text('nav.news'),
                     ),
                     NavigationDestination(
