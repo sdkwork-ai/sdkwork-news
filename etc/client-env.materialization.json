@@ -122,6 +122,21 @@
           "iam:self"
         ]
       }
+    },
+    {
+      "id": "sdkwork-news-flutter-mobile",
+      "root": "apps/sdkwork-news-flutter-mobile",
+      "format": "flutter",
+      "runtimeTarget": "flutter-android",
+      "bindings": {},
+      "accessToken": {
+        "appId": "sdkwork-news",
+        "tenantId": "100001",
+        "organizationId": "0",
+        "permissionScope": [
+          "iam:self"
+        ]
+      }
     }
   ]
 }
