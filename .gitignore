@@ -75,3 +75,6 @@ temp/
 !.env.cloud.staging
 !.env.cloud.demo
 !.env.cloud.production
+
+# WeChat DevTools host-local settings
+apps/sdkwork-news-mini-program/project.private.config.json

@@ -49,7 +49,8 @@ Non-goals:
 
 ### Assistant
 
-- Agent list is the first mobile tab and the primary PC workspace.
+- Agent list is the primary PC and mobile assistant workspace, reached from the
+  second global tab.
 - Agent create/edit supports name, mission, reading scope, trusted sources, output format, and schedule.
 - Selecting an agent opens its SDKWork IM conversation.
 - Agent results render as normal IM messages plus news-owned citation, digest, risk, and action cards.
@@ -57,8 +58,27 @@ Non-goals:
 
 ### News
 
-- Category tabs, recommended feed, breaking/live states, search, article detail, save, share, and feedback.
+- News is the default home surface on PC, H5, Flutter, and mini program.
+- Home hierarchy: brand/search, hot ranking strip, category tabs, editorial lead,
+  topic chips, live feed, and a persistent hot list on wide screens.
+- Category tabs, recommended feed, breaking/live states, search, article detail,
+  AI summary, save, share, and feedback.
 - Interactive lists use server pagination and preserve reading position per category.
+
+### Comments And Engagement
+
+- Every article exposes a comments thread backed by SDKWork Comments.
+- Readers can load more comments, publish, reply, like, and delete their own comment.
+- H5, PC, Flutter, and mini program share the same thread identity (`news-item` +
+  article id) and the same `CommentsService`/repository contract shape.
+- Comment counts, thread summaries, and engagement state come from the generated
+  Comments app SDK, never from local counters or raw HTTP.
+- Article favorites, likes, and visits use Comments engagement targets; favorite and
+  like counts are server-backed and mutations are optimistic with rollback.
+- The mini program keeps its saved cache synchronized with the engagement favorite
+  state so the profile saved list is not a separate source of truth.
+- Demo mode provides deterministic source-backed comments; production mode resolves
+  `VITE_SDKWORK_COMMENTS_APPLICATION_PUBLIC_HTTP_URL` or the platform gateway.
 
 ### AI Store
 
@@ -72,10 +92,15 @@ Non-goals:
 
 ### Client Experience
 
-- PC uses a quiet WeChat-inspired three-pane work surface: compact global navigation, contextual list,
-  and content workspace. It does not duplicate a second feature sidebar inside the active capability.
-- H5 and Flutter use four stable bottom tabs: Assistant, News, AI Store, and Account.
-- H5 and Flutter share contracts, route ids, tokens, fixtures, and service ports, not UI runtime code.
+- PC uses a quiet three-pane news work surface: compact global navigation, feed and
+  ranking columns, and a content workspace. It does not duplicate a second feature
+  sidebar inside the active capability.
+- H5 and Flutter use four stable bottom tabs with News first: News, Assistant, AI
+  Store/Discover, and Account.
+- The WeChat mini program uses four native tabs: Home, Ranking, Topics, and Me;
+  article reading lives in the `news` subpackage and hides the tab bar.
+- H5, PC, mini program, and Flutter share contracts, route ids, tokens, fixtures,
+  and service ports, not UI runtime code.
 
 ## 5. User Scenarios
 
@@ -95,8 +120,9 @@ Non-goals:
 - At least 70% of scheduled runs surface one or more cited, deduplicated findings.
 - Conversation resume preserves unread count and message order across PC, H5, and Flutter.
 - Feed first page requests no more than the declared page size and never downloads the full collection.
-- Core four-tab navigation and Assistant conversation flow pass visual and interaction parity review on all clients.
-- Zero raw IM/news HTTP wrappers and zero private cross-package `src/**` imports in authored consumers.
+- Core four-tab navigation, ranking, search, article reading, and comments pass visual and interaction parity review on PC, H5, Flutter, and mini program.
+- Comment submission, reply, like, pagination, empty, unavailable, and failure states are covered on every client.
+- Zero raw IM/news/comments HTTP wrappers and zero private cross-package `src/**` imports in authored consumers.
 
 ## 7. Phases
 

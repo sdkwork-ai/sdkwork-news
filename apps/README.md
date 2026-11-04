@@ -17,6 +17,7 @@ The repository root `agent.app.config.json` governs the primary application mani
 | sdkwork-news-common | shared | no | Cross-client agent contracts, orchestration, and public SDK adapters. | `sdkwork-news-common/` |
 | sdkwork-news-pc | pc | yes | WeChat-inspired PC workspace with one global rail. | `sdkwork-news-pc/` |
 | sdkwork-news-h5 | h5 | yes | Mobile web application with four bottom tabs. | `sdkwork-news-h5/` |
+| sdkwork-news-mini-program | mini-program | yes | Native WeChat news app with feed, ranking, topics, search, and article reading. | `sdkwork-news-mini-program/` |
 | sdkwork-news-flutter-mobile | app | yes | Native Android/iOS Flutter phone application. | `sdkwork-news-flutter-mobile/` |
 
 ## Allowed Content

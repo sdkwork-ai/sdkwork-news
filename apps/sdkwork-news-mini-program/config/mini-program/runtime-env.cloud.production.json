@@ -1,0 +1,9 @@
+{
+  "SDKWORK_ACCESS_TOKEN": "mini-program-cloud-production-public-token",
+  "SDKWORK_APP_ID": "sdkwork-news",
+  "SDKWORK_DEPLOYMENT_PROFILE": "cloud",
+  "SDKWORK_ENVIRONMENT": "production",
+  "SDKWORK_PROFILE_ID": "cloud.production",
+  "SDKWORK_COMMENTS_APP_API_URL": "",
+  "SDKWORK_RUNTIME_TARGET": "mini-program"
+}

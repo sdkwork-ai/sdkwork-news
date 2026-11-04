@@ -20,9 +20,9 @@ export interface NewsPcWindowControls {
 }
 
 const tabs = [
+  { id: "news" as const, label: "首页", icon: Newspaper },
   { id: "assistant" as const, label: "助手", icon: Bot },
-  { id: "news" as const, label: "新闻", icon: Newspaper },
-  { id: "store" as const, label: "AI Store", icon: ShoppingBag },
+  { id: "store" as const, label: "精选", icon: ShoppingBag },
   { id: "account" as const, label: "我的", icon: UserRound },
 ];
 
@@ -39,8 +39,8 @@ export function NewsPcWorkspaceShell({
 }) {
   return <div className="news-pc-workspace">
     <header className="news-pc-titlebar">
-      <div className="news-pc-titlebar__brand"><span>N</span><strong>SDKWork News</strong></div>
-      <div className="news-pc-titlebar__status"><i />智能体阅读工作台</div>
+      <div className="news-pc-titlebar__brand"><span>头</span><strong>SDKWork 头条</strong></div>
+      <div className="news-pc-titlebar__status"><i />资讯工作台</div>
       {windowControls && <div className="news-pc-titlebar__controls">
         <button onClick={windowControls.minimize} type="button" title="最小化"><Minus size={14} /></button>
         <button onClick={windowControls.maximize} type="button" title="最大化"><Maximize2 size={13} /></button>

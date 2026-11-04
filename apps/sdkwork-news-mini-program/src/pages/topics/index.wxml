@@ -1,0 +1,35 @@
+<view class="page">
+  <view style="height: {{statusBarHeight}}px"></view>
+
+  <view class="top">
+    <text class="title">专题</text>
+    <text class="subtitle">用一条主线，把碎片信息连成可读的判断</text>
+  </view>
+
+  <view class="grid">
+    <view
+      wx:for="{{topics}}"
+      wx:key="title"
+      class="topic-card tap"
+      data-query="{{item.query}}"
+      bindtap="openTopic"
+    >
+      <image class="topic-image" src="{{item.image}}" mode="aspectFill" />
+      <view class="topic-shade"></view>
+      <view class="topic-copy">
+        <view class="topic-top">
+          <text class="topic-tag">{{item.tag}}</text>
+          <text class="topic-count">{{item.count}}</text>
+        </view>
+        <text class="topic-title">{{item.title}}</text>
+        <text class="topic-desc ellipsis-2">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="note">
+    <text class="note-title">专题由编辑与阅读智能体共同维护</text>
+    <text class="note-copy">每一条内容都保留来源与更新时间，方便你回到原始证据。</text>
+  </view>
+  <view class="safe-bottom"></view>
+</view>

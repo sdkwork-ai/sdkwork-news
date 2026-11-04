@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-enum NewsShellTab { assistant, news, store, account }
+enum NewsShellTab { news, assistant, store, account }
 
 class NewsShellController extends ChangeNotifier {
-  NewsShellTab activeTab = NewsShellTab.assistant;
+  NewsShellTab activeTab = NewsShellTab.news;
   bool isSecondaryPage = false;
 
   void select(NewsShellTab tab) {

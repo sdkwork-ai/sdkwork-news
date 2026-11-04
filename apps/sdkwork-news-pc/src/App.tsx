@@ -16,6 +16,7 @@ import {
 import type { NewsAgentService } from "@sdkwork/news-agent-service";
 import type { NewsAccountService } from "@sdkwork/news-account-service";
 import type { AiStoreService } from "@sdkwork/news-ai-store-service";
+import type { NewsCommentsService } from "@sdkwork/news-comments-service";
 import type { NewsFeedService } from "@sdkwork/news-feed-service";
 
 const TAB_HASHES: Record<NewsPcWorkspaceTab, string> = {
@@ -28,7 +29,7 @@ const TAB_HASHES: Record<NewsPcWorkspaceTab, string> = {
 function resolveInitialTab(): NewsPcWorkspaceTab {
   const hash = window.location.hash.replace(/^#\/?/u, "");
   return (Object.entries(TAB_HASHES).find(([, value]) => value === hash)?.[0] as NewsPcWorkspaceTab | undefined)
-    ?? "assistant";
+    ?? "news";
 }
 
 export interface NewsPcAppProps {
@@ -39,6 +40,7 @@ export interface NewsPcAppProps {
   aiStoreDemoMode: boolean;
   aiStoreService?: AiStoreService;
   assistantDemoMode: boolean;
+  commentsService?: NewsCommentsService;
   newsDemoMode: boolean;
   newsService?: NewsFeedService;
 }
@@ -51,6 +53,7 @@ export default function App({
   aiStoreDemoMode,
   aiStoreService,
   assistantDemoMode,
+  commentsService,
   newsDemoMode,
   newsService,
 }: NewsPcAppProps) {
@@ -67,6 +70,7 @@ export default function App({
       )}
       {activeTab === "news" && (
         <NewsPcNews
+          commentsService={commentsService}
           demoMode={newsDemoMode}
           service={newsService}
           shareArticle={shareNewsArticle}

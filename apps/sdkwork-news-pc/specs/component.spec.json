@@ -27,7 +27,8 @@
       { "name": "newsAccountRuntime", "export": "./runtime", "provider": "@sdkwork/news-account-runtime" },
       { "name": "newsAgentRuntime", "export": "./runtime", "provider": "@sdkwork/news-agent-bootstrap" },
       { "name": "newsFeedRuntime", "export": "./feed-runtime", "provider": "@sdkwork/news-runtime" },
-      { "name": "newsAiStoreRuntime", "export": "./runtime", "provider": "@sdkwork/news-ai-store-runtime" }
+      { "name": "newsAiStoreRuntime", "export": "./runtime", "provider": "@sdkwork/news-ai-store-runtime" },
+      { "name": "newsCommentsService", "export": ".", "provider": "@sdkwork/news-comments-service" }
     ],
     "runtimeEntrypoints": ["src/main.tsx"],
     "sdkClients": [],
@@ -38,7 +39,8 @@
       { "workspace": "sdkwork-news-app-sdk", "surface": "app-api", "packageName": "@sdkwork/news-app-sdk", "status": "active" },
       { "workspace": "sdkwork-appstore-app-sdk", "surface": "app-api", "packageName": "@sdkwork/appstore-app-sdk", "status": "active" },
       { "workspace": "sdkwork-skills-app-sdk", "surface": "app-api", "packageName": "@sdkwork/skills-app-sdk", "status": "active" },
-      { "workspace": "sdkwork-mcp-app-sdk", "surface": "app-api", "packageName": "@sdkwork/mcp-app-sdk", "status": "active" }
+      { "workspace": "sdkwork-mcp-app-sdk", "surface": "app-api", "packageName": "@sdkwork/mcp-app-sdk", "status": "active" },
+      { "workspace": "sdkwork-comments-app-sdk", "surface": "app-api", "packageName": "@sdkwork/comments-app-sdk", "status": "active" }
     ],
     "events": [],
     "configKeys": [
@@ -53,6 +55,7 @@
       "VITE_SDKWORK_SKILLS_APPLICATION_PUBLIC_HTTP_URL",
       "VITE_SDKWORK_MCP_APPLICATION_PUBLIC_HTTP_URL",
       "VITE_SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL",
+      "VITE_SDKWORK_COMMENTS_APPLICATION_PUBLIC_HTTP_URL",
       "VITE_SDKWORK_NEWS_DEMO_MODE",
       "VITE_SDKWORK_NEWS_ENVIRONMENT"
     ]

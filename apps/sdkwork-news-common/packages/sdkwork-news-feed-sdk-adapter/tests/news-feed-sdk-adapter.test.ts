@@ -33,7 +33,7 @@ describe("createSdkworkNewsFeedPort", () => {
 
     const page = await createSdkworkNewsFeedPort(client).listFeed({ pageSize: 20 });
 
-    expect(list).toHaveBeenCalledWith({ cursor: undefined, limit: "20" });
+    expect(list).toHaveBeenCalledWith({ cursor: undefined, pageSize: 20 });
     expect(page).toEqual({
       hasMore: true,
       items: [{
@@ -93,7 +93,7 @@ describe("createSdkworkNewsFeedPort", () => {
       occurredAt: "2026-08-01T00:00:00.000Z",
     });
 
-    expect(related).toHaveBeenCalledWith("article-1", { limit: "6" });
+    expect(related).toHaveBeenCalledWith("article-1", { pageSize: 6 });
     expect(createFeedback).toHaveBeenCalledWith({
       feedbackType: "more_like_this",
       reason: "useful",

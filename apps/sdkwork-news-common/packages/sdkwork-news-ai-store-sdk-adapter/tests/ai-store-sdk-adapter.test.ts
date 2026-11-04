@@ -63,20 +63,22 @@ function createClients() {
     } as unknown as AppStoreClient,
     mcp: {
       mcp: {
-        listServers: vi.fn(async () => ({
-          items: [{
-            data_scope: "user",
-            health_status: "healthy",
-            id: "mcp-1",
-            lifecycle_status: "active",
-            name: "GitHub MCP",
-            server_key: "github",
-            transport: "stdio",
-            uuid: "mcp-uuid-1",
-            visibility: "public",
-          }],
-          pageInfo: { hasMore: false, mode: "cursor" },
-        })),
+        servers: {
+          list: vi.fn(async () => ({
+            items: [{
+              data_scope: "user",
+              health_status: "healthy",
+              id: "mcp-1",
+              lifecycle_status: "active",
+              name: "GitHub MCP",
+              server_key: "github",
+              transport: "stdio",
+              uuid: "mcp-uuid-1",
+              visibility: "public",
+            }],
+            pageInfo: { hasMore: false, mode: "cursor" },
+          })),
+        },
       },
     } as unknown as SdkworkMcpAppClient,
     skills: {

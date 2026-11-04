@@ -560,6 +560,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  sdkwork_comments_app_sdk_flutter:
+    dependency: "direct main"
+    description:
+      path: "../../../sdkwork-comments/sdks/sdkwork-comments-app-sdk/sdkwork-comments-app-sdk-flutter/generated/server-openapi"
+      relative: true
+    source: path
+    version: "1.0.0"
   sdkwork_common_flutter:
     dependency: "direct overridden"
     description:
@@ -648,6 +655,20 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/sdkwork_news_flutter_mobile_assistant"
+      relative: true
+    source: path
+    version: "0.1.0"
+  sdkwork_news_flutter_mobile_comments:
+    dependency: "direct main"
+    description:
+      path: "packages/sdkwork_news_flutter_mobile_comments"
+      relative: true
+    source: path
+    version: "0.1.0"
+  sdkwork_news_flutter_mobile_comments_sdk_adapter:
+    dependency: "direct main"
+    description:
+      path: "packages/sdkwork_news_flutter_mobile_comments_sdk_adapter"
       relative: true
     source: path
     version: "0.1.0"

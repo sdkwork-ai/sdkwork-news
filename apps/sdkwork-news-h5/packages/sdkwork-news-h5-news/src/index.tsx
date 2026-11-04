@@ -2,22 +2,33 @@ import { type FormEvent, useState } from "react";
 import {
   ArrowLeft,
   Bookmark,
+  ChevronRight,
   Clock3,
   Flame,
+  Hash,
+  Heart,
   LoaderCircle,
   RefreshCw,
   Search,
   Share2,
+  Sparkles,
   ThumbsDown,
   ThumbsUp,
+  TrendingUp,
+  WifiOff,
   X,
 } from "lucide-react";
 import {
   useNewsArticleController,
   useNewsFeedController,
+  type NewsFeedStatus,
 } from "@sdkwork/news-feed-react";
+import { useNewsEngagement } from "@sdkwork/news-comments-react";
+import { NewsH5Comments } from "@sdkwork/news-h5-comments";
+import type { NewsCommentsService } from "@sdkwork/news-comments-service";
 import type {
   NewsArticle,
+  NewsFeedChannel,
   NewsFeedItem,
   NewsFeedService,
 } from "@sdkwork/news-feed-service";
@@ -29,6 +40,7 @@ import workspaceImage from "../../../../sdkwork-news-common/assets/news/workspac
 import "./styles.css";
 
 export interface NewsH5NewsProps {
+  commentsService?: NewsCommentsService;
   demoMode?: boolean;
   onSecondaryPageChange?: (value: boolean) => void;
   shareArticle?: (input: NewsShareInput) => Promise<void>;
@@ -40,234 +52,666 @@ export interface NewsShareInput {
   title: string;
 }
 
+interface ViewNewsItem {
+  authorName?: string;
+  body?: string;
+  categoryId: string;
+  featured: boolean;
+  id: string;
+  image?: string;
+  publishedAt?: string;
+  publishedLabel?: string;
+  readMinutes?: number;
+  reason?: string;
+  source?: string;
+  summary: string;
+  tags: readonly string[];
+  title: string;
+}
+
+const FALLBACK_CHANNELS: readonly NewsFeedChannel[] = [
+  { id: "headlines", title: "要闻" },
+  { id: "technology", title: "科技" },
+  { id: "finance", title: "财经" },
+  { id: "business", title: "商业" },
+  { id: "world", title: "国际" },
+  { id: "policy", title: "政策" },
+];
+
+const TOPIC_SUGGESTIONS = [
+  "AI Agent",
+  "低空经济",
+  "美联储",
+  "供应链",
+  "新能源",
+] as const;
+
 export function NewsH5News({
+  commentsService,
   demoMode = false,
   onSecondaryPageChange,
   shareArticle,
   service,
 }: NewsH5NewsProps) {
+  if (demoMode) {
+    return (
+      <NewsH5Demo
+        commentsService={commentsService}
+        onSecondaryPageChange={onSecondaryPageChange}
+        shareArticle={shareArticle}
+      />
+    );
+  }
+  return (
+    <NewsH5Live
+      commentsService={commentsService}
+      onSecondaryPageChange={onSecondaryPageChange}
+      service={service}
+      shareArticle={shareArticle}
+    />
+  );
+}
+
+function NewsH5Live({
+  commentsService,
+  onSecondaryPageChange,
+  service,
+  shareArticle,
+}: Omit<NewsH5NewsProps, "demoMode">) {
   const controller = useNewsFeedController(service);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedItemId, setSelectedItemId] = useState<string>();
+  const [showRanking, setShowRanking] = useState(false);
   const articleController = useNewsArticleController(service, selectedItemId);
 
-  if (demoMode) {
-    return <NewsH5NewsDemo
-      onSecondaryPageChange={onSecondaryPageChange}
-      shareArticle={shareArticle}
-    />;
-  }
+  const closeDetail = () => {
+    setSelectedItemId(undefined);
+    onSecondaryPageChange?.(false);
+  };
 
   if (selectedItemId) {
     if (articleController.status !== "ready" || !articleController.article) {
-      return <NewsH5DetailState
-        onBack={() => {
-          setSelectedItemId(undefined);
-          onSecondaryPageChange?.(false);
-        }}
-        onRetry={articleController.retry}
-        status={articleController.status}
-      />;
+      return (
+        <NewsDetailState
+          onBack={closeDetail}
+          onRetry={articleController.retry}
+          status={articleController.status}
+        />
+      );
     }
-    return <NewsH5Detail
-      favorite={controller.favoriteItemIds.has(selectedItemId)}
-      favoritePending={controller.favoritePendingItemIds.has(selectedItemId)}
-      feedbackError={articleController.feedbackError}
-      feedbackMessage={articleController.feedbackMessage}
-      feedbackPending={articleController.feedbackPending}
-      item={toNewsDetailModel(articleController.article)}
-      onBack={() => {
-        setSelectedItemId(undefined);
-        onSecondaryPageChange?.(false);
-      }}
-      onOpenRelated={(itemId) => setSelectedItemId(itemId)}
-      onShare={shareArticle
-        ? async () => {
-            await shareArticle({
-              text: articleController.article?.summary ?? "",
-              title: articleController.article?.title ?? "",
-            });
-            await articleController.recordShare();
-          }
-        : undefined}
-      onSubmitFeedback={articleController.submitFeedback}
-      onToggleFavorite={() => void controller.toggleFavorite(selectedItemId)}
-      relatedError={articleController.relatedError}
-      relatedItems={articleController.relatedItems}
-    />;
+    return (
+      <NewsH5Detail
+        commentsService={commentsService}
+        feedbackError={articleController.feedbackError}
+        feedbackMessage={articleController.feedbackMessage}
+        feedbackPending={articleController.feedbackPending}
+        item={toDetailView(articleController.article)}
+        onBack={closeDetail}
+        onOpenRelated={(itemId) => setSelectedItemId(itemId)}
+        onShare={
+          shareArticle
+            ? async () => {
+                await shareArticle({
+                  text: articleController.article?.summary ?? "",
+                  title: articleController.article?.title ?? "",
+                });
+                await articleController.recordShare();
+              }
+            : undefined
+        }
+        onSubmitFeedback={articleController.submitFeedback}
+        relatedError={articleController.relatedError}
+        relatedItems={articleController.relatedItems.map((item, index) =>
+          toViewItem(item, index),
+        )}
+      />
+    );
   }
 
+  const channels = controller.channels.length > 0
+    ? controller.channels
+    : FALLBACK_CHANNELS;
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     controller.search(searchText);
     setSearchOpen(false);
   };
+  const openArticle = (itemId: string) => {
+    setSelectedItemId(itemId);
+    onSecondaryPageChange?.(true);
+  };
 
-  return <div className="news-h5-feed">
-    <header>
-      <h1>新闻</h1>
-      <button
-        aria-label={searchOpen ? "关闭搜索" : "搜索新闻"}
-        onClick={() => setSearchOpen((current) => !current)}
-        type="button"
-      >{searchOpen ? <X size={20} /> : <Search size={20} />}</button>
-    </header>
-    {searchOpen && <form className="news-h5-search" onSubmit={submitSearch} role="search">
-      <Search aria-hidden="true" size={17} />
-      <input
-        aria-label="搜索新闻"
-        autoFocus
-        onChange={(event) => setSearchText(event.target.value)}
-        placeholder="搜索新闻、主题或来源"
-        value={searchText}
-      />
-      <button type="submit">搜索</button>
-    </form>}
-    <nav aria-label="新闻分类">
-      <button
-        className={!controller.activeChannelId && !controller.query ? "is-active" : ""}
-        onClick={() => controller.selectChannel()}
-        type="button"
-      >推荐</button>
-      {controller.channels.map((channel) => <button
-        className={controller.activeChannelId === channel.id ? "is-active" : ""}
-        key={channel.id}
-        onClick={() => controller.selectChannel(channel.id)}
-        type="button"
-      >{channel.title}</button>)}
-    </nav>
-    <main>
-      {controller.trendingItems[0] && <section className="news-h5-trending">
-        <Flame size={14} />
-        <strong>热榜</strong>
-        <span>{controller.trendingItems[0].title}</span>
-      </section>}
-      <div className="news-h5-feed__label">
-        <h2>{controller.query ? `“${controller.query}”的结果` : "最新动态"}</h2>
-        {controller.items.length > 0 && <span>{controller.items.length} 条</span>}
-      </div>
-
-      <NewsH5FeedState onRetry={controller.retry} status={controller.status} />
-
-      {controller.status === "ready" && <section className="news-h5-feed__items">
-        {controller.items.map((item) => <NewsH5FeedArticle
-          favorite={controller.favoriteItemIds.has(item.id)}
-          favoritePending={controller.favoritePendingItemIds.has(item.id)}
-          item={item}
-          key={item.id}
-          onOpen={() => {
-            setSelectedItemId(item.id);
-            onSecondaryPageChange?.(true);
-          }}
-          onToggleFavorite={() => void controller.toggleFavorite(item.id)}
-        />)}
-      </section>}
-
-      {(controller.channelsError || controller.mutationError) && <p
-        className="news-h5-command-error"
-        role="alert"
-      >{controller.mutationError ?? controller.channelsError}</p>}
-      {controller.status === "ready" && controller.canLoadMore && <button
-        className="news-h5-load-more"
-        disabled={controller.loadingMore}
-        onClick={() => void controller.loadMore()}
-        type="button"
-      >
-        {controller.loadingMore && <LoaderCircle className="is-spinning" size={14} />}
-        {controller.loadingMore ? "正在加载" : "加载更多"}
-      </button>}
-    </main>
-  </div>;
+  return (
+    <NewsHome
+      activeChannelId={controller.activeChannelId}
+      channels={channels}
+      favoriteItemIds={controller.favoriteItemIds}
+      favoritePendingItemIds={controller.favoritePendingItemIds}
+      items={controller.items.map((item, index) => toViewItem(item, index))}
+      onChannel={(channelId) => {
+        setShowRanking(false);
+        controller.selectChannel(channelId);
+      }}
+      onCloseSearch={() => setSearchOpen(false)}
+      onOpenArticle={openArticle}
+      onRetry={controller.retry}
+      onSearch={(value) => {
+        setShowRanking(false);
+        controller.search(value);
+      }}
+      onSearchChange={setSearchText}
+      onSearchOpen={() => setSearchOpen(true)}
+      onShowRanking={() => setShowRanking((current) => !current)}
+      onToggleFavorite={(itemId) => void controller.toggleFavorite(itemId)}
+      query={controller.query}
+      searchOpen={searchOpen}
+      searchText={searchText}
+      showRanking={showRanking}
+      status={controller.status}
+      trending={controller.trendingItems.map((item, index) =>
+        toViewItem(item, index),
+      )}
+    />
+  );
 }
 
-function NewsH5FeedArticle({
+function NewsH5Demo({
+  commentsService,
+  onSecondaryPageChange,
+  shareArticle,
+}: Pick<
+  NewsH5NewsProps,
+  "commentsService" | "onSecondaryPageChange" | "shareArticle"
+>) {
+  const [category, setCategory] = useState("推荐");
+  const [feedbackMessage, setFeedbackMessage] = useState<string>();
+  const [query, setQuery] = useState("");
+  const [saved, setSaved] = useState<ReadonlySet<string>>(() => new Set());
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [selectedItem, setSelectedItem] = useState<ViewNewsItem | null>(null);
+  const [showRanking, setShowRanking] = useState(false);
+
+  const normalizedQuery = query.toLocaleLowerCase("zh-CN");
+  const visibleItems = DEMO_ITEMS.filter(
+    (item) =>
+      (category === "推荐" || item.categoryId === category)
+      && (!normalizedQuery
+        || [item.source, item.categoryId, item.summary, item.title]
+          .filter((value): value is string => Boolean(value))
+          .some((value) =>
+            value.toLocaleLowerCase("zh-CN").includes(normalizedQuery)
+          )),
+  );
+  const showLead = !query && (category === "推荐" || category === "要闻");
+
+  const closeDetail = () => {
+    setSelectedItem(null);
+    setFeedbackMessage(undefined);
+    onSecondaryPageChange?.(false);
+  };
+
+  if (selectedItem) {
+    const relatedItems = [DEMO_LEAD, ...DEMO_ITEMS]
+      .filter((item) => item.id !== selectedItem.id)
+      .slice(0, 3);
+    return (
+      <NewsH5Detail
+        commentsService={commentsService}
+        feedbackMessage={feedbackMessage}
+        item={selectedItem}
+        onBack={closeDetail}
+        onOpenRelated={(itemId) => {
+          const item = [DEMO_LEAD, ...DEMO_ITEMS].find(
+            (candidate) => candidate.id === itemId,
+          );
+          if (item) {
+            setSelectedItem(item);
+            setFeedbackMessage(undefined);
+            onSecondaryPageChange?.(true);
+          }
+        }}
+        onShare={
+          shareArticle
+            ? () =>
+                shareArticle({
+                  text: selectedItem.summary,
+                  title: selectedItem.title,
+                })
+            : undefined
+        }
+        onSubmitFeedback={async (type) => {
+          setFeedbackMessage(
+            type === "more_like_this"
+              ? "已记录，将推荐更多此类内容"
+              : "已记录，将减少此类内容",
+          );
+        }}
+        relatedItems={relatedItems}
+      />
+    );
+  }
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCategory("推荐");
+    setQuery(searchText.trim());
+    setSearchOpen(false);
+    setShowRanking(false);
+  };
+
+  return (
+    <NewsHome
+      activeChannelId={query
+        ? undefined
+        : DEMO_CHANNELS.find((channel) => channel.title === category)?.id}
+      channels={DEMO_CHANNELS}
+      favoriteItemIds={saved}
+      favoritePendingItemIds={new Set()}
+      items={visibleItems}
+      lead={showLead ? DEMO_LEAD : undefined}
+      onChannel={(channelId) => {
+        const next = DEMO_CHANNELS.find((channel) => channel.id === channelId);
+        setCategory(next?.title ?? "推荐");
+        setQuery("");
+        setShowRanking(false);
+      }}
+      onCloseSearch={() => setSearchOpen(false)}
+      onOpenArticle={(itemId) => {
+        const item = [DEMO_LEAD, ...DEMO_ITEMS].find(
+          (candidate) => candidate.id === itemId,
+        );
+        if (item) {
+          setSelectedItem(item);
+          setFeedbackMessage(undefined);
+          onSecondaryPageChange?.(true);
+        }
+      }}
+      onRetry={() => undefined}
+      onSearch={(value) => {
+        setCategory("推荐");
+        setQuery(value.trim());
+        setShowRanking(false);
+      }}
+      onSearchChange={setSearchText}
+      onSearchOpen={() => setSearchOpen(true)}
+      onShowRanking={() => setShowRanking((current) => !current)}
+      onToggleFavorite={(itemId) =>
+        setSaved((current) => withSetValue(current, itemId))}
+      query={query}
+      searchOpen={searchOpen}
+      searchText={searchText}
+      showRanking={showRanking}
+      status="ready"
+      trending={DEMO_TRENDING}
+    />
+  );
+}
+
+interface NewsHomeProps {
+  activeChannelId?: string;
+  channels: readonly NewsFeedChannel[];
+  favoriteItemIds: ReadonlySet<string>;
+  favoritePendingItemIds: ReadonlySet<string>;
+  items: readonly ViewNewsItem[];
+  lead?: ViewNewsItem;
+  onChannel(channelId?: string): void;
+  onCloseSearch(): void;
+  onOpenArticle(itemId: string): void;
+  onRetry(): void;
+  onSearch(value: string): void;
+  onSearchChange(value: string): void;
+  onSearchOpen(): void;
+  onShowRanking(): void;
+  onToggleFavorite(itemId: string): void;
+  query?: string;
+  searchOpen: boolean;
+  searchText: string;
+  showRanking: boolean;
+  status: NewsFeedStatus;
+  trending: readonly ViewNewsItem[];
+}
+
+function NewsHome({
+  activeChannelId,
+  channels,
+  favoriteItemIds,
+  favoritePendingItemIds,
+  items,
+  lead,
+  onChannel,
+  onCloseSearch,
+  onOpenArticle,
+  onRetry,
+  onSearch,
+  onSearchChange,
+  onSearchOpen,
+  onShowRanking,
+  onToggleFavorite,
+  query,
+  searchOpen,
+  searchText,
+  showRanking,
+  status,
+  trending,
+}: NewsHomeProps) {
+  const hero = lead ?? (items.length > 1
+    ? items.find((item) => item.featured) ?? items[0]
+    : undefined);
+  const rest = hero ? items.filter((item) => item.id !== hero.id) : items;
+  const channelTitle = channels.find(
+    (channel) => channel.id === activeChannelId,
+  )?.title;
+  const sectionTitle = query
+    ? `“${query}”的结果`
+    : channelTitle
+      ? `${channelTitle}频道`
+      : "最新动态";
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSearch(searchText);
+  };
+
+  return (
+    <div className="news-h5-home">
+      <header className="news-h5-appbar">
+        <div className="news-h5-brand" aria-label="SDKWork 头条">
+          <span className="news-h5-brand__mark">头</span>
+          <div>
+            <strong>SDKWork 头条</strong>
+            <small>{formatToday()}</small>
+          </div>
+        </div>
+        <div className="news-h5-appbar__actions">
+          <button
+            aria-expanded={searchOpen}
+            aria-label={searchOpen ? "关闭搜索" : "搜索新闻"}
+            className="news-h5-icon-button"
+            onClick={searchOpen ? onCloseSearch : onSearchOpen}
+            type="button"
+          >
+            {searchOpen ? <X size={20} /> : <Search size={20} />}
+          </button>
+        </div>
+      </header>
+
+      {searchOpen && (
+        <form className="news-h5-search" onSubmit={submitSearch} role="search">
+          <Search aria-hidden="true" size={17} />
+          <input
+            aria-label="搜索新闻"
+            autoFocus
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder="搜索新闻、话题或来源"
+            value={searchText}
+          />
+          <button type="submit">搜索</button>
+        </form>
+      )}
+
+      {!query && !activeChannelId && (
+        <button className="news-h5-hot-strip" onClick={onShowRanking} type="button">
+          <span><Flame size={14} />热榜</span>
+          <strong>{trending[0]?.title ?? "实时热点正在聚合"}</strong>
+          <ChevronRight aria-hidden="true" size={15} />
+        </button>
+      )}
+
+      <nav aria-label="新闻分类" className="news-h5-channels">
+        <button
+          className={!activeChannelId && !query ? "is-active" : ""}
+          onClick={() => onChannel(undefined)}
+          type="button"
+        >
+          推荐
+        </button>
+        {channels.map((channel) => (
+          <button
+            aria-current={activeChannelId === channel.id ? "page" : undefined}
+            className={activeChannelId === channel.id ? "is-active" : ""}
+            key={channel.id}
+            onClick={() => onChannel(channel.id)}
+            type="button"
+          >
+            {channel.title}
+          </button>
+        ))}
+      </nav>
+
+      <main>
+        {query && (
+          <div className="news-h5-query">
+            <span>“{query}”的搜索结果</span>
+            <button onClick={() => onChannel(undefined)} type="button">
+              清除
+            </button>
+          </div>
+        )}
+
+        {showRanking ? (
+          <NewsRanking
+            items={trending.length > 0 ? trending : items}
+            onBack={onShowRanking}
+          />
+        ) : (
+          <>
+            <NewsFeedState onRetry={onRetry} status={status} />
+
+            {status === "ready" && hero && !query && (
+              <HeroStory item={hero} onOpen={() => onOpenArticle(hero.id)} />
+            )}
+
+            {status === "ready" && (
+              <section className="news-h5-topics" aria-label="热门话题">
+                {TOPIC_SUGGESTIONS.map((topic) => (
+                  <button
+                    key={topic}
+                    onClick={() => onSearch(topic)}
+                    type="button"
+                  >
+                    <Hash size={12} />{topic}
+                  </button>
+                ))}
+              </section>
+            )}
+
+            {status === "ready" && (
+              <div className="news-h5-section-heading">
+                <div>
+                  <h2>{sectionTitle}</h2>
+                  <span><i />实时更新</span>
+                </div>
+                <small>{items.length > 0 ? `${items.length} 条` : ""}</small>
+              </div>
+            )}
+
+            {status === "ready" && (
+              <section className="news-h5-feed">
+                {rest.map((item, index) => (
+                  <ArticleCard
+                    favorite={favoriteItemIds.has(item.id)}
+                    favoritePending={favoritePendingItemIds.has(item.id)}
+                    imageFirst={index === 0 && !hero}
+                    item={item}
+                    key={item.id}
+                    onOpen={() => onOpenArticle(item.id)}
+                    onToggleFavorite={() => onToggleFavorite(item.id)}
+                  />
+                ))}
+              </section>
+            )}
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function HeroStory({
+  item,
+  onOpen,
+}: {
+  item: ViewNewsItem;
+  onOpen(): void;
+}) {
+  return (
+    <section
+      aria-label={"阅读 " + item.title}
+      className={`news-h5-hero${item.image ? "" : " is-text"}`}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
+      {item.image ? (
+        <img src={item.image} alt="" />
+      ) : (
+        <span className="news-h5-hero__glyph" aria-hidden="true">
+          {item.categoryId.slice(0, 1)}
+        </span>
+      )}
+      <div className="news-h5-hero__content">
+        <span className="news-h5-hero__kicker">
+          <Flame size={12} />今日要闻
+        </span>
+        <h1>{item.title}</h1>
+        <p>{item.summary}</p>
+        <footer>
+          <span>{item.source ?? "SDKWork 资讯"}</span>
+          <span>{item.publishedLabel ?? formatPublishedAt(item.publishedAt)}</span>
+        </footer>
+      </div>
+    </section>
+  );
+}
+
+function ArticleCard({
   favorite,
   favoritePending,
+  imageFirst,
   item,
   onOpen,
   onToggleFavorite,
 }: {
   favorite: boolean;
   favoritePending: boolean;
-  item: NewsFeedItem;
+  imageFirst: boolean;
+  item: ViewNewsItem;
   onOpen(): void;
   onToggleFavorite(): void;
 }) {
-  return <article
-    aria-label={"阅读 " + item.title}
-    className="is-clickable"
-    onClick={onOpen}
-    onKeyDown={(event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        onOpen();
-      }
-    }}
-    role="button"
-    tabIndex={0}
-  >
-    <div className="news-h5-feed__article-meta">
-      <span>{item.categoryId}</span>
-      {item.featured && <b><Flame size={11} />精选</b>}
-    </div>
-    <h3>{item.title}</h3>
-    <p>{item.summary}</p>
-    {item.reason && <blockquote>{item.reason}</blockquote>}
-    <footer>
-      <div>
-        {item.authorName && <span>{item.authorName}</span>}
-        {item.publishedAt && <span>{formatPublishedAt(item.publishedAt)}</span>}
-        {item.estimatedReadMinutes && <span><Clock3 size={11} />{item.estimatedReadMinutes} 分钟</span>}
+  return (
+    <article
+      aria-label={"阅读 " + item.title}
+      className={`news-h5-card${imageFirst ? " has-large-image" : ""}`}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
+      <div className="news-h5-card__content">
+        <div className="news-h5-card__meta">
+          <span>{item.categoryId}</span>
+          {item.featured && <b><Flame size={11} />精选</b>}
+        </div>
+        <h3>{item.title}</h3>
+        <p>{item.summary}</p>
+        {item.reason && <blockquote>{item.reason}</blockquote>}
+        <footer>
+          <div>
+            {item.source && <span>{item.source}</span>}
+            <span>{item.publishedLabel ?? formatPublishedAt(item.publishedAt)}</span>
+            {item.readMinutes && (
+              <span><Clock3 size={11} />{item.readMinutes} 分钟</span>
+            )}
+          </div>
+          <button
+            aria-label={`${favorite ? "取消收藏" : "收藏"} ${item.title}`}
+            aria-pressed={favorite}
+            className={favorite ? "is-saved" : ""}
+            disabled={favoritePending}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite();
+            }}
+            type="button"
+          >
+            {favoritePending
+              ? <LoaderCircle className="is-spinning" size={16} />
+              : <Bookmark fill={favorite ? "currentColor" : "none"} size={16} />}
+          </button>
+        </footer>
       </div>
-      <button
-        aria-label={`${favorite ? "取消收藏" : "收藏"} ${item.title}`}
-        aria-pressed={favorite}
-        className={favorite ? "is-saved" : ""}
-        disabled={favoritePending}
-        onClick={(event) => {
-          event.stopPropagation();
-          onToggleFavorite();
-        }}
-        type="button"
-      >
-        {favoritePending
-          ? <LoaderCircle className="is-spinning" size={16} />
-          : <Bookmark fill={favorite ? "currentColor" : "none"} size={16} />}
-      </button>
-    </footer>
-  </article>;
+      <NewsThumb item={item} />
+    </article>
+  );
 }
 
-interface NewsDetailModel {
-  author?: string;
-  body?: readonly string[];
-  category: string;
-  estimatedReadMinutes?: number;
-  image?: string;
-  publishedLabel?: string;
-  summary: string;
-  tags: readonly string[];
-  title: string;
-  source?: string;
+function NewsThumb({ item }: { item: ViewNewsItem }) {
+  if (item.image) {
+    return <img className="news-h5-card__image" src={item.image} alt="" />;
+  }
+  return (
+    <div
+      aria-hidden="true"
+      className={`news-h5-card__image news-h5-thumb-glyph is-${categoryTone(item.categoryId)}`}
+    >
+      {item.categoryId.slice(0, 1)}
+    </div>
+  );
 }
 
-function toNewsDetailModel(item: NewsArticle): NewsDetailModel {
-  return {
-    author: item.authorName,
-    body: toBodyParagraphs(item.body),
-    category: item.categoryId,
-    estimatedReadMinutes: item.estimatedReadMinutes,
-    publishedLabel: item.publishedAt ? formatPublishedAt(item.publishedAt) : undefined,
-    summary: item.summary,
-    tags: item.tags,
-    title: item.title,
-  };
+function NewsRanking({
+  items,
+  onBack,
+}: {
+  items: readonly ViewNewsItem[];
+  onBack(): void;
+}) {
+  return (
+    <section className="news-h5-ranking" aria-label="今日热榜">
+      <header>
+        <button aria-label="返回新闻列表" onClick={onBack} type="button">
+          <ArrowLeft size={20} />
+        </button>
+        <div>
+          <h1>今日热榜</h1>
+          <p>全网热度聚合 · 每 5 分钟更新</p>
+        </div>
+        <TrendingUp aria-hidden="true" size={19} />
+      </header>
+      <ol>
+        {items.map((item, index) => (
+          <li key={item.id}>
+            <b className={index < 3 ? "is-hot" : ""}>{index + 1}</b>
+            <div>
+              <strong>{item.title}</strong>
+              <span>{item.source ?? item.categoryId}</span>
+            </div>
+            <Flame aria-hidden="true" size={14} />
+          </li>
+        ))}
+        {items.length === 0 && (
+          <li className="is-empty">热榜正在聚合，请稍后刷新。</li>
+        )}
+      </ol>
+    </section>
+  );
 }
 
 function NewsH5Detail({
-  favorite,
-  favoritePending,
+  commentsService,
   feedbackError,
   feedbackMessage,
   feedbackPending,
@@ -276,26 +720,30 @@ function NewsH5Detail({
   onOpenRelated,
   onShare,
   onSubmitFeedback,
-  onToggleFavorite,
   relatedError,
   relatedItems,
 }: {
-  favorite: boolean;
-  favoritePending?: boolean;
+  commentsService?: NewsCommentsService;
   feedbackError?: string;
   feedbackMessage?: string;
   feedbackPending?: boolean;
-  item: NewsDetailModel;
+  item: ViewNewsItem;
   onBack(): void;
   onOpenRelated?(itemId: string): void;
   onShare?(): Promise<void>;
   onSubmitFeedback?(type: "less_like_this" | "more_like_this"): Promise<void>;
-  onToggleFavorite(): void;
   relatedError?: string;
-  relatedItems?: readonly NewsFeedItem[];
+  relatedItems?: readonly ViewNewsItem[];
 }) {
-  const [sharePending, setSharePending] = useState(false);
+  const engagement = useNewsEngagement(commentsService, {
+    id: item.id,
+    kind: "news-item",
+  });
   const [shareError, setShareError] = useState<string>();
+  const [sharePending, setSharePending] = useState(false);
+  const [largeText, setLargeText] = useState(false);
+  const keyPoints = buildKeyPoints(item);
+
   const submitShare = async () => {
     if (!onShare || sharePending) {
       return;
@@ -310,67 +758,220 @@ function NewsH5Detail({
       setSharePending(false);
     }
   };
-  return <div className="news-h5-detail-page">
-    <header className="news-h5-detail-page__header">
-      <button aria-label="返回新闻列表" onClick={onBack} type="button"><ArrowLeft size={20} /></button>
-      <strong>新闻详情</strong>
-      <div>
-        {onShare && <button aria-label="分享新闻" disabled={sharePending} onClick={() => void submitShare()} type="button">
-          {sharePending ? <LoaderCircle className="is-spinning" size={18} /> : <Share2 size={18} />}
-        </button>}
-        <button
-          aria-label={favorite ? "取消收藏" : "收藏新闻"}
-          aria-pressed={favorite}
-          className={favorite ? "is-saved" : ""}
-          disabled={favoritePending}
-          onClick={onToggleFavorite}
-          type="button"
-        >{favoritePending
-          ? <LoaderCircle className="is-spinning" size={18} />
-          : <Bookmark fill={favorite ? "currentColor" : "none"} size={18} />}</button>
-      </div>
-    </header>
-    <main>
-      {item.image && <img className="news-h5-detail-page__cover" src={item.image} alt="" />}
-      <div className="news-h5-detail-page__meta">
-        <span>{item.category}</span>
-        {item.source && <span>{item.source}</span>}
-        {item.author && <span>{item.author}</span>}
-        {item.publishedLabel && <span>{item.publishedLabel}</span>}
-      </div>
-      <h1>{item.title}</h1>
-      <div className="news-h5-detail-page__reading">
-        <span>智能摘要</span>
-        {item.estimatedReadMinutes && <span><Clock3 size={12} />约 {item.estimatedReadMinutes} 分钟</span>}
-      </div>
-      <p className="news-h5-detail-page__summary">{item.summary}</p>
-      {item.body && item.body.length > 0
-        ? <div className="news-h5-detail-page__body">{item.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        : <section className="news-h5-detail-page__unavailable">
-          <h2>原文内容</h2>
-          <p>当前来源只提供摘要，原文将在来源同步后继续呈现。</p>
-        </section>}
-      {item.tags.length > 0 && <div className="news-h5-detail-page__tags">{item.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
-      {onSubmitFeedback && <section className="news-h5-detail-page__feedback">
-        <h2>这篇内容对你有帮助吗？</h2>
+
+  return (
+    <div className={`news-h5-detail${largeText ? " is-large-text" : ""}`}>
+      <header className="news-h5-detail__header">
+        <button aria-label="返回新闻列表" onClick={onBack} type="button">
+          <ArrowLeft size={20} />
+        </button>
+        <strong>资讯详情</strong>
         <div>
-          <button disabled={feedbackPending} onClick={() => void onSubmitFeedback("more_like_this")} type="button"><ThumbsUp size={16} />更多此类</button>
-          <button disabled={feedbackPending} onClick={() => void onSubmitFeedback("less_like_this")} type="button"><ThumbsDown size={16} />减少此类</button>
+          {onShare && (
+            <button
+              aria-label="分享新闻"
+              disabled={sharePending}
+              onClick={() => void submitShare()}
+              type="button"
+            >
+              {sharePending
+                ? <LoaderCircle className="is-spinning" size={18} />
+                : <Share2 size={18} />}
+            </button>
+          )}
+          <button
+            aria-label={engagement.liked ? "取消点赞" : "点赞新闻"}
+            aria-pressed={engagement.liked}
+            className={engagement.liked ? "is-liked" : ""}
+            disabled={engagement.liking}
+            onClick={() => void engagement.toggleLike()}
+            type="button"
+          >
+            <Heart
+              fill={engagement.liked ? "currentColor" : "none"}
+              size={18}
+            />
+            <span className="news-h5-detail__count">
+              {engagement.summary.likeCount}
+            </span>
+          </button>
+          <button
+            aria-label={engagement.favorited ? "取消收藏" : "收藏新闻"}
+            aria-pressed={engagement.favorited}
+            className={engagement.favorited ? "is-saved" : ""}
+            disabled={engagement.pending}
+            onClick={() => void engagement.toggleFavorite()}
+            type="button"
+          >
+            {engagement.pending
+              ? <LoaderCircle className="is-spinning" size={18} />
+              : <Bookmark
+                  fill={engagement.favorited ? "currentColor" : "none"}
+                  size={18}
+                />}
+          </button>
         </div>
-        {(feedbackMessage || feedbackError || shareError) && <p role={feedbackError || shareError ? "alert" : "status"}>{feedbackError ?? shareError ?? feedbackMessage}</p>}
-      </section>}
-      {(relatedItems?.length ?? 0) > 0 && <section className="news-h5-detail-page__related">
-        <h2>相关新闻</h2>
-        {relatedItems?.map((related) => <button key={related.id} onClick={() => onOpenRelated?.(related.id)} type="button">
-          <span>{related.categoryId}</span><strong>{related.title}</strong><small>{related.summary}</small>
-        </button>)}
-      </section>}
-      {relatedError && <p className="news-h5-detail-page__command-error" role="status">{relatedError}</p>}
-    </main>
-  </div>;
+      </header>
+
+      <main>
+        {item.image && (
+          <img className="news-h5-detail__cover" src={item.image} alt="" />
+        )}
+        <div className="news-h5-detail__kicker">
+          <span>{item.categoryId}</span>
+          <span>{item.publishedLabel ?? formatPublishedAt(item.publishedAt)}</span>
+        </div>
+        <h1>{item.title}</h1>
+        <div className="news-h5-detail__byline">
+          <span className="news-h5-detail__avatar">
+            {(item.source ?? item.authorName ?? "资").slice(0, 1)}
+          </span>
+          <div>
+            <strong>{item.source ?? item.authorName ?? "SDKWork 资讯"}</strong>
+            <small>
+              {item.readMinutes ? `约 ${item.readMinutes} 分钟读完` : "优质内容"}
+            </small>
+          </div>
+          <button
+            aria-label={largeText ? "恢复标准字号" : "放大字号"}
+            onClick={() => setLargeText((current) => !current)}
+            type="button"
+          >
+            A{largeText ? "-" : "+"}
+          </button>
+        </div>
+
+        <section className="news-h5-ai-summary" aria-label="智能摘要">
+          <header><Sparkles size={15} /><strong>智能摘要</strong><span>AI 生成</span></header>
+          <p>{item.summary}</p>
+          {keyPoints.length > 0 && (
+            <ul>
+              {keyPoints.map((point) => <li key={point}>{point}</li>)}
+            </ul>
+          )}
+        </section>
+
+        <article className="news-h5-detail__body">
+          {item.body
+            ? item.body
+                .split(/\r?\n\s*\r?\n/u)
+                .map((paragraph) => paragraph.trim())
+                .filter(Boolean)
+                .map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+            : (
+              <p className="news-h5-detail__summary-only">
+                当前来源只提供摘要，原文将在来源同步后继续呈现。
+              </p>
+            )}
+        </article>
+
+        {item.tags.length > 0 && (
+          <div className="news-h5-detail__tags">
+            {item.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+          </div>
+        )}
+
+        {onSubmitFeedback && (
+          <section className="news-h5-detail__feedback">
+            <h2>这篇内容对你有帮助吗？</h2>
+            <p>你的反馈会帮助改进推荐质量。</p>
+            <div>
+              <button
+                disabled={feedbackPending}
+                onClick={() => void onSubmitFeedback("more_like_this")}
+                type="button"
+              >
+                <ThumbsUp size={16} />更多此类
+              </button>
+              <button
+                disabled={feedbackPending}
+                onClick={() => void onSubmitFeedback("less_like_this")}
+                type="button"
+              >
+                <ThumbsDown size={16} />减少此类
+              </button>
+            </div>
+            {(feedbackMessage || feedbackError || shareError) && (
+              <span role={feedbackError || shareError ? "alert" : "status"}>
+                {feedbackError ?? shareError ?? feedbackMessage}
+              </span>
+            )}
+          </section>
+        )}
+
+        <NewsH5Comments
+          service={commentsService}
+          targetId={item.id}
+          targetTitle={item.title}
+        />
+
+        {(relatedItems?.length ?? 0) > 0 && (
+          <section className="news-h5-detail__related">
+            <h2>继续阅读</h2>
+            {relatedItems?.map((related) => (
+              <button
+                key={related.id}
+                onClick={() => onOpenRelated?.(related.id)}
+                type="button"
+              >
+                <div>
+                  <span>{related.categoryId}</span>
+                  <strong>{related.title}</strong>
+                  <small>{related.summary}</small>
+                </div>
+                {related.image && <img src={related.image} alt="" />}
+              </button>
+            ))}
+          </section>
+        )}
+        {relatedError && (
+          <p className="news-h5-command-error" role="status">{relatedError}</p>
+        )}
+      </main>
+
+      <div className="news-h5-detail__actionbar">
+        <button
+          aria-label={engagement.liked ? "取消点赞" : "点赞新闻"}
+          aria-pressed={engagement.liked}
+          className={engagement.liked ? "is-liked" : ""}
+          onClick={() => void engagement.toggleLike()}
+          type="button"
+        >
+          <Heart
+            fill={engagement.liked ? "currentColor" : "none"}
+            size={18}
+          />
+          <span>
+            {engagement.summary.likeCount > 0
+              ? engagement.summary.likeCount
+              : "点赞"}
+          </span>
+        </button>
+        <button
+          className={engagement.favorited ? "is-liked" : ""}
+          onClick={() => void engagement.toggleFavorite()}
+          type="button"
+        >
+          <Bookmark
+            fill={engagement.favorited ? "currentColor" : "none"}
+            size={18}
+          />
+          <span>{engagement.favorited ? "已收藏" : "收藏"}</span>
+        </button>
+        {onShare && (
+          <button onClick={() => void submitShare()} type="button">
+            <Share2 size={18} /><span>分享</span>
+          </button>
+        )}
+        <button aria-label="调整字号" onClick={() => setLargeText((current) => !current)} type="button">
+          <span className="news-h5-aa">Aa</span><span>字号</span>
+        </button>
+      </div>
+    </div>
+  );
 }
 
-function NewsH5DetailState({
+function NewsDetailState({
   onBack,
   onRetry,
   status,
@@ -379,249 +980,289 @@ function NewsH5DetailState({
   onRetry(): void;
   status: ReturnType<typeof useNewsArticleController>["status"];
 }) {
-  return <div className="news-h5-detail-page">
-    <header className="news-h5-detail-page__header">
-      <button aria-label="返回新闻列表" onClick={onBack} type="button"><ArrowLeft size={20} /></button>
-      <strong>新闻详情</strong><span />
-    </header>
-    <main><section className="news-h5-state" role={status === "error" ? "alert" : "status"}>
-      {status === "loading" && <LoaderCircle className="is-spinning" size={22} />}
-      <h2>{status === "error" ? "新闻详情加载失败" : "正在加载新闻详情"}</h2>
-      {status === "error" && <button onClick={onRetry} type="button"><RefreshCw size={14} />重试</button>}
-    </section></main>
-  </div>;
+  return (
+    <div className="news-h5-detail">
+      <header className="news-h5-detail__header">
+        <button aria-label="返回新闻列表" onClick={onBack} type="button">
+          <ArrowLeft size={20} />
+        </button>
+        <strong>资讯详情</strong>
+        <span />
+      </header>
+      <main>
+        <section
+          className="news-h5-state"
+          role={status === "error" ? "alert" : "status"}
+        >
+          {status === "loading" && <LoaderCircle className="is-spinning" size={22} />}
+          <h2>{status === "error" ? "新闻详情加载失败" : "正在加载新闻详情"}</h2>
+          {status === "error" && (
+            <button onClick={onRetry} type="button">
+              <RefreshCw size={14} />重试
+            </button>
+          )}
+        </section>
+      </main>
+    </div>
+  );
 }
 
-function toBodyParagraphs(body?: string): readonly string[] | undefined {
-  const paragraphs = body
-    ?.split(/\r?\n\s*\r?\n/u)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-  return paragraphs && paragraphs.length > 0 ? paragraphs : undefined;
-}
-
-function NewsH5FeedState({
+function NewsFeedState({
   onRetry,
   status,
 }: {
   onRetry(): void;
-  status: ReturnType<typeof useNewsFeedController>["status"];
+  status: NewsFeedStatus;
 }) {
   if (status === "ready") {
     return null;
   }
   if (status === "loading") {
-    return <section aria-live="polite" className="news-h5-state">
-      <LoaderCircle className="is-spinning" size={22} />
-      <h2>正在加载新闻</h2>
-    </section>;
+    return (
+      <section aria-live="polite" className="news-h5-state">
+        <LoaderCircle className="is-spinning" size={22} />
+        <h2>正在加载今日资讯</h2>
+        <p>正在连接你的个性化频道。</p>
+      </section>
+    );
   }
   if (status === "unavailable") {
-    return <section className="news-h5-state" role="status">
-      <Search size={22} />
-      <h2>新闻服务未连接</h2>
-      <p>完成登录并连接新闻服务后即可查看内容。</p>
-    </section>;
+    return (
+      <section className="news-h5-state" role="status">
+        <WifiOff size={23} />
+        <h2>新闻服务未连接</h2>
+        <p>完成登录并连接新闻服务后即可查看内容。</p>
+      </section>
+    );
   }
   if (status === "error") {
-    return <section className="news-h5-state" role="alert">
-      <h2>新闻流暂不可用</h2>
-      <button onClick={onRetry} type="button"><RefreshCw size={14} />重试</button>
-    </section>;
+    return (
+      <section className="news-h5-state" role="alert">
+        <WifiOff size={23} />
+        <h2>新闻流暂不可用</h2>
+        <button onClick={onRetry} type="button">
+          <RefreshCw size={14} />重试
+        </button>
+      </section>
+    );
   }
-  return <section className="news-h5-state" role="status">
-    <Search size={22} />
-    <h2>暂无匹配新闻</h2>
-    <p>可以切换分类或调整搜索关键词。</p>
-  </section>;
-}
-
-const DEMO_CATEGORIES = ["推荐", "要闻", "科技", "财经", "商业", "国际", "政策"];
-type DemoNewsArticle = {
-  readonly body: readonly string[];
-  readonly id: string;
-  readonly image: string;
-  readonly source: string;
-  readonly summary: string;
-  readonly tag: string;
-  readonly time: string;
-  readonly title: string;
-};
-
-const DEMO_LEAD: DemoNewsArticle = {
-  body: [
-    "过去的新闻产品依赖推荐算法，把用户留在一条不断刷新的信息流里。AI 时代的阅读方式开始转向长期协作：用户定义目标，智能体持续追踪变化并解释它们为什么重要。",
-    "这意味着新闻产品需要同时处理来源筛选、事实核验和上下文整理。高质量的阅读体验不再是更多内容，而是在合适的时间交付更少但更有用的判断依据。",
-  ],
-  id: "lead",
-  image: newsroomImage,
-  source: "SDKWork 研究院",
-  summary: "用户不再需要消费所有内容，而是让不同角色的智能体持续阅读、验证并呈现真正影响决策的变化。",
-  tag: "要闻",
-  time: "12 分钟前",
-  title: "从信息流到智能体：新闻阅读正在发生结构性变化",
-};
-
-const DEMO_ITEMS: readonly DemoNewsArticle[] = [
-  { body: ["企业正在把智能体从单次问答工具放进销售、客服和研发流程。", "随着任务持续执行，可靠性、权限边界和可观察性成为采购决策的核心。"], id: "1", title: "AI Agent 开始进入企业核心工作流，评估标准正在改变", source: "MIT Technology Review", time: "42 分钟前", tag: "科技", image: aiChipsImage, summary: "从单次回答走向长期执行后，可靠性、权限边界和可观察性成为采购决策的核心。" },
-  { body: ["公开市场操作规模连续上升，短端利率回落。", "机构仍在观察政策传导到实体经济的速度，趋势判断保持谨慎。"], id: "2", title: "资金面延续宽松，市场关注下一阶段政策信号", source: "第一财经", time: "1 小时前", tag: "财经", image: marketsImage, summary: "公开市场操作规模连续上升，短端利率回落，但机构对趋势判断仍保持谨慎。" },
-  { body: ["越来越多 AI 产品尝试按任务、调用或业务结果计费。", "当价值从席位转向结果，传统 SaaS 的增长和留存指标也需要重新解释。"], id: "3", title: "企业软件定价从席位转向结果，新的商业模型浮出水面", source: "Bloomberg", time: "2 小时前", tag: "商业", image: workspaceImage, summary: "越来越多 AI 产品尝试按任务、调用或业务结果计费，传统 SaaS 指标面临重估。" },
-  { body: ["效率与韧性的权衡正在改变，企业开始重新评估供应商集中度。", "关键零部件的多源策略增加，也让库存和物流协同成为新的管理重点。"], id: "4", title: "全球供应链继续区域化，制造企业重新校准库存策略", source: "Reuters", time: "3 小时前", tag: "国际", image: logisticsImage, summary: "效率与韧性的权衡正在改变，关键零部件的多源策略明显增加。" },
-] as const;
-
-function NewsH5NewsDemo({
-  onSecondaryPageChange,
-  shareArticle,
-}: Pick<NewsH5NewsProps, "onSecondaryPageChange" | "shareArticle">) {
-  const [category, setCategory] = useState("推荐");
-  const [feedbackMessage, setFeedbackMessage] = useState<string>();
-  const [query, setQuery] = useState("");
-  const [saved, setSaved] = useState<ReadonlySet<string>>(() => new Set());
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [selectedItem, setSelectedItem] = useState<DemoNewsArticle | null>(null);
-  const normalizedQuery = query.toLocaleLowerCase("zh-CN");
-  const visibleItems = DEMO_ITEMS.filter((item) =>
-    (category === "推荐" || item.tag === category)
-    && (!normalizedQuery || [item.source, item.tag, item.title]
-      .some((value) => value.toLocaleLowerCase("zh-CN").includes(normalizedQuery))),
+  return (
+    <section className="news-h5-state" role="status">
+      <Search size={23} />
+      <h2>暂无匹配新闻</h2>
+      <p>可以切换分类或调整搜索关键词。</p>
+    </section>
   );
-  const showLead = !query && (category === "推荐" || category === "要闻");
-
-  if (selectedItem) {
-    const relatedItems = [DEMO_LEAD, ...DEMO_ITEMS]
-      .filter((item) => item.id !== selectedItem.id)
-      .slice(0, 3)
-      .map(toDemoFeedItem);
-    return <NewsH5Detail
-      favorite={saved.has(selectedItem.id)}
-      feedbackMessage={feedbackMessage}
-      item={{
-        body: selectedItem.body,
-        category: selectedItem.tag,
-        image: selectedItem.image,
-        publishedLabel: selectedItem.time,
-        source: selectedItem.source,
-        summary: selectedItem.summary,
-        tags: [selectedItem.tag],
-        title: selectedItem.title,
-      }}
-      onBack={() => {
-        setSelectedItem(null);
-        setFeedbackMessage(undefined);
-        onSecondaryPageChange?.(false);
-      }}
-      onOpenRelated={(itemId) => {
-        const item = [DEMO_LEAD, ...DEMO_ITEMS].find((candidate) => candidate.id === itemId);
-        if (item) {
-          setSelectedItem(item);
-          setFeedbackMessage(undefined);
-        }
-      }}
-      onShare={shareArticle
-        ? () => shareArticle({ text: selectedItem.summary, title: selectedItem.title })
-        : undefined}
-      onSubmitFeedback={async (type) => {
-        setFeedbackMessage(type === "more_like_this" ? "已记录，将推荐更多此类内容" : "已记录，将减少此类内容");
-      }}
-      onToggleFavorite={() => setSaved((current) => withDemoFavorite(current, selectedItem.id))}
-      relatedItems={relatedItems}
-    />;
-  }
-
-  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setCategory("推荐");
-    setQuery(searchText.trim());
-    setSearchOpen(false);
-  };
-
-  const selectCategory = (value: string) => {
-    setCategory(value);
-    setQuery("");
-  };
-
-  return <div className="news-h5-feed is-demo">
-    <header><h1>新闻</h1><button aria-label={searchOpen ? "关闭搜索" : "搜索新闻"} onClick={() => setSearchOpen((current) => !current)} type="button">{searchOpen ? <X size={20} /> : <Search size={20} />}</button></header>
-    {searchOpen && <form className="news-h5-search" onSubmit={submitSearch} role="search"><Search aria-hidden="true" size={17} /><input aria-label="搜索新闻" autoFocus onChange={(event) => setSearchText(event.target.value)} placeholder="搜索新闻、主题或来源" value={searchText} /><button type="submit">搜索</button></form>}
-    <nav aria-label="新闻分类">{DEMO_CATEGORIES.map((item) => <button className={!query && category === item ? "is-active" : ""} onClick={() => selectCategory(item)} type="button" key={item}>{item}</button>)}</nav>
-    <main>
-      {showLead && <section
-        aria-label={"阅读 " + DEMO_LEAD.title}
-        className="news-h5-lead is-clickable"
-        onClick={() => {
-          setSelectedItem(DEMO_LEAD);
-          setFeedbackMessage(undefined);
-          onSecondaryPageChange?.(true);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            setSelectedItem(DEMO_LEAD);
-            setFeedbackMessage(undefined);
-            onSecondaryPageChange?.(true);
-          }
-        }}
-        role="button"
-        tabIndex={0}
-      ><img src={DEMO_LEAD.image} alt="新闻编辑室" /><div><span>今日要闻</span><h2>{DEMO_LEAD.title}</h2><p>{DEMO_LEAD.source} · {DEMO_LEAD.time}</p></div></section>}
-      <div className="news-h5-feed__label"><h2>{query ? `“${query}”的结果` : category === "推荐" ? "最新动态" : `${category}频道`}</h2><span>{visibleItems.length > 0 ? `${visibleItems.length} 条` : "演示内容"}</span></div>
-      {visibleItems.length > 0
-        ? <section className="news-h5-feed__items">{visibleItems.map((item) => <article
-          aria-label={"阅读 " + item.title}
-          className="has-image is-clickable"
-          key={item.id}
-          onClick={() => {
-            setSelectedItem(item);
-            setFeedbackMessage(undefined);
-            onSecondaryPageChange?.(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              setSelectedItem(item);
-              setFeedbackMessage(undefined);
-              onSecondaryPageChange?.(true);
-            }
-          }}
-          role="button"
-          tabIndex={0}
-        ><div><div className="news-h5-feed__article-meta"><span>{item.tag}</span></div><h3>{item.title}</h3><footer><div><span>{item.source}</span><span>{item.time}</span></div><button aria-label={`${saved.has(item.id) ? "取消收藏" : "收藏"} ${item.title}`} className={saved.has(item.id) ? "is-saved" : ""} onClick={(event) => { event.stopPropagation(); setSaved((current) => withDemoFavorite(current, item.id)); }} type="button"><Bookmark fill={saved.has(item.id) ? "currentColor" : "none"} size={16} /></button></footer></div><img src={item.image} alt="" /></article>)}</section>
-        : <section className="news-h5-state" role="status"><Search size={22} /><h2>暂无匹配新闻</h2><p>可以切换分类或调整搜索关键词。</p></section>}
-    </main>
-  </div>;
 }
 
-function toDemoFeedItem(item: DemoNewsArticle): NewsFeedItem {
+function toViewItem(item: NewsFeedItem, index: number): ViewNewsItem {
   return {
-    categoryId: item.tag,
-    featured: item.id === "lead",
+    ...(item.authorName ? { authorName: item.authorName } : {}),
+    categoryId: item.categoryId,
+    featured: item.featured,
     id: item.id,
+    ...(index % 4 === 1 ? { image: NEWS_IMAGE_POOL[index % NEWS_IMAGE_POOL.length] } : {}),
+    ...(item.publishedAt ? { publishedAt: item.publishedAt } : {}),
+    ...(item.publishedAt ? { publishedLabel: formatPublishedAt(item.publishedAt) } : {}),
+    ...(item.estimatedReadMinutes ? { readMinutes: item.estimatedReadMinutes } : {}),
+    ...(item.reason ? { reason: item.reason } : {}),
+    source: item.authorName ?? "SDKWork 资讯",
     summary: item.summary,
-    tags: [item.tag],
+    tags: item.tags,
     title: item.title,
   };
 }
 
-function withDemoFavorite(current: ReadonlySet<string>, itemId: string) {
+function toDetailView(item: NewsArticle): ViewNewsItem {
+  return {
+    ...toViewItem(item, 0),
+    ...(item.body ? { body: item.body } : {}),
+  };
+}
+
+function categoryTone(category: string): string {
+  const tones: Record<string, string> = {
+    商业: "amber",
+    国际: "blue",
+    政策: "violet",
+    科技: "cyan",
+    财经: "green",
+  };
+  return tones[category] ?? "red";
+}
+
+function buildKeyPoints(item: ViewNewsItem): readonly string[] {
+  return item.summary
+    .split(/(?<=[。！？!?])\s*/u)
+    .map((point) => point.trim())
+    .filter((point) => point.length >= 12 && point !== item.summary)
+    .slice(0, 3);
+}
+
+function withSetValue(
+  current: ReadonlySet<string>,
+  value: string,
+): ReadonlySet<string> {
   const next = new Set(current);
-  if (next.has(itemId)) {
-    next.delete(itemId);
+  if (next.has(value)) {
+    next.delete(value);
   } else {
-    next.add(itemId);
+    next.add(value);
   }
   return next;
 }
 
-function formatPublishedAt(value: string): string {
+function formatToday(): string {
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+  }).format(new Date());
+}
+
+function formatPublishedAt(value?: string): string {
+  if (!value) {
+    return "刚刚";
+  }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return value;
   }
   return new Intl.DateTimeFormat("zh-CN", {
-    dateStyle: "short",
-    timeStyle: "short",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(date);
 }
+
+const NEWS_IMAGE_POOL = [
+  aiChipsImage,
+  marketsImage,
+  workspaceImage,
+  newsroomImage,
+  logisticsImage,
+] as const;
+
+const DEMO_CHANNELS: readonly NewsFeedChannel[] = [
+  { id: "headlines", title: "要闻" },
+  { id: "technology", title: "科技" },
+  { id: "finance", title: "财经" },
+  { id: "business", title: "商业" },
+  { id: "world", title: "国际" },
+  { id: "policy", title: "政策" },
+];
+
+const DEMO_LEAD: ViewNewsItem = {
+  body: "过去的新闻产品依赖推荐算法，把用户留在一条不断刷新的信息流里。AI 时代的阅读方式开始转向长期协作：用户定义目标，智能体持续追踪变化并解释它们为什么重要。\n\n这意味着新闻产品需要同时处理来源筛选、事实核验和上下文整理。高质量的阅读体验不再是更多内容，而是在合适的时间交付更少但更有用的判断依据。\n\n对读者而言，真正稀缺的不是信息，而是可信的判断。把重复扫描交给智能体，把注意力留给需要决策的部分，正在成为新一代资讯产品的核心价值。",
+  categoryId: "要闻",
+  featured: true,
+  id: "lead",
+  image: newsroomImage,
+  publishedLabel: "12 分钟前",
+  readMinutes: 6,
+  source: "SDKWork 研究院",
+  summary:
+    "用户不再需要消费所有内容，而是让不同角色的智能体持续阅读、验证并呈现真正影响决策的变化。",
+  tags: ["AI 阅读", "信息流", "智能体"],
+  title: "从信息流到智能体：新闻阅读正在发生结构性变化",
+};
+
+const DEMO_ITEMS: readonly ViewNewsItem[] = [
+  {
+    body: "企业正在把智能体从单次问答工具放进销售、客服和研发流程。\n\n随着任务持续执行，可靠性、权限边界和可观察性成为采购决策的核心。\n\n采购方开始要求智能体提供完整的执行轨迹、失败回滚机制以及可审计的权限记录，这些能力正在取代单纯的模型参数，成为新一轮选型的硬指标。",
+    categoryId: "科技",
+    featured: true,
+    id: "1",
+    image: aiChipsImage,
+    publishedLabel: "42 分钟前",
+    readMinutes: 5,
+    source: "MIT Technology Review",
+    summary:
+      "从单次回答走向长期执行后，可靠性、权限边界和可观察性成为采购决策的核心。",
+    tags: ["AI Agent", "企业软件"],
+    title: "AI Agent 开始进入企业核心工作流，评估标准正在改变",
+  },
+  {
+    body: "公开市场操作规模连续上升，短端利率回落。\n\n机构仍在观察政策传导到实体经济的速度，趋势判断保持谨慎。\n\n多家机构在最新策略报告中提示，资金面的宽松并不等同于信用扩张，后续仍需观察企业中长期贷款和居民消费信心的修复情况。",
+    categoryId: "财经",
+    featured: false,
+    id: "2",
+    image: marketsImage,
+    publishedLabel: "1 小时前",
+    readMinutes: 4,
+    source: "第一财经",
+    summary:
+      "公开市场操作规模连续上升，短端利率回落，但机构对趋势判断仍保持谨慎。",
+    tags: ["流动性", "货币政策"],
+    title: "资金面延续宽松，市场关注下一阶段政策信号",
+  },
+  {
+    body: "越来越多 AI 产品尝试按任务、调用或业务结果计费。\n\n当价值从席位转向结果，传统 SaaS 的增长和留存指标也需要重新解释。\n\n投资人开始关注单位任务成本、结果达成率和客户扩展收入，而不是单一的年度经常性收入。",
+    categoryId: "商业",
+    featured: false,
+    id: "3",
+    image: workspaceImage,
+    publishedLabel: "2 小时前",
+    readMinutes: 7,
+    source: "Bloomberg",
+    summary:
+      "越来越多 AI 产品尝试按任务、调用或业务结果计费，传统 SaaS 指标面临重估。",
+    tags: ["SaaS", "商业模式"],
+    title: "企业软件定价从席位转向结果，新的商业模型浮出水面",
+  },
+  {
+    body: "效率与韧性的权衡正在改变，企业开始重新评估供应商集中度。\n\n关键零部件的多源策略增加，也让库存和物流协同成为新的管理重点。\n\n区域化生产并不意味全球化结束，而是供应链从单一成本最优转向成本、时效与风险的多目标平衡。",
+    categoryId: "国际",
+    featured: false,
+    id: "4",
+    image: logisticsImage,
+    publishedLabel: "3 小时前",
+    readMinutes: 6,
+    source: "Reuters",
+    summary:
+      "效率与韧性的权衡正在改变，关键零部件的多源策略明显增加。",
+    tags: ["供应链", "制造业"],
+    title: "全球供应链继续区域化，制造企业重新校准库存策略",
+  },
+  {
+    body: "政策文件首次把数据要素流通与产业数字化放在同一框架下。\n\n地方试点将围绕公共数据授权运营、跨境数据流动和企业数据资产入表展开。\n\n业内普遍认为，清晰的权属和定价机制是数据要素市场从试点走向规模化交易的前提。",
+    categoryId: "政策",
+    featured: false,
+    id: "5",
+    image: newsroomImage,
+    publishedLabel: "4 小时前",
+    readMinutes: 4,
+    source: "经济日报",
+    summary:
+      "数据要素市场建设提速，公共数据授权运营与数据资产入表成为试点重点。",
+    tags: ["数据要素", "政策"],
+    title: "数据要素市场化配置改革提速，多地启动新一轮试点",
+  },
+  {
+    body: "新一代储能电芯在循环寿命和安全性上同时提升。\n\n成本下降与电网调峰需求叠加，让储能从配套设备变成独立的收益资产。\n\n不过，商业模式仍依赖电力市场规则，峰谷价差和辅助服务补偿决定项目回报。",
+    categoryId: "科技",
+    featured: false,
+    id: "6",
+    image: workspaceImage,
+    publishedLabel: "5 小时前",
+    readMinutes: 5,
+    source: "财新",
+    summary:
+      "储能电芯技术迭代叠加电力市场改革，储能资产开始获得独立收益模型。",
+    tags: ["新能源", "储能"],
+    title: "储能产业进入价值重估期，技术迭代与市场机制同步推进",
+  },
+];
+
+const DEMO_TRENDING: readonly ViewNewsItem[] = [
+  DEMO_ITEMS[0]!,
+  DEMO_LEAD,
+  DEMO_ITEMS[4]!,
+  DEMO_ITEMS[1]!,
+  DEMO_ITEMS[5]!,
+  DEMO_ITEMS[2]!,
+  DEMO_ITEMS[3]!,
+];
 
 export default NewsH5News;

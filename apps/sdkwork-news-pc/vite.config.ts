@@ -10,6 +10,9 @@ export default defineConfig({
     emptyOutDir: true,
   },
   plugins: [react()],
+  resolve: {
+    dedupe: ["@sdkwork/sdk-common"],
+  },
   server: {
     port: 3000,
   },

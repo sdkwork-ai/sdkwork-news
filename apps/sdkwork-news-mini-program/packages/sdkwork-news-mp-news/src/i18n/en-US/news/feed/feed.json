@@ -1,0 +1,17 @@
+{
+  "news.title": "SDKWork News",
+  "news.recommended": "For you",
+  "news.latest": "Latest",
+  "news.live": "Live",
+  "news.ranking": "Trending",
+  "news.topics": "Topics",
+  "news.search": "Search news",
+  "news.detail": "Story",
+  "news.save": "Save",
+  "news.saved": "Saved",
+  "news.share": "Share",
+  "news.loadMore": "Load more",
+  "news.empty": "No matching stories",
+  "news.summary": "AI brief",
+  "account.title": "Me"
+}

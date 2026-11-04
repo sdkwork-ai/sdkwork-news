@@ -1,0 +1,176 @@
+import type { NewsArticle, NewsChannel } from "@sdkwork/news-mp-core";
+
+export const DEMO_CHANNELS: readonly NewsChannel[] = [
+  { id: "recommended", title: "推荐" },
+  { id: "headlines", title: "要闻" },
+  { id: "technology", title: "科技" },
+  { id: "finance", title: "财经" },
+  { id: "business", title: "商业" },
+  { id: "world", title: "国际" },
+  { id: "policy", title: "政策" },
+];
+
+export const DEMO_ARTICLES: readonly NewsArticle[] = [
+  {
+    body: [
+      "过去的新闻产品依赖推荐算法，把用户留在一条不断刷新的信息流里。AI 时代的阅读方式开始转向长期协作：用户定义目标，智能体持续追踪变化并解释它们为什么重要。",
+      "这意味着新闻产品需要同时处理来源筛选、事实核验和上下文整理。高质量的阅读体验不再是更多内容，而是在合适的时间交付更少但更有用的判断依据。",
+      "对读者而言，真正稀缺的不是信息，而是可信的判断。把重复扫描交给智能体，把注意力留给需要决策的部分，正在成为新一代资讯产品的核心价值。",
+    ],
+    categoryId: "headlines",
+    featured: true,
+    id: "lead-agent-reading",
+    image: "/assets/news/newsroom.jpg",
+    publishedLabel: "12 分钟前",
+    readMinutes: 6,
+    source: "SDKWork 研究院",
+    summary:
+      "用户不再需要消费所有内容，而是让不同角色的智能体持续阅读、验证并呈现真正影响决策的变化。",
+    tags: ["AI 阅读", "信息流", "智能体"],
+    title: "从信息流到智能体：新闻阅读正在发生结构性变化",
+  },
+  {
+    body: [
+      "企业正在把智能体从单次问答工具放进销售、客服和研发流程。",
+      "随着任务持续执行，可靠性、权限边界和可观察性成为采购决策的核心。",
+      "采购方开始要求智能体提供完整的执行轨迹、失败回滚机制以及可审计的权限记录，这些能力正在取代单纯的模型参数，成为新一轮选型的硬指标。",
+    ],
+    categoryId: "technology",
+    featured: true,
+    id: "ai-agent-workflow",
+    image: "/assets/news/ai-chips.jpg",
+    publishedLabel: "42 分钟前",
+    readMinutes: 5,
+    source: "MIT Technology Review",
+    summary:
+      "从单次回答走向长期执行后，可靠性、权限边界和可观察性成为采购决策的核心。",
+    tags: ["AI Agent", "企业软件"],
+    title: "AI Agent 开始进入企业核心工作流，评估标准正在改变",
+  },
+  {
+    body: [
+      "公开市场操作规模连续上升，短端利率回落。",
+      "机构仍在观察政策传导到实体经济的速度，趋势判断保持谨慎。",
+      "多家机构在最新策略报告中提示，资金面的宽松并不等同于信用扩张，后续仍需观察企业中长期贷款和居民消费信心的修复情况。",
+    ],
+    categoryId: "finance",
+    featured: false,
+    id: "market-liquidity",
+    image: "/assets/news/markets.jpg",
+    publishedLabel: "1 小时前",
+    readMinutes: 4,
+    source: "第一财经",
+    summary:
+      "公开市场操作规模连续上升，短端利率回落，但机构对趋势判断仍保持谨慎。",
+    tags: ["流动性", "货币政策"],
+    title: "资金面延续宽松，市场关注下一阶段政策信号",
+  },
+  {
+    body: [
+      "越来越多 AI 产品尝试按任务、调用或业务结果计费。",
+      "当价值从席位转向结果，传统 SaaS 的增长和留存指标也需要重新解释。",
+      "投资人开始关注单位任务成本、结果达成率和客户扩展收入，而不是单一的年度经常性收入。",
+    ],
+    categoryId: "business",
+    featured: false,
+    id: "software-pricing",
+    image: "/assets/news/workspace.jpg",
+    publishedLabel: "2 小时前",
+    readMinutes: 7,
+    source: "Bloomberg",
+    summary:
+      "越来越多 AI 产品尝试按任务、调用或业务结果计费，传统 SaaS 指标面临重估。",
+    tags: ["SaaS", "商业模式"],
+    title: "企业软件定价从席位转向结果，新的商业模型浮出水面",
+  },
+  {
+    body: [
+      "效率与韧性的权衡正在改变，企业开始重新评估供应商集中度。",
+      "关键零部件的多源策略增加，也让库存和物流协同成为新的管理重点。",
+      "区域化生产并不意味全球化结束，而是供应链从单一成本最优转向成本、时效与风险的多目标平衡。",
+    ],
+    categoryId: "world",
+    featured: false,
+    id: "supply-chain",
+    image: "/assets/news/logistics.jpg",
+    publishedLabel: "3 小时前",
+    readMinutes: 6,
+    source: "Reuters",
+    summary:
+      "效率与韧性的权衡正在改变，关键零部件的多源策略明显增加。",
+    tags: ["供应链", "制造业"],
+    title: "全球供应链继续区域化，制造企业重新校准库存策略",
+  },
+  {
+    body: [
+      "政策文件首次把数据要素流通与产业数字化放在同一框架下。",
+      "地方试点将围绕公共数据授权运营、跨境数据流动和企业数据资产入表展开。",
+      "业内普遍认为，清晰的权属和定价机制是数据要素市场从试点走向规模化交易的前提。",
+    ],
+    categoryId: "policy",
+    featured: false,
+    id: "data-market",
+    image: "/assets/news/newsroom.jpg",
+    publishedLabel: "4 小时前",
+    readMinutes: 4,
+    source: "经济日报",
+    summary:
+      "数据要素市场建设提速，公共数据授权运营与数据资产入表成为试点重点。",
+    tags: ["数据要素", "政策"],
+    title: "数据要素市场化配置改革提速，多地启动新一轮试点",
+  },
+  {
+    body: [
+      "新一代储能电芯在循环寿命和安全性上同时提升。",
+      "成本下降与电网调峰需求叠加，让储能从配套设备变成独立的收益资产。",
+      "不过，商业模式仍依赖电力市场规则，峰谷价差和辅助服务补偿决定项目回报。",
+    ],
+    categoryId: "technology",
+    featured: false,
+    id: "energy-storage",
+    image: "/assets/news/workspace.jpg",
+    publishedLabel: "5 小时前",
+    readMinutes: 5,
+    source: "财新",
+    summary:
+      "储能电芯技术迭代叠加电力市场改革，储能资产开始获得独立收益模型。",
+    tags: ["新能源", "储能"],
+    title: "储能产业进入价值重估期，技术迭代与市场机制同步推进",
+  },
+  {
+    body: [
+      "多模态模型开始从演示走向生产环境，视频、语音和结构化数据进入同一推理链路。",
+      "企业更关注模型在真实业务数据上的稳定性，而不是单次基准测试的分数。",
+      "数据治理、评测集建设和人工复核仍然是落地成本最高的部分。",
+    ],
+    categoryId: "technology",
+    featured: false,
+    id: "multimodal-production",
+    image: "/assets/news/ai-chips.jpg",
+    publishedLabel: "6 小时前",
+    readMinutes: 5,
+    source: "机器之心",
+    summary:
+      "多模态模型进入生产环境，评测、数据治理和人工复核成为落地关键。",
+    tags: ["多模态", "大模型"],
+    title: "多模态模型从演示走向生产，企业开始重建评测体系",
+  },
+  {
+    body: [
+      "消费市场呈现明显的结构性分化：高频刚需保持韧性，可选消费更依赖体验。",
+      "品牌开始把预算从广撒网转向会员复购和内容运营。",
+      "渠道效率的提升并不自动带来利润改善，供应链和库存周转仍是关键变量。",
+    ],
+    categoryId: "business",
+    featured: false,
+    id: "consumer-structure",
+    image: "/assets/news/markets.jpg",
+    publishedLabel: "7 小时前",
+    readMinutes: 4,
+    source: "晚点 LatePost",
+    summary:
+      "消费市场结构性分化，品牌把预算转向会员复购与内容运营。",
+    tags: ["消费", "品牌"],
+    title: "消费市场结构性分化，品牌重新计算增长质量",
+  },
+];

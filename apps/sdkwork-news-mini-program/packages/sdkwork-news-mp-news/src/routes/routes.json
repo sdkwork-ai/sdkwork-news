@@ -1,0 +1,65 @@
+[
+  {
+    "id": "app.news.feed.home",
+    "surface": "app",
+    "domain": "news",
+    "capability": "feed",
+    "screen": "home",
+    "titleKey": "news.title",
+    "auth": "public",
+    "miniProgram": { "rootPackage": true, "pagePath": "pages/feed/index" }
+  },
+  {
+    "id": "app.news.ranking.list",
+    "surface": "app",
+    "domain": "news",
+    "capability": "ranking",
+    "screen": "list",
+    "titleKey": "news.ranking",
+    "auth": "public",
+    "miniProgram": { "rootPackage": true, "pagePath": "pages/ranking/index" }
+  },
+  {
+    "id": "app.news.topics.list",
+    "surface": "app",
+    "domain": "news",
+    "capability": "topics",
+    "screen": "list",
+    "titleKey": "news.topics",
+    "auth": "public",
+    "miniProgram": { "rootPackage": true, "pagePath": "pages/topics/index" }
+  },
+  {
+    "id": "app.news.search.results",
+    "surface": "app",
+    "domain": "news",
+    "capability": "search",
+    "screen": "results",
+    "titleKey": "news.search",
+    "auth": "public",
+    "miniProgram": { "rootPackage": true, "pagePath": "pages/search/index" }
+  },
+  {
+    "id": "app.account.profile.home",
+    "surface": "app",
+    "domain": "account",
+    "capability": "profile",
+    "screen": "home",
+    "titleKey": "account.title",
+    "auth": "public",
+    "miniProgram": { "rootPackage": true, "pagePath": "pages/profile/index" }
+  },
+  {
+    "id": "app.news.article.detail",
+    "surface": "app",
+    "domain": "news",
+    "capability": "article",
+    "screen": "detail",
+    "titleKey": "news.detail",
+    "auth": "public",
+    "miniProgram": {
+      "subpackage": "news",
+      "pagePath": "pages/article/index"
+    }
+  }
+]

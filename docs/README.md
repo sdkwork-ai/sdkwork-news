@@ -41,6 +41,8 @@ Search documentation for old path or crate names before completing structure mig
 | --- | --- |
 | Product PRD | [product/prd/PRD.md](product/prd/PRD.md) |
 | Technical architecture | [architecture/tech/TECH_ARCHITECTURE.md](architecture/tech/TECH_ARCHITECTURE.md) |
+| News app initialization and Toutiao alignment | [architecture/tech/TECH-2026-11-04-news-app-initialization-and-toutiao-alignment.md](architecture/tech/TECH-2026-11-04-news-app-initialization-and-toutiao-alignment.md) |
+| SDKWork Comments integration | [architecture/tech/TECH-2026-11-04-comments-integration.md](architecture/tech/TECH-2026-11-04-comments-integration.md) |
 
 - [docs/product/prd/PRD.md](product/prd/PRD.md)
 - [docs/architecture/tech/TECH_ARCHITECTURE.md](architecture/tech/TECH_ARCHITECTURE.md)

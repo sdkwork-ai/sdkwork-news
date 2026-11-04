@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 3,
+  "kind": "agent.app",
+  "app": {
+    "key": "sdkwork-news-mini-program",
+    "name": "sdkwork-news-mini-program",
+    "displayName": "SDKWork 头条",
+    "officialWebsiteUrl": "https://sdkwork.com/apps/news",
+    "appType": "APP_UNIAPP",
+    "description": "WeChat mini-program information app for SDKWork News: personalized channels, trending ranking, topics, search, and source-backed article reading.",
+    "identifiers": {
+      "containerImage": "registry.sdkwork.com/apps/sdkwork-news-mini-program"
+    }
+  },
+  "backend": {
+    "primaryLanguage": "rust",
+    "framework": "axum",
+    "appId": "sdkwork-news",
+    "tenantId": "100001",
+    "organizationId": "0"
+  },
+  "runtime": {
+    "family": "mini-program",
+    "framework": "weixin-mini-program",
+    "runtimes": ["MP_WEIXIN"],
+    "defaultPlatform": "MP_WEIXIN",
+    "defaultArchitecture": "universal",
+    "supportedDeploymentProfiles": ["standalone", "cloud"],
+    "defaultDeploymentProfile": "standalone"
+  },
+  "media": {
+    "icons": {
+      "primary": {
+        "id": "sdkwork-news-mini-program-primary-icon",
+        "type": "ICON",
+        "purpose": "PRIMARY",
+        "platform": "MP_WEIXIN",
+        "format": "PNG",
+        "width": 1024,
+        "height": 1024,
+        "enabled": true,
+        "url": "https://cdn.sdkwork.com/apps/sdkwork-news/assets/icon-1024.png",
+        "metadata": { "generatedPlaceholder": true }
+      },
+      "platform": []
+    },
+    "screenshots": [],
+    "previews": []
+  },
+  "publish": {
+    "status": "DRAFT",
+    "platforms": ["MP_WEIXIN"],
+    "installPlatforms": ["MP_WEIXIN"],
+    "installSkill": false,
+    "config": {
+      "workspaceRoot": "apps/sdkwork-news-mini-program",
+      "framework": "weixin-mini-program",
+      "managedBy": "sdkwork-news"
+    }
+  },
+  "artifacts": {
+    "installConfig": { "packages": [] }
+  },
+  "release": {
+    "currentVersion": "0.1.0",
+    "defaultChannel": "BETA",
+    "latest": { "BETA": "0.1.0" },
+    "notes": [
+      {
+        "version": "0.1.0",
+        "channel": "BETA",
+        "current": true,
+        "packageIds": []
+      }
+    ]
+  },
+  "security": {
+    "checksumRequired": true,
+    "signatureRequired": false,
+    "sbomRequired": true
+  },
+  "metadata": {
+    "deploymentConfig": "etc/sdkwork.deployment.config.json"
+  }
+}

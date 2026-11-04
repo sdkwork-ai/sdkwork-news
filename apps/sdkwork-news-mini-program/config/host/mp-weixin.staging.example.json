@@ -1,0 +1,8 @@
+{
+  "appid": "wx0000000000000000",
+  "description": "WeChat staging host profile.",
+  "upload": {
+    "environment": "staging",
+    "robot": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "appid": "wx0000000000000000",
+  "description": "WeChat development host profile. appid is a public platform identifier, not a secret.",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "Used only when a future local-news channel asks for city-level content."
+    }
+  },
+  "upload": {
+    "environment": "development",
+    "robot": 1
+  }
+}

@@ -6,6 +6,7 @@ import 'package:sdkwork_news_flutter_mobile/bootstrap/runtime.dart';
 import 'package:sdkwork_news_flutter_mobile_account/sdkwork_news_flutter_mobile_account.dart';
 import 'package:sdkwork_news_flutter_mobile_ai_store/sdkwork_news_flutter_mobile_ai_store.dart';
 import 'package:sdkwork_news_flutter_mobile_assistant/sdkwork_news_flutter_mobile_assistant.dart';
+import 'package:sdkwork_news_flutter_mobile_comments/sdkwork_news_flutter_mobile_comments.dart';
 import 'package:sdkwork_news_flutter_mobile_commons/sdkwork_news_flutter_mobile_commons.dart';
 import 'package:sdkwork_news_flutter_mobile_news/sdkwork_news_flutter_mobile_news.dart';
 import 'package:sdkwork_news_flutter_mobile_shell/sdkwork_news_flutter_mobile_shell.dart';
@@ -15,6 +16,7 @@ const _testLocaleFragments = <NewsLocaleFragment>[
   ...newsShellLocaleFragments,
   ...newsAssistantLocaleFragments,
   ...newsFeedLocaleFragments,
+  ...newsCommentsLocaleFragments,
   ...newsAiStoreLocaleFragments,
   ...newsAccountLocaleFragments,
 ];
@@ -24,22 +26,21 @@ void main() {
     final controller = NewsShellController();
     controller.setSecondaryPage(true);
 
-    controller.select(NewsShellTab.news);
+    controller.select(NewsShellTab.assistant);
 
-    expect(controller.activeTab, NewsShellTab.news);
+    expect(controller.activeTab, NewsShellTab.assistant);
     expect(controller.isSecondaryPage, isFalse);
   });
 
-  testWidgets('renders the four-tab assistant-first shell', (tester) async {
+  testWidgets('renders the four-tab news-first shell', (tester) async {
     final runtime = NewsRuntime.demo();
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
-    expect(find.text('阅读助手'), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.text('首页'), findsOneWidget);
     expect(find.text('助手'), findsOneWidget);
-    expect(find.text('新闻'), findsOneWidget);
-    expect(find.text('AI Store'), findsOneWidget);
+    expect(find.text('精选'), findsOneWidget);
     expect(find.text('我的'), findsOneWidget);
   });
 
@@ -49,6 +50,8 @@ void main() {
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('助手'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('市场雷达'));
     await tester.pumpAndSettle();
     expect(find.byType(NavigationBar), findsNothing);
@@ -117,13 +120,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Reading Assistants'),
+      find.text('For you'),
       findsOneWidget,
       reason: _visibleText(tester),
     );
+    expect(find.text('Home'), findsOneWidget);
     expect(find.text('Assistant'), findsOneWidget);
-    expect(find.text('News'), findsOneWidget);
-    expect(find.text('AI Store'), findsOneWidget);
+    expect(find.text('Discover'), findsOneWidget);
     expect(find.text('Account'), findsOneWidget);
 
     runtime.dispose();
@@ -159,8 +162,9 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('account.detail.back')));
     await tester.pumpAndSettle();
 
+    expect(find.text('Home'), findsOneWidget);
     expect(find.text('Assistant'), findsOneWidget);
-    expect(find.text('News'), findsOneWidget);
+    expect(find.text('Discover'), findsOneWidget);
     expect(find.byTooltip('Settings'), findsOneWidget);
   });
 
@@ -193,8 +197,6 @@ void main() {
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('新闻'));
-    await tester.pumpAndSettle();
     await tester.drag(
       find.byType(CustomScrollView),
       const Offset(0, -220),
@@ -210,6 +212,16 @@ void main() {
     expect(find.byKey(const ValueKey('news.detail.back')), findsOneWidget);
     expect(find.text('新闻详情'), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+    expect(find.text('356'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('news.detail.like')));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.favorite_rounded), findsWidgets);
+    expect(find.text('357'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('news.detail.save')));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('news.detail.back')));
     await tester.pumpAndSettle();
@@ -223,7 +235,7 @@ void main() {
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.storefront_outlined));
+    await tester.tap(find.byIcon(Icons.explore_outlined));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('store.search.open')));
     await tester.pumpAndSettle();
@@ -295,6 +307,8 @@ void main() {
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('助手'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('市场雷达'));
     await tester.pumpAndSettle();
     final followUp = find.text('继续追问');
@@ -325,6 +339,8 @@ void main() {
     await tester.pumpWidget(NewsApp(runtime: runtime));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.text('助手'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('市场雷达'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('助手设置'));

@@ -1,75 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { resolveNewsAccountBootstrap } from "@sdkwork/news-account-runtime/config";
-import type { NewsAccountService } from "@sdkwork/news-account-service";
-import { resolveNewsAgentBootstrap } from "@sdkwork/news-agent-bootstrap/config";
-import type { NewsAgentService } from "@sdkwork/news-agent-service";
-import { resolveAiStoreBootstrap } from "@sdkwork/news-ai-store-runtime/config";
-import type { AiStoreService } from "@sdkwork/news-ai-store-service";
-import type { NewsFeedService } from "@sdkwork/news-feed-service";
-import { resolveNewsFeedBootstrap } from "@sdkwork/news-runtime/config";
-import { createTokenManager } from "@sdkwork/sdk-common";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createNewsBrowserRuntime } from "@sdkwork/news-runtime";
 import App from "./App";
 import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+
+root.render(
+  <React.StrictMode>
+    <StartupScreen />
+  </React.StrictMode>,
+);
 
 async function bootstrap(): Promise<void> {
   try {
-    const accountBootstrap = resolveNewsAccountBootstrap(import.meta.env);
-    const agentBootstrap = resolveNewsAgentBootstrap(import.meta.env);
-    const aiStoreBootstrap = resolveAiStoreBootstrap(import.meta.env);
-    const newsBootstrap = resolveNewsFeedBootstrap(import.meta.env);
-    const tokenManager = createTokenManager();
-    let accountService: NewsAccountService | undefined;
-    let agentService: NewsAgentService | undefined;
-    let aiStoreService: AiStoreService | undefined;
-    let newsService: NewsFeedService | undefined;
-    if (accountBootstrap.config) {
-      const { createNewsAccountRuntime } = await import("@sdkwork/news-account-runtime/runtime");
-      const accountRuntime = createNewsAccountRuntime({
-        ...accountBootstrap.config,
-        storage: window.localStorage,
-        tokenManager,
-      });
-      await accountRuntime.hydrate();
-      accountService = accountRuntime.service;
-    }
-    if (agentBootstrap.config) {
-      const { createNewsAgentRuntime } = await import("@sdkwork/news-agent-bootstrap/runtime");
-      agentService = createNewsAgentRuntime({
-        ...agentBootstrap.config,
-        tokenManager,
-      }).service;
-    }
-    if (newsBootstrap.config) {
-      const { createNewsFeedRuntime } = await import("@sdkwork/news-runtime/feed-runtime");
-      newsService = createNewsFeedRuntime({
-        ...newsBootstrap.config,
-        tokenManager,
-      }).service;
-    }
-    if (aiStoreBootstrap.config) {
-      const { createAiStoreRuntime } = await import("@sdkwork/news-ai-store-runtime/runtime");
-      aiStoreService = createAiStoreRuntime({
-        ...aiStoreBootstrap.config,
-        platform: "WEB",
-        tokenManager,
-      }).service;
-    }
-
+    const runtime = await createNewsBrowserRuntime({
+      environment: import.meta.env,
+      platform: "WEB",
+      storage: window.localStorage,
+    });
     root.render(
       <React.StrictMode>
         <App
-          accountDemoMode={accountBootstrap.mode === "demo"}
-          accountService={accountService}
+          accountDemoMode={runtime.account.mode === "demo"}
+          accountService={runtime.account.service}
           accountStorage={window.localStorage}
-          agentService={agentService}
-          aiStoreDemoMode={aiStoreBootstrap.mode === "demo"}
-          aiStoreService={aiStoreService}
-          assistantDemoMode={agentBootstrap.mode === "demo"}
-          newsDemoMode={newsBootstrap.mode === "demo"}
-          newsService={newsService}
+          agentService={runtime.agent.service}
+          aiStoreDemoMode={runtime.aiStore.mode === "demo"}
+          aiStoreService={runtime.aiStore.service}
+          assistantDemoMode={runtime.agent.mode === "demo"}
+          commentsService={runtime.comments.service}
+          newsDemoMode={runtime.news.mode === "demo"}
+          newsService={runtime.news.service}
         />
       </React.StrictMode>,
     );
@@ -82,6 +44,17 @@ async function bootstrap(): Promise<void> {
       </main>,
     );
   }
+}
+
+function StartupScreen() {
+  return (
+    <main className="news-startup" aria-live="polite">
+      <div className="news-startup__mark">头</div>
+      <strong>SDKWork 头条</strong>
+      <span>正在加载资讯与个性化频道</span>
+      <i aria-hidden="true" />
+    </main>
+  );
 }
 
 void bootstrap();

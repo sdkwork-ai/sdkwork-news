@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+﻿import { describe, it, expect, vi } from 'vitest';
 import {
   createNewsService,
 } from '../src/services/news-service';
@@ -16,14 +16,14 @@ function createMockNewsApi(): NewsApiPort {
     search: { list: vi.fn(), suggestions: { list: vi.fn() } },
     events: { create: vi.fn() },
     favorites: { list: vi.fn(), create: vi.fn(), delete: vi.fn() },
-    reactions: { upsert: vi.fn() },
+    reactions: { update: vi.fn() },
     comments: { list: vi.fn(), create: vi.fn() },
     reports: { create: vi.fn() },
     feedback: { create: vi.fn() },
     history: { list: vi.fn() },
     follows: { list: vi.fn(), create: vi.fn(), delete: vi.fn() },
-    interests: { list: vi.fn(), upsert: vi.fn() },
-    notification: { subscriptions: { list: vi.fn(), upsert: vi.fn(), delete: vi.fn() } },
+    interests: { list: vi.fn(), update: vi.fn() },
+    notification: { subscriptions: { list: vi.fn(), update: vi.fn(), delete: vi.fn() } },
     alerts: { breaking: { list: vi.fn() } },
     digests: { list: vi.fn() },
     trust: { item: { retrieve: vi.fn() } },

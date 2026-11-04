@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sdkwork_news_flutter_mobile_account/sdkwork_news_flutter_mobile_account.dart';
 import 'package:sdkwork_news_flutter_mobile_ai_store/sdkwork_news_flutter_mobile_ai_store.dart';
 import 'package:sdkwork_news_flutter_mobile_assistant/sdkwork_news_flutter_mobile_assistant.dart';
+import 'package:sdkwork_news_flutter_mobile_comments/sdkwork_news_flutter_mobile_comments.dart';
 import 'package:sdkwork_news_flutter_mobile_commons/sdkwork_news_flutter_mobile_commons.dart';
 import 'package:sdkwork_news_flutter_mobile_news/sdkwork_news_flutter_mobile_news.dart';
 import 'package:sdkwork_news_flutter_mobile_shell/sdkwork_news_flutter_mobile_shell.dart';
@@ -16,6 +17,7 @@ const _newsLocaleFragments = <NewsLocaleFragment>[
   ...newsShellLocaleFragments,
   ...newsAssistantLocaleFragments,
   ...newsFeedLocaleFragments,
+  ...newsCommentsLocaleFragments,
   ...newsAiStoreLocaleFragments,
   ...newsAccountLocaleFragments,
 ];
@@ -88,13 +90,14 @@ class _NewsAppState extends State<NewsApp> {
             ? const NewsAuthRequiredPage()
             : NewsMobileShell(
                 controller: widget.runtime.shellController!,
-                assistant: AssistantPage(
-                  controller: widget.runtime.assistantController!,
+                news: NewsFeedPage(
+                  commentsRepository: widget.runtime.commentsRepository,
+                  controller: widget.runtime.newsController!,
                   onSecondaryPageChanged:
                       widget.runtime.shellController!.setSecondaryPage,
                 ),
-                news: NewsFeedPage(
-                  controller: widget.runtime.newsController!,
+                assistant: AssistantPage(
+                  controller: widget.runtime.assistantController!,
                   onSecondaryPageChanged:
                       widget.runtime.shellController!.setSecondaryPage,
                 ),
@@ -135,7 +138,6 @@ class _NoopListenable implements Listenable {
 
 class NewsAuthRequiredPage extends StatelessWidget {
   const NewsAuthRequiredPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,6 +186,58 @@ class NewsAuthRequiredPage extends StatelessWidget {
                   label: Text(NewsStrings.of(context).text('auth.login')),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NewsBootstrapFailureApp extends StatelessWidget {
+  const NewsBootstrapFailureApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: NewsTheme.light(),
+      home: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 58,
+                    height: 58,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: NewsPalette.primary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.newspaper_rounded,
+                        color: Colors.white, size: 30),
+                  ),
+                  const SizedBox(height: 18),
+                  const Text(
+                    'SDKWork 头条',
+                    style: TextStyle(
+                      color: NewsPalette.ink,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '服务配置未就绪，请稍后重试或联系管理员。',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: NewsPalette.muted, height: 1.6),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

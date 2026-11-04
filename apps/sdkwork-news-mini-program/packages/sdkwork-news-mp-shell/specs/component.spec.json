@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/news-mp-shell",
+    "displayName": "SDKWork News Mini Program Shell",
+    "version": "0.1.0",
+    "type": "node-package",
+    "root": "sdkwork-news/apps/sdkwork-news-mini-program/packages/sdkwork-news-mp-shell",
+    "domain": "content",
+    "capability": "news-mp-shell",
+    "surface": "app",
+    "languages": ["typescript"],
+    "generated": false,
+    "manifests": ["package.json"]
+  },
+  "canonicalSpecs": [
+    { "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "path": "../../../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "purpose": "Tab and subpackage composition." },
+    { "file": "APP_MINI_PROGRAM_UI_SPEC.md", "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md", "purpose": "Tab-bar visibility and icon rules." },
+    { "file": "ICON_SPEC.md", "path": "../../../../../sdkwork-specs/ICON_SPEC.md", "purpose": "Filled/outline tab icon pairs." }
+  ],
+  "contracts": {
+    "layerRole": "frontend-shell",
+    "publicExports": ["."],
+    "providedPorts": [{ "name": "newsMiniProgramTabs", "export": "." }],
+    "requiredPorts": [{ "name": "newsMiniProgramRoutes", "export": ".", "provider": "@sdkwork/news-mp-core" }],
+    "runtimeEntrypoints": [],
+    "routeManifest": "src/navigation/tabs.ts",
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "events": [],
+    "configKeys": []
+  },
+  "verification": {
+    "commands": ["pnpm --dir apps/sdkwork-news-mini-program typecheck"]
+  }
+}

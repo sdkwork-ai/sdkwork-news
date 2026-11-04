@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/news-comments-react",
+    "displayName": "SDKWork News Comments React",
+    "version": "0.1.0",
+    "type": "node-package",
+    "root": "sdkwork-news/apps/sdkwork-news-common/packages/sdkwork-news-comments-react",
+    "domain": "content",
+    "capability": "news-comments-react",
+    "languages": ["typescript"],
+    "generated": false,
+    "manifests": ["package.json"]
+  },
+  "canonicalSpecs": [
+    { "file": "FRONTEND_SPEC.md", "path": "../../../../../sdkwork-specs/FRONTEND_SPEC.md", "purpose": "State and service layering." },
+    { "file": "TYPESCRIPT_CODE_SPEC.md", "path": "../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md", "purpose": "Strict TypeScript and hook lifecycle." }
+  ],
+  "contracts": {
+    "layerRole": "frontend-state",
+    "publicExports": ["."],
+    "providedPorts": [{ "name": "newsCommentsController", "export": "." }],
+    "requiredPorts": [{ "name": "newsCommentsService", "export": ".", "provider": "@sdkwork/news-comments-service" }],
+    "runtimeEntrypoints": [],
+    "routeManifest": null,
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "events": [],
+    "configKeys": []
+  },
+  "verification": {
+    "commands": ["pnpm --filter @sdkwork/news-comments-react test"]
+  }
+}

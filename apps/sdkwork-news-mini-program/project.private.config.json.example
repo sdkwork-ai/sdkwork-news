@@ -1,0 +1,7 @@
+{
+  "description": "Local developer overrides. Copy from project.private.config.json.example; never commit this file.",
+  "projectname": "sdkwork-news-mini-program-local",
+  "setting": {
+    "urlCheck": false
+  }
+}

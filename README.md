@@ -8,18 +8,39 @@ This repository owns news contracts, open/app/backend API surfaces, SDK generati
 ## Project Structure
 
 - `apis/`: authored and materialized News OpenAPI inputs for open-api, app-api, and backend-api surfaces.
-- `apps/`: PC News app-surface packages.
+- `apps/`: client application roots — PC browser workspace, H5 mobile web, native WeChat mini program, Flutter mobile, and shared cross-client packages.
 - `crates/`: Rust service, repository-sqlx, and route crates.
 - `sdks/`: generated SDK family workspaces and SDK ownership manifests.
 - `jobs/`: job definitions and schedules when News background processing is added.
-- `tools/`: deterministic OpenAPI, SDK, and schema validation tooling.
+- `tools/`: deterministic OpenAPI, SDK, schema validation, and browser QA tooling.
 - `plugins/`: runtime/application plugins owned by this repository when added.
 - `examples/`: runnable or copyable API/SDK examples.
-- `configs/`: safe checked-in config templates and schemas.
+- `etc/`: deployment configuration authority.
+- `config/`: safe checked-in runtime templates and schemas.
 - `deployments/`: deployment descriptors and release handoff docs.
 - `scripts/`: thin build, verification, generation, and migration entrypoints.
 - `docs/`: architecture notes, plans, and runbooks.
 - `tests/`: cross-package/static/integration verification fixtures.
+
+## Client Surfaces
+
+| Surface | Root | Run |
+| --- | --- | --- |
+| PC web | `apps/sdkwork-news-pc` | `pnpm --dir apps/sdkwork-news-pc dev` |
+| H5 web | `apps/sdkwork-news-h5` | `pnpm --dir apps/sdkwork-news-h5 dev` |
+| WeChat mini program | `apps/sdkwork-news-mini-program` | `pnpm --dir apps/sdkwork-news-mini-program build:mini-program` |
+| Flutter mobile | `apps/sdkwork-news-flutter-mobile` | `node tools/run-news-flutter.mjs test` |
+
+The product is news-first: the feed, ranking, topic discovery, search, and
+source-backed article reading are the primary path on every surface. Assistant,
+AI curation, and account capabilities remain available without displacing the
+home feed.
+
+Article reading is integrated with SDKWork Comments on every client. Browsers and
+Flutter use the generated Comments app SDK behind a repository port; the mini
+program consumes the shared comments service. Comment threads use the news item id
+as the `ownerId`, and all clients render loading, empty, unavailable, error,
+pagination, reply, like, submit, and delete states.
 
 ## Rust Crate Responsibilities
 

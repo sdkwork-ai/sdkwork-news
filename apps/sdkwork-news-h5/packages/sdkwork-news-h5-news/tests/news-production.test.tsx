@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import type { NewsFeedService } from "@sdkwork/news-feed-service";
+import { createDemoNewsCommentsService } from "@sdkwork/news-comments-service";
 import { NewsH5News } from "../src/index.js";
 
 function createService(): NewsFeedService {
@@ -114,6 +115,34 @@ describe("NewsH5News production state", () => {
 
     expect(screen.getByText("最新动态")).toBeInTheDocument();
     expect(onSecondaryPageChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it("persists article like and favorite through comments engagement", async () => {
+    const commentsService = createDemoNewsCommentsService();
+    render(
+      <NewsH5News demoMode commentsService={commentsService} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", {
+      name: /阅读 从信息流到智能体/,
+    }));
+    const likeButton = (
+      await screen.findAllByRole("button", { name: "点赞新闻" })
+    )[0]!;
+    fireEvent.click(likeButton);
+    await waitFor(() => {
+      expect(
+        screen.getAllByRole("button", { name: "取消点赞" }).length,
+      ).toBeGreaterThan(0);
+    });
+    expect(screen.getAllByText("357").length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "收藏新闻" })[0]!);
+    await waitFor(() => {
+      expect(
+        screen.getAllByRole("button", { name: "取消收藏" }).length,
+      ).toBeGreaterThan(0);
+    });
   });
 
   it("supports feedback, sharing, and related-story navigation in showcase detail", async () => {

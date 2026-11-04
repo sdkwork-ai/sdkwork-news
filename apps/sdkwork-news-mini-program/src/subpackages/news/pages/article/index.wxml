@@ -1,0 +1,159 @@
+<view class="page">
+  <view style="height: {{statusBarHeight}}px"></view>
+
+  <view class="appbar">
+    <view class="back tap" bindtap="goBack">‹</view>
+    <text class="appbar-title">资讯详情</text>
+    <view class="appbar-action tap" bindtap="toggleFont">Aa</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="state">
+    <view class="spinner"></view>
+    <text>正在加载资讯</text>
+  </view>
+
+  <view wx:elif="{{errorMessage}}" class="state">
+    <text class="state-title">资讯加载失败</text>
+    <text class="state-copy">{{errorMessage}}</text>
+  </view>
+
+  <block wx:elif="{{article}}">
+    <scroll-view class="content" scroll-y>
+      <image wx:if="{{article.image}}" class="cover" src="{{article.image}}" mode="aspectFill" />
+      <view class="article">
+        <view class="kicker">
+          <text class="kicker-category">{{article.categoryLabel}}</text>
+          <text>{{article.publishedLabel}}</text>
+          <text>{{article.readLabel}}</text>
+        </view>
+        <text class="title">{{article.title}}</text>
+        <view class="byline">
+          <view class="avatar">{{article.source[0]}}</view>
+          <view class="byline-copy">
+            <text class="source">{{article.source}}</text>
+            <text class="source-meta">已核验来源 · 编辑部</text>
+          </view>
+          <view class="follow tap" bindtap="feedback">关注</view>
+        </view>
+
+        <view class="ai-card">
+          <view class="ai-head">
+            <text class="ai-icon">✦</text>
+            <text class="ai-title">智能摘要</text>
+            <text class="ai-badge">AI 生成</text>
+          </view>
+          <text class="ai-summary">{{article.summary}}</text>
+          <view wx:if="{{article.keyPoints.length > 0}}" class="ai-points">
+            <view wx:for="{{article.keyPoints}}" wx:key="*this" class="ai-point">
+              <view class="ai-dot"></view>
+              <text>{{item}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="body {{isLargeText ? 'is-large' : ''}}">
+          <text wx:for="{{article.body}}" wx:key="*this" class="paragraph">{{item}}</text>
+        </view>
+
+        <view wx:if="{{article.tags.length > 0}}" class="tags">
+          <text wx:for="{{article.tags}}" wx:key="*this" class="tag"># {{item}}</text>
+        </view>
+
+        <view class="feedback">
+          <text class="feedback-title">这篇内容对你有帮助吗？</text>
+          <view class="feedback-actions">
+            <view class="feedback-button tap" bindtap="feedback">有帮助</view>
+            <view class="feedback-button tap" bindtap="feedback">减少此类</view>
+          </view>
+        </view>
+
+        <view class="comments">
+          <view class="comments-head">
+            <text class="comments-title">评论</text>
+            <text class="comments-count">{{commentsSummary ? commentsSummary.publishedCount : comments.length}}</text>
+            <text class="comments-hint">理性讨论 · 尊重事实</text>
+          </view>
+
+          <view class="composer">
+            <view wx:if="{{commentReplyTo}}" class="reply-bar">
+              <text>回复 @{{commentReplyTo.name}}</text>
+              <text class="reply-cancel" bindtap="cancelCommentReply">取消</text>
+            </view>
+            <textarea
+              class="composer-input"
+              value="{{commentInput}}"
+              maxlength="300"
+              auto-height
+              placeholder="{{commentReplyTo ? '回复 @' + commentReplyTo.name + '…' : '写下你的判断，或补充一条来源…'}}"
+              bindinput="onCommentInput"
+            />
+            <view class="composer-foot">
+              <text class="composer-count">{{commentInput.length}}/300</text>
+              <view
+                class="publish {{commentInput && !commentSubmitting ? '' : 'is-disabled'}}"
+                bindtap="submitComment"
+              >{{commentSubmitting ? '发布中…' : '发布'}}</view>
+            </view>
+          </view>
+
+          <view wx:if="{{commentsLoading && comments.length === 0}}" class="comments-state">正在加载评论</view>
+          <view wx:elif="{{commentsError}}" class="comments-state">{{commentsError}}</view>
+          <view wx:elif="{{comments.length === 0}}" class="comments-state">
+            <text class="comments-empty-title">还没有评论</text>
+            <text class="comments-empty-copy">成为第一个留下判断的人。</text>
+          </view>
+
+          <view wx:else class="comment-list">
+            <view wx:for="{{comments}}" wx:key="id" class="comment">
+              <view class="comment-avatar">{{item.avatarText}}</view>
+              <view class="comment-body">
+                <view class="comment-meta">
+                  <text class="comment-author">{{item.authorName}}</text>
+                  <text wx:if="{{item.quoteAuthorName}}" class="comment-quote">回复 @{{item.quoteAuthorName}}</text>
+                  <text class="comment-time">{{item.timeLabel}}</text>
+                </view>
+                <text class="comment-text">{{item.body}}</text>
+                <view class="comment-actions">
+                  <view
+                    class="comment-action {{item.viewerLiked ? 'is-liked' : ''}}"
+                    data-id="{{item.id}}"
+                    bindtap="toggleCommentLike"
+                  >{{item.viewerLiked ? '♥' : '♡'}} {{item.likeCount > 0 ? item.likeCount : '赞'}}</view>
+                  <view
+                    class="comment-action"
+                    data-id="{{item.id}}"
+                    data-name="{{item.authorName}}"
+                    bindtap="replyToComment"
+                  >回复</view>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{commentHasMore}}" class="comments-more tap" bindtap="loadMoreComments">
+              {{commentsLoading ? '加载中…' : '查看更多评论'}}
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="content-bottom"></view>
+    </scroll-view>
+
+    <view class="actionbar">
+      <view class="action tap {{liked ? 'is-liked' : ''}}" bindtap="toggleArticleLike">
+        <text class="action-icon">{{liked ? '♥' : '♡'}}</text>
+        <text>{{engagementSummary ? engagementSummary.likeCount : '点赞'}}</text>
+      </view>
+      <view class="action tap" bindtap="toggleSave">
+        <text class="action-icon">{{saved ? '★' : '☆'}}</text>
+        <text>{{saved ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="action tap" bindtap="share">
+        <text class="action-icon">↗</text>
+        <text>分享</text>
+      </view>
+      <view class="action tap" bindtap="toggleFont">
+        <text class="action-icon">Aa</text>
+        <text>字号</text>
+      </view>
+    </view>
+  </block>
+</view>

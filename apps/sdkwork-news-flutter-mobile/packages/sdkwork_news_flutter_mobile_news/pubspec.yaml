@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sdkwork_news_flutter_mobile_comments:
+    path: ../sdkwork_news_flutter_mobile_comments
   sdkwork_news_flutter_mobile_commons:
     path: ../sdkwork_news_flutter_mobile_commons
 

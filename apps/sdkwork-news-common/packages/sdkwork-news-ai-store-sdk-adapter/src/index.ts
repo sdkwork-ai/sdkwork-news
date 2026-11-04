@@ -124,12 +124,12 @@ async function listMcpServers(
   input: Parameters<AiStorePort["list"]>[0],
 ): Promise<AiStorePage> {
   const page = readPage<McpServerRecord>(
-    await client.mcp.listServers({
+    await client.mcp.servers.list({
       cursor: input.cursor,
       pageSize: input.pageSize,
       q: input.q,
     }),
-    "mcp.listServers",
+    "mcp.servers.list",
   );
   return {
     hasMore: page.hasMore,

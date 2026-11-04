@@ -1,0 +1,9 @@
+{
+  "desc": "SDKWork News mini program sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

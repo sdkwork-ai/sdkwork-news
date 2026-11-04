@@ -9,6 +9,7 @@ class NewsArticle {
     required this.commentCount,
     this.summary = '',
     this.body = const <String>[],
+    this.tags = const <String>[],
   });
 
   final String id;
@@ -20,6 +21,7 @@ class NewsArticle {
   final int commentCount;
   final String summary;
   final List<String> body;
+  final List<String> tags;
 }
 
 class NewsArticlePage {

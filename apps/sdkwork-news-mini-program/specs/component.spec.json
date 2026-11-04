@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "sdkwork-news-mini-program",
+    "displayName": "SDKWork News Mini Program",
+    "version": "0.1.0",
+    "type": "mini-program-app-root",
+    "root": "apps/sdkwork-news-mini-program",
+    "domain": "content",
+    "capability": "news",
+    "surface": "app",
+    "languages": ["typescript"],
+    "generated": false,
+    "manifests": ["package.json", "agent.app.config.json", "project.config.json"]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "path": "../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "purpose": "Mini program application root architecture."
+    },
+    {
+      "file": "APP_MINI_PROGRAM_UI_SPEC.md",
+      "path": "../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md",
+      "purpose": "Mini program package and interaction rules."
+    },
+    {
+      "file": "APP_CLIENT_ARCHITECTURE_ALIGNMENT_SPEC.md",
+      "path": "../../../sdkwork-specs/APP_CLIENT_ARCHITECTURE_ALIGNMENT_SPEC.md",
+      "purpose": "Cross-client route and package alignment."
+    },
+    {
+      "file": "APP_SDK_INTEGRATION_SPEC.md",
+      "path": "../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md",
+      "purpose": "Generated app SDK integration."
+    },
+    {
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../../../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Authored source structure."
+    },
+    {
+      "file": "NAMING_SPEC.md",
+      "path": "../../../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical naming."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "Strict TypeScript rules."
+    }
+  ],
+  "contracts": {
+    "layerRole": "frontend-host",
+    "publicExports": [],
+    "providedPorts": [],
+    "requiredPorts": [
+      { "name": "newsMiniProgramService", "export": ".", "provider": "@sdkwork/news-mp-core" },
+      { "name": "newsMiniProgramHost", "export": ".", "provider": "@sdkwork/news-mp-host" },
+      { "name": "newsMiniProgramTabs", "export": ".", "provider": "@sdkwork/news-mp-shell" },
+      { "name": "newsCommentsService", "export": ".", "provider": "@sdkwork/news-comments-service" }
+    ],
+    "runtimeEntrypoints": ["src/app.ts"],
+    "routeManifest": "packages/sdkwork-news-mp-news/src/routes/routes.json",
+    "sdkClients": [],
+    "sdkDependencies": [
+      { "workspace": "sdkwork-news-app-sdk", "surface": "app-api", "packageName": "@sdkwork/news-app-sdk", "status": "planned" },
+      { "workspace": "sdkwork-comments-app-sdk", "surface": "app-api", "packageName": "@sdkwork/comments-app-sdk", "status": "planned" }
+    ],
+    "events": [],
+    "configKeys": [
+      "SDKWORK_ACCESS_TOKEN",
+      "SDKWORK_APP_ID",
+      "SDKWORK_COMMENTS_APP_API_URL",
+      "SDKWORK_DEPLOYMENT_PROFILE",
+      "SDKWORK_ENVIRONMENT",
+      "SDKWORK_PROFILE_ID",
+      "SDKWORK_RUNTIME_TARGET"
+    ]
+  },
+  "verification": {
+    "commands": [
+      "pnpm --dir apps/sdkwork-news-mini-program typecheck",
+      "pnpm --dir apps/sdkwork-news-mini-program test",
+      "pnpm --dir apps/sdkwork-news-mini-program build:mini-program"
+    ]
+  }
+}

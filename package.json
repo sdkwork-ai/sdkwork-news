@@ -13,6 +13,8 @@
     "test:flutter": "node tools/run-news-flutter.mjs test",
     "build:pc": "pnpm --dir apps/sdkwork-news-pc build",
     "build:h5": "pnpm --dir apps/sdkwork-news-h5 build",
+    "build:mini-program": "pnpm --dir apps/sdkwork-news-mini-program build:mini-program",
+    "test:mini-program": "pnpm --dir apps/sdkwork-news-mini-program test",
     "build:flutter:web": "node tools/verify-news-build-sources.mjs --scope flutter && node tools/run-news-flutter.mjs build web --release --dart-define-from-file=config/app/runtime-env.development.example.json",
     "build:rust": "node tools/run-news-cargo.mjs build --workspace",
     "check:flutter": "node tools/run-news-flutter.mjs analyze",
@@ -100,7 +102,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@sdkwork/sdk-common": "workspace:*"
+      "@sdkwork/sdk-common": "workspace:*",
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
     }
   }
 }

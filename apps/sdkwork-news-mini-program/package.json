@@ -1,0 +1,29 @@
+{
+  "name": "@sdkwork/news-mini-program",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Native WeChat mini-program surface for SDKWork News.",
+  "scripts": {
+    "dev": "pnpm project:routes && tsc --noEmit",
+    "build:mini-program": "pnpm project:routes && pnpm verify:config && tsc --noEmit",
+    "build:mini-program:staging": "pnpm build:mini-program",
+    "build:mini-program:prod": "pnpm build:mini-program",
+    "project:routes": "node scripts/project-routes.mjs",
+    "verify:config": "node scripts/verify-config.mjs",
+    "test:routes": "node --test tests/*.test.mjs",
+    "test": "pnpm project:routes && pnpm test:routes && tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sdkwork/news-comments-service": "workspace:*",
+    "@sdkwork/news-mp-commons": "workspace:*",
+    "@sdkwork/news-mp-core": "workspace:*",
+    "@sdkwork/news-mp-host": "workspace:*",
+    "@sdkwork/news-mp-news": "workspace:*",
+    "@sdkwork/news-mp-shell": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

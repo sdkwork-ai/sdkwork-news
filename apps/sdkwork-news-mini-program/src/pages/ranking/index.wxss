@@ -1,0 +1,137 @@
+.page {
+  min-height: 100vh;
+  background: #f4f5f2;
+}
+
+.top {
+  padding: 30rpx 30rpx 24rpx;
+  background:
+    radial-gradient(circle at 86% 20%, #ffe4e0 0, transparent 46%),
+    #fff;
+  border-bottom: 1rpx solid #edf0ec;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: 900;
+  letter-spacing: -2rpx;
+}
+
+.badge {
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  background: #e63b2e;
+  color: #fff;
+  font-size: 18rpx;
+  font-weight: 700;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 8rpx;
+  color: #8a928c;
+  font-size: 21rpx;
+}
+
+.list {
+  margin: 22rpx 24rpx;
+  overflow: hidden;
+  border-radius: 18rpx;
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid #f0f2ef;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rank {
+  width: 42rpx;
+  flex: 0 0 auto;
+  color: #a4aba6;
+  font-family: Georgia, serif;
+  font-size: 32rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.rank.is-hot {
+  color: #e63b2e;
+}
+
+.row-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.row-title {
+  color: #202622;
+  font-size: 29rpx;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.row-meta {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 9rpx;
+  color: #9aa19c;
+  font-size: 18rpx;
+}
+
+.row-arrow {
+  color: #c5cbc6;
+  font-size: 34rpx;
+}
+
+.state {
+  display: flex;
+  min-height: 520rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+  color: #8a928c;
+  font-size: 22rpx;
+}
+
+.spinner {
+  width: 38rpx;
+  height: 38rpx;
+  border: 4rpx solid #f0c7c2;
+  border-top-color: #e63b2e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.retry {
+  height: 62rpx;
+  padding: 0 28rpx;
+  border: 1rpx solid #e2e7e1;
+  border-radius: 31rpx;
+  background: #fff;
+  color: #46514a;
+  font-size: 22rpx;
+  line-height: 60rpx;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

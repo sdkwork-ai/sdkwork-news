@@ -72,6 +72,7 @@ const demoArticles = <NewsArticle>[
     imageAsset: NewsAssets.aiChips,
     commentCount: 186,
     summary: '可靠性、权限边界和可观察性成为采购决策的核心。',
+    tags: ['AI Agent', '企业软件'],
     body: [
       '企业正在把智能体从单次问答工具放进销售、客服和研发流程。',
       '随着任务持续执行，可靠性、权限边界和可观察性成为采购决策的核心。',
@@ -86,6 +87,7 @@ const demoArticles = <NewsArticle>[
     imageAsset: NewsAssets.markets,
     commentCount: 92,
     summary: '短端利率回落，但机构对趋势判断仍保持谨慎。',
+    tags: ['流动性', '货币政策'],
     body: [
       '公开市场操作规模连续上升，短端利率回落。',
       '机构仍在观察政策传导到实体经济的速度，趋势判断保持谨慎。',
@@ -100,6 +102,7 @@ const demoArticles = <NewsArticle>[
     imageAsset: NewsAssets.workspace,
     commentCount: 64,
     summary: 'AI 产品开始按任务、调用或业务结果计费。',
+    tags: ['SaaS', '商业模式'],
     body: [
       '越来越多 AI 产品尝试按任务、调用或业务结果计费。',
       '当价值从席位转向结果，传统 SaaS 的增长和留存指标也需要重新解释。',
@@ -114,6 +117,7 @@ const demoArticles = <NewsArticle>[
     imageAsset: NewsAssets.logistics,
     commentCount: 41,
     summary: '关键零部件的多源策略明显增加。',
+    tags: ['供应链', '制造业'],
     body: [
       '效率与韧性的权衡正在改变，企业开始重新评估供应商集中度。',
       '关键零部件的多源策略增加，也让库存和物流协同成为新的管理重点。',

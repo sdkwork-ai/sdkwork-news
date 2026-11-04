@@ -1,0 +1,23 @@
+{
+  "name": "@sdkwork/news-pc-comments",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@sdkwork/news-comments-react": "workspace:*",
+    "@sdkwork/news-comments-service": "workspace:*",
+    "lucide-react": "catalog:",
+    "react": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.tsx",
+      "import": "./src/index.tsx",
+      "default": "./src/index.tsx"
+    }
+  },
+  "scripts": {
+    "test": "vitest run apps/sdkwork-news-pc/packages/sdkwork-news-pc-comments/tests --root ../../../.. --config vitest.config.ts --configLoader native --pool vmThreads",
+    "typecheck": "tsc --noEmit"
+  }
+}

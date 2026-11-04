@@ -33,7 +33,7 @@ export function createSdkworkNewsFeedPort(client: SdkworkAppClient): NewsFeedPor
     },
     async listChannels(pageSize) {
       const page = readPage<SdkNewsChannel>(
-        await client.news.channels.list({ limit: String(pageSize) }),
+        await client.news.channels.list({ pageSize }),
         "news.channels.list",
       );
       return page.items.map((channel) => ({
@@ -43,33 +43,33 @@ export function createSdkworkNewsFeedPort(client: SdkworkAppClient): NewsFeedPor
       }));
     },
     async listFeed(input) {
-      const pageSize = String(input.pageSize ?? 20);
+      const pageSize = input.pageSize ?? 20;
       const response = input.q
         ? await client.news.search.list({
             cursor: input.cursor,
-            limit: pageSize,
+            pageSize,
             q: input.q,
           })
         : input.channelId
           ? await client.news.channels.feed.list(input.channelId, {
               cursor: input.cursor,
-              limit: pageSize,
+              pageSize,
             })
           : await client.news.feed.personalized.list({
               cursor: input.cursor,
-              limit: pageSize,
+              pageSize,
             });
       return mapFeedPage(response, "news feed");
     },
     async listRelated(itemId, pageSize) {
       return mapFeedPage(
-        await client.news.items.related.list(itemId, { limit: String(pageSize) }),
+        await client.news.items.related.list(itemId, { pageSize }),
         "news.items.related.list",
       );
     },
     async listTrending(pageSize) {
       return mapFeedPage(
-        await client.news.trending.list({ limit: String(pageSize) }),
+        await client.news.trending.list({ pageSize }),
         "news.trending.list",
       );
     },

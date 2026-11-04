@@ -1,62 +1,63 @@
 {
-  "name": "@sdkwork/news-pc",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "dev": "node ../../tools/verify-news-build-sources.mjs --scope pc && vite",
-    "build": "node ../../tools/verify-news-build-sources.mjs --scope pc && tsc && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run apps/sdkwork-news-pc --root ../.. --config vitest.config.ts --configLoader native --pool vmThreads",
-    "check": "pnpm typecheck && pnpm test && pnpm build",
-    "verify": "pnpm check",
-    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "build:dev": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev",
-    "build:test": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test",
-    "build:staging": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging",
-    "build:demo": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment demo",
-    "build:prod": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod",
-    "build:dev:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev --deployment-profile cloud",
-    "build:test:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test --deployment-profile cloud",
-    "build:staging:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging --deployment-profile cloud",
-    "build:demo:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment demo --deployment-profile cloud",
-    "build:prod:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod --deployment-profile cloud"
-  },
-  "dependencies": {
-    "@sdkwork/news-account-runtime": "workspace:*",
-    "@sdkwork/news-account-service": "workspace:*",
-    "@sdkwork/news-agent-bootstrap": "workspace:*",
-    "@sdkwork/news-agent-service": "workspace:*",
-    "@sdkwork/news-ai-store-runtime": "workspace:*",
-    "@sdkwork/news-ai-store-service": "workspace:*",
-    "@sdkwork/news-app-sdk": "workspace:*",
-    "@sdkwork/news-feed-service": "workspace:*",
-    "@sdkwork/news-pc-account": "workspace:*",
-    "@sdkwork/news-pc-ai-store": "workspace:*",
-    "@sdkwork/news-pc-assistant": "workspace:*",
-    "@sdkwork/news-pc-news": "workspace:*",
-    "@sdkwork/news-pc-workspace-shell": "workspace:*",
-    "@sdkwork/news-runtime": "workspace:*",
-    "@sdkwork/sdk-common": "workspace:*",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-router-dom": "catalog:"
-  },
-  "devDependencies": {
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:"
-  },
-  "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
-    }
-  }
+    "name":  "@sdkwork/news-pc",
+    "private":  true,
+    "version":  "0.1.0",
+    "type":  "module",
+    "scripts":  {
+                    "dev":  "node ../../tools/verify-news-build-sources.mjs --scope pc \u0026\u0026 vite",
+                    "build":  "node ../../tools/verify-news-build-sources.mjs --scope pc \u0026\u0026 tsc \u0026\u0026 vite build",
+                    "preview":  "vite preview",
+                    "typecheck":  "tsc --noEmit",
+                    "test":  "vitest run apps/sdkwork-news-pc --root ../.. --config vitest.config.ts --configLoader native --pool vmThreads",
+                    "check":  "pnpm typecheck \u0026\u0026 pnpm test \u0026\u0026 pnpm build",
+                    "verify":  "pnpm check",
+                    "clean":  "node -e \"require(\u0027node:fs\u0027).rmSync(\u0027dist\u0027,{recursive:true,force:true})\"",
+                    "lint":  "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+                    "build:dev":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev",
+                    "build:test":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test",
+                    "build:staging":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging",
+                    "build:demo":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment demo",
+                    "build:prod":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod",
+                    "build:dev:cloud":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev --deployment-profile cloud",
+                    "build:test:cloud":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test --deployment-profile cloud",
+                    "build:staging:cloud":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging --deployment-profile cloud",
+                    "build:demo:cloud":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment demo --deployment-profile cloud",
+                    "build:prod:cloud":  "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod --deployment-profile cloud"
+                },
+    "dependencies":  {
+                         "@sdkwork/news-account-runtime":  "workspace:*",
+                         "@sdkwork/news-account-service":  "workspace:*",
+                         "@sdkwork/news-agent-bootstrap":  "workspace:*",
+                         "@sdkwork/news-agent-service":  "workspace:*",
+                         "@sdkwork/news-ai-store-runtime":  "workspace:*",
+                         "@sdkwork/news-ai-store-service":  "workspace:*",
+                         "@sdkwork/news-app-sdk":  "workspace:*",
+                         "@sdkwork/news-feed-service":  "workspace:*",
+                         "@sdkwork/news-pc-account":  "workspace:*",
+                         "@sdkwork/news-pc-ai-store":  "workspace:*",
+                         "@sdkwork/news-pc-assistant":  "workspace:*",
+                         "@sdkwork/news-pc-news":  "workspace:*",
+                         "@sdkwork/news-pc-workspace-shell":  "workspace:*",
+                         "@sdkwork/news-runtime":  "workspace:*",
+                         "@sdkwork/sdk-common":  "workspace:*",
+                         "react":  "catalog:",
+                         "react-dom":  "catalog:",
+                         "react-router-dom":  "catalog:",
+                         "@sdkwork/news-comments-service":  "workspace:*"
+                     },
+    "devDependencies":  {
+                            "@types/react":  "catalog:",
+                            "@types/react-dom":  "catalog:",
+                            "@vitejs/plugin-react":  "catalog:",
+                            "typescript":  "catalog:",
+                            "vite":  "catalog:",
+                            "vitest":  "catalog:"
+                        },
+    "exports":  {
+                    ".":  {
+                              "types":  "./src/index.ts",
+                              "import":  "./src/index.ts",
+                              "default":  "./src/index.ts"
+                          }
+                }
 }

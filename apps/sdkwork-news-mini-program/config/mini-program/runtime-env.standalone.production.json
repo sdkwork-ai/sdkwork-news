@@ -1,0 +1,9 @@
+{
+  "SDKWORK_ACCESS_TOKEN": "mini-program-standalone-production-public-token",
+  "SDKWORK_APP_ID": "sdkwork-news",
+  "SDKWORK_DEPLOYMENT_PROFILE": "standalone",
+  "SDKWORK_ENVIRONMENT": "production",
+  "SDKWORK_PROFILE_ID": "standalone.production",
+  "SDKWORK_COMMENTS_APP_API_URL": "",
+  "SDKWORK_RUNTIME_TARGET": "mini-program"
+}

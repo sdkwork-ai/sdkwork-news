@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/news-pc-comments",
+    "displayName": "SDKWork News PC Comments",
+    "version": "0.1.0",
+    "type": "node-package",
+    "root": "sdkwork-news/apps/sdkwork-news-pc/packages/sdkwork-news-pc-comments",
+    "domain": "content",
+    "capability": "news-pc-comments",
+    "languages": ["typescript"],
+    "generated": false,
+    "manifests": ["package.json"]
+  },
+  "canonicalSpecs": [
+    { "file": "APP_PC_REACT_UI_SPEC.md", "path": "../../../../../sdkwork-specs/APP_PC_REACT_UI_SPEC.md", "purpose": "Desktop comments UI." },
+    { "file": "FRONTEND_CODE_SPEC.md", "path": "../../../../../sdkwork-specs/FRONTEND_CODE_SPEC.md", "purpose": "Accessibility, states, and layering." }
+  ],
+  "contracts": {
+    "layerRole": "frontend-feature",
+    "publicExports": ["."],
+    "providedPorts": [{ "name": "newsPcCommentsFeature", "export": "." }],
+    "requiredPorts": [
+      { "name": "newsCommentsController", "export": ".", "provider": "@sdkwork/news-comments-react" },
+      { "name": "newsCommentsService", "export": ".", "provider": "@sdkwork/news-comments-service" }
+    ],
+    "runtimeEntrypoints": [],
+    "routeManifest": null,
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "events": [],
+    "configKeys": []
+  },
+  "verification": {
+    "commands": ["pnpm --filter @sdkwork/news-pc-comments test"]
+  }
+}

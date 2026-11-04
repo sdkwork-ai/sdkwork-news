@@ -1,0 +1,19 @@
+{
+  "appid": "wx0000000000000000",
+  "projectname": "sdkwork-news-mini-program",
+  "compileType": "miniprogram",
+  "libVersion": "3.5.5",
+  "miniprogramRoot": "src/",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "packNpmManually": false,
+    "ignoreDevUnusedFiles": true,
+    "ignoreUploadUnusedFiles": true,
+    "useCompilerPlugins": ["typescript"]
+  },
+  "description": "SDKWork News information app for WeChat."
+}

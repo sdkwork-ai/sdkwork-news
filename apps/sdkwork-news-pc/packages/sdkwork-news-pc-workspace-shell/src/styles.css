@@ -6,3 +6,22 @@
   background: #e4ece7;
   color: #1e5d4b;
 }
+
+.news-pc-titlebar__brand > span {
+  background: #e63b2e;
+  font-family: inherit;
+  font-weight: 900;
+}
+
+.news-pc-titlebar__status i {
+  background: #e63b2e;
+}
+
+.news-pc-global-nav button.is-active {
+  background: #3b302e;
+  color: #ff8278;
+}
+
+.news-pc-workspace__content {
+  background: #f4f5f2;
+}

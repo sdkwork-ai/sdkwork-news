@@ -15,6 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.9
   sdkwork_agents_app_sdk:
     path: ../../../sdkwork-agents/sdks/sdkwork-agents-app-sdk/sdkwork-agents-app-sdk-flutter/generated/server-openapi
+  sdkwork_comments_app_sdk_flutter:
+    path: ../../../sdkwork-comments/sdks/sdkwork-comments-app-sdk/sdkwork-comments-app-sdk-flutter/generated/server-openapi
   sdkwork_iam_app_sdk:
     path: ../../../sdkwork-iam/sdks/sdkwork-iam-app-sdk/sdkwork-iam-app-sdk-flutter/generated/server-openapi
   sdkwork_im_flutter_mobile_core:
@@ -31,6 +33,10 @@ dependencies:
     path: packages/sdkwork_news_flutter_mobile_assistant
   sdkwork_news_flutter_mobile_commons:
     path: packages/sdkwork_news_flutter_mobile_commons
+  sdkwork_news_flutter_mobile_comments:
+    path: packages/sdkwork_news_flutter_mobile_comments
+  sdkwork_news_flutter_mobile_comments_sdk_adapter:
+    path: packages/sdkwork_news_flutter_mobile_comments_sdk_adapter
   sdkwork_news_flutter_mobile_core:
     path: packages/sdkwork_news_flutter_mobile_core
   sdkwork_news_flutter_mobile_host:

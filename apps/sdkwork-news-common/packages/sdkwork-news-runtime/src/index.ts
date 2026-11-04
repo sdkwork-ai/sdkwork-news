@@ -1,6 +1,7 @@
 import { NEWS_APP_API_ROUTES, NEWS_BACKEND_API_ROUTES, NEWS_OPEN_API_ROUTES, NEWS_OWNER } from "@sdkwork/news-contracts";
 import type { SdkworkNewsService } from "@sdkwork/news-service";
 
+export * from "./browser-runtime.js";
 export * from "./config.js";
 export * from "./feed-runtime.js";
 

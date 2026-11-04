@@ -1,0 +1,47 @@
+page {
+  min-height: 100%;
+  background: #f4f5f2;
+  color: #171b18;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 28rpx;
+  -webkit-font-smoothing: antialiased;
+}
+
+view,
+text,
+image,
+scroll-view,
+input {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  background: #f4f5f2;
+}
+
+.safe-bottom {
+  height: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.tap {
+  transition: opacity 0.15s ease;
+}
+
+.tap:active {
+  opacity: 0.72;
+}
+
+.ellipsis-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ellipsis-3 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}

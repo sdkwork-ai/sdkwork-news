@@ -1,0 +1,70 @@
+<view class="page">
+  <view style="height: {{statusBarHeight}}px"></view>
+
+  <view class="appbar">
+    <view class="back tap" bindtap="goBack">‹</view>
+    <view class="search-box">
+      <view class="search-icon"></view>
+      <input
+        class="search-input"
+        value="{{inputValue}}"
+        placeholder="搜索新闻、话题或来源"
+        confirm-type="search"
+        focus="{{!searched}}"
+        bindinput="onInput"
+        bindconfirm="submit"
+      />
+      <view wx:if="{{inputValue}}" class="clear tap" bindtap="clear">×</view>
+    </view>
+    <view class="search-action tap" bindtap="submit">搜索</view>
+  </view>
+
+  <view wx:if="{{!searched}}" class="suggestions">
+    <text class="suggestion-title">大家都在搜</text>
+    <view class="suggestion-list">
+      <view
+        wx:for="{{suggestions}}"
+        wx:key="*this"
+        class="suggestion tap"
+        data-value="{{item}}"
+        bindtap="pickSuggestion"
+      ># {{item}}</view>
+    </view>
+  </view>
+
+  <view wx:elif="{{loading}}" class="state">
+    <view class="spinner"></view>
+    <text>正在搜索“{{query}}”</text>
+  </view>
+
+  <view wx:elif="{{errorMessage}}" class="state">
+    <text>{{errorMessage}}</text>
+  </view>
+
+  <view wx:elif="{{results.length === 0}}" class="state">
+    <text class="state-title">没有找到相关资讯</text>
+    <text class="state-copy">换个关键词，或回到首页看看今日要闻。</text>
+  </view>
+
+  <block wx:else>
+    <view class="result-head">“{{query}}”的搜索结果 · {{results.length}} 条</view>
+    <view class="results">
+      <view
+        wx:for="{{results}}"
+        wx:key="id"
+        class="row tap"
+        data-id="{{item.id}}"
+        bindtap="openArticle"
+      >
+        <view class="row-copy">
+          <text class="row-category">{{item.categoryLabel}}</text>
+          <text class="row-title ellipsis-2">{{item.title}}</text>
+          <text class="row-summary ellipsis-2">{{item.summary}}</text>
+          <text class="row-meta">{{item.source}} · {{item.publishedLabel}}</text>
+        </view>
+        <image wx:if="{{item.image}}" class="row-image" src="{{item.image}}" mode="aspectFill" />
+      </view>
+    </view>
+  </block>
+  <view class="safe-bottom"></view>
+</view>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sdkwork_news_flutter_mobile_comments/sdkwork_news_flutter_mobile_comments.dart';
 import 'package:sdkwork_news_flutter_mobile_commons/sdkwork_news_flutter_mobile_commons.dart';
 
 import '../controllers/news_feed_controller.dart';
@@ -8,10 +9,12 @@ class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({
     super.key,
     required this.controller,
+    this.commentsRepository,
     this.onSecondaryPageChanged,
   });
 
   final NewsFeedController controller;
+  final NewsCommentsRepository? commentsRepository;
   final ValueChanged<bool>? onSecondaryPageChanged;
 
   @override
@@ -21,6 +24,8 @@ class NewsFeedPage extends StatefulWidget {
 class _NewsFeedPageState extends State<NewsFeedPage> {
   final _scrollController = ScrollController();
   NewsArticle? _selectedArticle;
+  NewsCommentsController? _commentsController;
+  NewsEngagementController? _engagementController;
 
   @override
   void initState() {
@@ -36,12 +41,30 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   }
 
   void _openArticle(NewsArticle article) {
+    _commentsController?.dispose();
+    _engagementController?.dispose();
+    final repository =
+        widget.commentsRepository ?? const UnavailableNewsCommentsRepository();
+    _commentsController = NewsCommentsController(
+      repository,
+      articleId: article.id,
+      articleTitle: article.title,
+    );
+    _engagementController = NewsEngagementController(
+      repository,
+      articleId: article.id,
+    );
+    _engagementController!.initialize();
     setState(() => _selectedArticle = article);
     widget.onSecondaryPageChanged?.call(true);
   }
 
   void _closeArticle() {
     setState(() => _selectedArticle = null);
+    _commentsController?.dispose();
+    _commentsController = null;
+    _engagementController?.dispose();
+    _engagementController = null;
     widget.onSecondaryPageChanged?.call(false);
   }
 
@@ -49,6 +72,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   void dispose() {
     _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
+    _commentsController?.dispose();
+    _engagementController?.dispose();
     widget.onSecondaryPageChanged?.call(false);
     super.dispose();
   }
@@ -62,6 +87,8 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         if (_selectedArticle != null) {
           return NewsArticleDetailPage(
             article: _selectedArticle!,
+            commentsController: _commentsController,
+            engagementController: _engagementController,
             onBack: _closeArticle,
             onSaved: () => widget.controller.toggleSaved(_selectedArticle!.id),
             saved: widget.controller.savedIds.contains(_selectedArticle!.id),
@@ -71,23 +98,70 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         final failed = widget.controller.errorMessage != null &&
             articles.isEmpty &&
             !widget.controller.isLoading;
+        final topicTags = <String>{
+          for (final article in articles) ...article.tags,
+        }.take(6).toList(growable: false);
         return SafeArea(
           bottom: false,
           child: Column(
             children: [
               Container(
-                height: 58,
+                height: 70,
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 color: Theme.of(context).colorScheme.surface,
                 child: Row(
                   children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: NewsPalette.primary,
+                        borderRadius: BorderRadius.circular(9),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x33E63B2E),
+                            blurRadius: 14,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: const Text(
+                        '头',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: Text(
-                        strings.text('news.title'),
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w800),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            strings.text('news.title'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.4,
+                                ),
+                          ),
+                          Text(
+                            MaterialLocalizations.of(context)
+                                .formatMediumDate(DateTime.now()),
+                            style: const TextStyle(
+                              color: NewsPalette.muted,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     IconButton(
@@ -100,6 +174,11 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                 ),
               ),
               _CategoryTabs(controller: widget.controller, strings: strings),
+              if (topicTags.isNotEmpty)
+                _TopicChips(
+                  tags: topicTags,
+                  onSelect: (tag) => widget.controller.search(tag),
+                ),
               if (widget.controller.query != null)
                 _SearchContextBar(
                   onClear: () => widget.controller.search(null),
@@ -244,12 +323,16 @@ class NewsArticleDetailPage extends StatelessWidget {
     required this.onBack,
     required this.onSaved,
     required this.saved,
+    this.commentsController,
+    this.engagementController,
   });
 
   final NewsArticle article;
   final VoidCallback onBack;
   final VoidCallback onSaved;
   final bool saved;
+  final NewsCommentsController? commentsController;
+  final NewsEngagementController? engagementController;
 
   @override
   Widget build(BuildContext context) {
@@ -292,19 +375,73 @@ class NewsArticleDetailPage extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
-                  IconButton(
-                    key: const ValueKey('news.detail.save'),
-                    tooltip: saved
-                        ? strings.text('news.unsave')
-                        : strings.text('news.save'),
-                    onPressed: onSaved,
-                    icon: Icon(
-                      saved
-                          ? Icons.bookmark_rounded
-                          : Icons.bookmark_border_rounded,
-                      color: saved ? NewsPalette.primary : NewsPalette.muted,
+                  if (engagementController != null)
+                    AnimatedBuilder(
+                      animation: engagementController!,
+                      builder: (context, _) {
+                        final engagement = engagementController!;
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton.icon(
+                              key: const ValueKey('news.detail.like'),
+                              onPressed: engagement.isLikePending
+                                  ? null
+                                  : engagement.toggleLike,
+                              icon: Icon(
+                                engagement.liked
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                size: 19,
+                                color: engagement.liked
+                                    ? NewsPalette.primary
+                                    : NewsPalette.muted,
+                              ),
+                              label: Text(
+                                '${engagement.summary.likeCount}',
+                                style: TextStyle(
+                                  color: engagement.liked
+                                      ? NewsPalette.primary
+                                      : NewsPalette.muted,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              key: const ValueKey('news.detail.save'),
+                              tooltip: engagement.favorited
+                                  ? strings.text('news.unsave')
+                                  : strings.text('news.save'),
+                              onPressed: engagement.isFavoritePending
+                                  ? null
+                                  : engagement.toggleFavorite,
+                              icon: Icon(
+                                engagement.favorited
+                                    ? Icons.bookmark_rounded
+                                    : Icons.bookmark_border_rounded,
+                                color: engagement.favorited
+                                    ? NewsPalette.primary
+                                    : NewsPalette.muted,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    )
+                  else
+                    IconButton(
+                      key: const ValueKey('news.detail.save'),
+                      tooltip: saved
+                          ? strings.text('news.unsave')
+                          : strings.text('news.save'),
+                      onPressed: onSaved,
+                      icon: Icon(
+                        saved
+                            ? Icons.bookmark_rounded
+                            : Icons.bookmark_border_rounded,
+                        color: saved ? NewsPalette.primary : NewsPalette.muted,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -399,11 +536,44 @@ class NewsArticleDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                  if (commentsController != null)
+                    NewsCommentsSection(controller: commentsController!),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TopicChips extends StatelessWidget {
+  const _TopicChips({required this.onSelect, required this.tags});
+
+  final ValueChanged<String> onSelect;
+  final List<String> tags;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 46,
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
+        scrollDirection: Axis.horizontal,
+        itemCount: tags.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final tag = tags[index];
+          return ActionChip(
+            label: Text('# $tag'),
+            labelStyle: const TextStyle(fontSize: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            side: const BorderSide(color: NewsPalette.line),
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            onPressed: () => onSelect(tag),
+          );
+        },
       ),
     );
   }

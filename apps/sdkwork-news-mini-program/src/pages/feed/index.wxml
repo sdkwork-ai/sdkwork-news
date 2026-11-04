@@ -1,0 +1,112 @@
+<view class="page">
+  <view style="height: {{statusBarHeight}}px"></view>
+
+  <view class="appbar">
+    <view class="brand">
+      <view class="brand-mark">头</view>
+      <view class="brand-copy">
+        <text class="brand-name">SDKWork 头条</text>
+        <text class="brand-date">{{today}}</text>
+      </view>
+    </view>
+    <view class="search tap" bindtap="openSearch">
+      <view class="search-icon"></view>
+      <text>搜索新闻、话题</text>
+    </view>
+  </view>
+
+  <view class="hotbar tap" bindtap="openRanking">
+    <view class="hot-label"><text class="hot-flame">热</text><text>热榜</text></view>
+    <text class="hot-title">{{hotTitle}}</text>
+    <text class="chev">›</text>
+  </view>
+
+  <scroll-view class="channels" scroll-x enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{channels}}"
+      wx:key="id"
+      class="channel {{item.id === activeChannelId ? 'is-active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="selectChannel"
+    >{{item.title}}</view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="state">
+    <view class="spinner"></view>
+    <text class="state-title">正在加载今日资讯</text>
+    <text class="state-copy">正在连接你的个性化频道</text>
+  </view>
+
+  <view wx:elif="{{errorMessage}}" class="state">
+    <text class="state-title">资讯暂时不可用</text>
+    <text class="state-copy">{{errorMessage}}</text>
+    <button class="retry" bindtap="retry">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view
+      wx:if="{{hero}}"
+      class="hero tap"
+      data-id="{{hero.id}}"
+      bindtap="openArticle"
+    >
+      <image class="hero-image" src="{{hero.image}}" mode="aspectFill" />
+      <view class="hero-shade"></view>
+      <view class="hero-copy">
+        <view class="hero-badge">今日要闻</view>
+        <text class="hero-title ellipsis-3">{{hero.title}}</text>
+        <text class="hero-meta">{{hero.source}} · {{hero.publishedLabel}}</text>
+      </view>
+    </view>
+
+    <scroll-view class="topics" scroll-x enhanced show-scrollbar="{{false}}">
+      <view
+        wx:for="{{topics}}"
+        wx:key="*this"
+        class="topic tap"
+        data-topic="{{item}}"
+        bindtap="openTopic"
+      ># {{item}}</view>
+    </scroll-view>
+
+    <view class="section-head">
+      <text class="section-title">最新动态</text>
+      <view class="live"><view class="live-dot"></view><text>实时更新</text></view>
+    </view>
+
+    <view class="feed">
+      <view
+        wx:for="{{cards}}"
+        wx:key="id"
+        class="card tap"
+        data-id="{{item.id}}"
+        bindtap="openArticle"
+      >
+        <view class="card-copy">
+          <view class="card-meta">
+            <text class="card-category">{{item.categoryLabel}}</text>
+            <text wx:if="{{item.featured}}" class="card-feature">精选</text>
+          </view>
+          <text class="card-title ellipsis-3">{{item.title}}</text>
+          <text class="card-summary ellipsis-2">{{item.summary}}</text>
+          <view class="card-foot">
+            <text>{{item.source}}</text>
+            <text>{{item.publishedLabel}}</text>
+            <text>{{item.readLabel}}</text>
+          </view>
+        </view>
+        <image
+          wx:if="{{item.image}}"
+          class="card-image"
+          src="{{item.image}}"
+          mode="aspectFill"
+          lazy-load
+        />
+      </view>
+    </view>
+
+    <view wx:if="{{loadingMore}}" class="loadmore">正在加载更多</view>
+    <view wx:elif="{{!hasMore && cards.length > 0}}" class="end">— 已经到底了 —</view>
+    <view class="safe-bottom"></view>
+  </block>
+</view>

@@ -1,10 +1,11 @@
 {
-  "app.name": "智阅",
+  "app.name": "SDKWork 头条",
   "auth.required": "登录 SDKWork 账号后继续",
   "auth.login": "登录",
   "auth.loginUnavailable": "登录入口暂不可用",
+  "nav.home": "首页",
   "nav.assistant": "助手",
-  "nav.news": "新闻",
-  "nav.store": "AI Store",
+  "nav.news": "资讯",
+  "nav.store": "精选",
   "nav.account": "我的"
 }

@@ -1,4 +1,6 @@
 import 'package:sdkwork_agents_app_sdk/sdkwork_agents_app_sdk.dart';
+import 'package:sdkwork_comments_app_sdk_flutter/sdkwork_comments_app_sdk_flutter.dart'
+    as comments_sdk;
 import 'package:sdkwork_iam_app_sdk/sdkwork_iam_app_sdk.dart' as iam_sdk;
 import 'package:sdkwork_im_flutter_mobile_core/sdkwork_im_flutter_mobile_core.dart';
 import 'package:sdkwork_mcp_app_sdk_generated_flutter/sdkwork_mcp_app_sdk_generated_flutter.dart'
@@ -7,6 +9,8 @@ import 'package:sdkwork_news_flutter_mobile_account/sdkwork_news_flutter_mobile_
 import 'package:sdkwork_news_flutter_mobile_agent_sdk_adapter/sdkwork_news_flutter_mobile_agent_sdk_adapter.dart';
 import 'package:sdkwork_news_flutter_mobile_ai_store/sdkwork_news_flutter_mobile_ai_store.dart';
 import 'package:sdkwork_news_flutter_mobile_assistant/sdkwork_news_flutter_mobile_assistant.dart';
+import 'package:sdkwork_news_flutter_mobile_comments/sdkwork_news_flutter_mobile_comments.dart';
+import 'package:sdkwork_news_flutter_mobile_comments_sdk_adapter/sdkwork_news_flutter_mobile_comments_sdk_adapter.dart';
 import 'package:sdkwork_news_flutter_mobile_host/sdkwork_news_flutter_mobile_host.dart';
 import 'package:sdkwork_news_flutter_mobile_iam_sdk_adapter/sdkwork_news_flutter_mobile_iam_sdk_adapter.dart';
 import 'package:sdkwork_news_flutter_mobile_im_adapter/sdkwork_news_flutter_mobile_im_adapter.dart';
@@ -23,6 +27,7 @@ class NewsRuntime {
     required this.newsController,
     required this.storeController,
     required this.accountController,
+    required this.commentsRepository,
     this.requiresSignIn = false,
     this.demoMode = false,
   });
@@ -33,6 +38,7 @@ class NewsRuntime {
         newsController = null,
         storeController = null,
         accountController = null,
+        commentsRepository = const UnavailableNewsCommentsRepository(),
         requiresSignIn = true,
         demoMode = false;
 
@@ -41,6 +47,7 @@ class NewsRuntime {
   final NewsFeedController? newsController;
   final AiStoreController? storeController;
   final AccountController? accountController;
+  final NewsCommentsRepository commentsRepository;
   final bool requiresSignIn;
   final bool demoMode;
 
@@ -58,6 +65,7 @@ class NewsRuntime {
             const AccountPreferences.demo(),
           ),
         ),
+        commentsRepository: DemoNewsCommentsRepository(),
         demoMode: true,
       );
 
@@ -109,6 +117,13 @@ Future<NewsRuntime> bootstrapNewsRuntime({
     accessToken: session.accessToken,
     authToken: session.authToken,
   );
+  final commentsClient = comments_sdk.SdkworkAppClient.withBaseUrl(
+    baseUrl: _transportBaseUrl(
+      '${activeConfig.applicationPublicHttpUrl.replaceFirst(RegExp(r'/+$'), '')}/app/v3/api',
+    ),
+    accessToken: session.accessToken,
+    authToken: session.authToken,
+  );
   return NewsRuntime(
     shellController: NewsShellController(),
     assistantController: AssistantController(
@@ -123,6 +138,7 @@ Future<NewsRuntime> bootstrapNewsRuntime({
       IamAccountRepository(SdkworkIamCurrentUserGateway(iamClient)),
       preferencesRepository: const SecureAccountPreferencesRepository(),
     ),
+    commentsRepository: SdkworkNewsCommentsRepository(commentsClient),
   );
 }
 

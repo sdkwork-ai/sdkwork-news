@@ -13,10 +13,21 @@ export interface NewsFeedBootstrapResolution {
   mode: "demo" | "sdk";
 }
 
+export interface CommentsBootstrapConfig {
+  commentsApplicationPublicHttpUrl: string;
+}
+
+export interface CommentsBootstrapResolution {
+  config?: CommentsBootstrapConfig;
+  mode: "demo" | "sdk";
+}
+
 export type NewsRuntimeEnvironment = Readonly<Record<string, unknown>>;
 
 const NEWS_APPLICATION_PUBLIC_HTTP_URL =
   "VITE_SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL";
+const COMMENTS_APPLICATION_PUBLIC_HTTP_URL =
+  "VITE_SDKWORK_COMMENTS_APPLICATION_PUBLIC_HTTP_URL";
 const PLATFORM_GATEWAY_HTTP_URL =
   "VITE_SDKWORK_NEWS_PLATFORM_API_GATEWAY_HTTP_URL";
 
@@ -46,6 +57,37 @@ export function resolveNewsFeedBootstrap(
   return {
     config: {
       newsApplicationPublicHttpUrl: normalizeHttpUrl(configuredUrl),
+    },
+    mode: "sdk",
+  };
+}
+
+export function resolveCommentsBootstrap(
+  environment: NewsRuntimeEnvironment,
+): CommentsBootstrapResolution {
+  const lifecycleEnvironment = resolveLifecycleEnvironment(environment);
+  const demoMode = readBoolean(environment.VITE_SDKWORK_NEWS_DEMO_MODE);
+  if (demoMode === true) {
+    if (lifecycleEnvironment !== "development" && lifecycleEnvironment !== "test") {
+      throw new Error("SDKWork News demo mode is allowed only in development or test.");
+    }
+    return { mode: "demo" };
+  }
+
+  const configuredUrl = readString(environment[COMMENTS_APPLICATION_PUBLIC_HTTP_URL])
+    ?? readString(environment[PLATFORM_GATEWAY_HTTP_URL]);
+  if (!configuredUrl) {
+    if (demoMode !== false && lifecycleEnvironment === "development") {
+      return { mode: "demo" };
+    }
+    throw new Error(
+      "SDKWork Comments requires the Comments application public HTTP URL or platform gateway URL.",
+    );
+  }
+
+  return {
+    config: {
+      commentsApplicationPublicHttpUrl: normalizeHttpUrl(configuredUrl),
     },
     mode: "sdk",
   };

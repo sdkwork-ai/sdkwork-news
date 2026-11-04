@@ -1,0 +1,8 @@
+{
+  "appid": "wx0000000000000000",
+  "description": "WeChat production host profile. Keep upload keys out of this file.",
+  "upload": {
+    "environment": "production",
+    "robot": 1
+  }
+}

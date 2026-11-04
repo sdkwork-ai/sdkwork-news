@@ -4,5 +4,13 @@ repository: news
 canon:
   prd: docs/product/prd/PRD.md
   techArchitecture: docs/architecture/tech/TECH_ARCHITECTURE.md
-entries: []
+entries:
+  - id: TECH-2026-11-04-news-app-initialization
+    title: News app initialization and Toutiao-aligned reading experience
+    path: docs/architecture/tech/TECH-2026-11-04-news-app-initialization-and-toutiao-alignment.md
+    kind: tech-design
+  - id: TECH-2026-11-04-comments-integration
+    title: SDKWork Comments integration across News clients
+    path: docs/architecture/tech/TECH-2026-11-04-comments-integration.md
+    kind: tech-design
 domains: []

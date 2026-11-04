@@ -1,0 +1,84 @@
+<view class="page">
+  <view style="height: {{statusBarHeight}}px"></view>
+
+  <view class="hero">
+    <view class="avatar">林</view>
+    <view class="identity">
+      <text class="name">林一</text>
+      <text class="tagline">让智能体替你读完，再把判断留给自己</text>
+    </view>
+    <view class="edit tap" bindtap="showNotice" data-label="编辑资料">编辑</view>
+  </view>
+
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-value">{{savedCount}}</text>
+      <text class="stat-label">收藏</text>
+    </view>
+    <view class="stat">
+      <text class="stat-value">7</text>
+      <text class="stat-label">连续阅读</text>
+    </view>
+    <view class="stat">
+      <text class="stat-value">3</text>
+      <text class="stat-label">关注专题</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">我的兴趣</text>
+      <text class="section-action" bindtap="openSearch">去发现</text>
+    </view>
+    <view class="chips">
+      <text wx:for="{{interests}}" wx:key="*this" class="chip"># {{item}}</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">我的收藏</text>
+      <text wx:if="{{savedCount > 0}}" class="section-action" bindtap="clearSaved">清空</text>
+    </view>
+    <view wx:if="{{savedItems.length === 0}}" class="empty">
+      <text class="empty-title">还没有收藏</text>
+      <text class="empty-copy">在资讯详情页点“收藏”，稍后在这里继续阅读。</text>
+    </view>
+    <view wx:else class="saved-list">
+      <view
+        wx:for="{{savedItems}}"
+        wx:key="id"
+        class="saved-row tap"
+        data-id="{{item.id}}"
+        bindtap="openArticle"
+      >
+        <view class="saved-copy">
+          <text class="saved-category">{{item.categoryLabel}}</text>
+          <text class="saved-title ellipsis-2">{{item.title}}</text>
+          <text class="saved-meta">{{item.source}} · {{item.publishedLabel}}</text>
+        </view>
+        <image wx:if="{{item.image}}" class="saved-image" src="{{item.image}}" mode="aspectFill" />
+      </view>
+    </view>
+  </view>
+
+  <view class="section menu">
+    <view
+      wx:for="{{menu}}"
+      wx:key="label"
+      class="menu-row tap"
+      data-label="{{item.label}}"
+      bindtap="showNotice"
+    >
+      <view class="menu-copy">
+        <text class="menu-label">{{item.label}}</text>
+        <text class="menu-value">{{item.value}}</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view wx:if="{{errorMessage}}" class="error">{{errorMessage}}</view>
+  <view class="version">SDKWork 头条 · 0.1.0</view>
+  <view class="safe-bottom"></view>
+</view>

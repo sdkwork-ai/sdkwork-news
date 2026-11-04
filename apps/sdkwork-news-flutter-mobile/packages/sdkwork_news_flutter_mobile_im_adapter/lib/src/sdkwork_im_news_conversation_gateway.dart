@@ -136,7 +136,7 @@ class SdkworkImNewsConversationGateway implements NewsConversationGateway {
       role: NewsMessageRole.user,
       text: text.trim(),
       occurredAt: DateTime.now().toUtc(),
-      sequence: result.messageSeq,
+      sequence: int.tryParse(result.messageSeq) ?? 0,
     );
     _messageTracker.track(conversationId, [message]);
     return message;
@@ -178,7 +178,7 @@ NewsMessage _fromEntry(ConversationMessageEntry entry) {
     text: entry.body.text ?? entry.body.summary ?? entry.summary ?? '',
     occurredAt: DateTime.tryParse(entry.occurredAt)?.toUtc() ??
         DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
-    sequence: entry.messageSeq,
+    sequence: int.tryParse(entry.messageSeq) ?? 0,
     streaming: entry.deliveryMode.toLowerCase().contains('stream'),
   );
 }

@@ -1,0 +1,18 @@
+{
+  "comments.title": "Comments",
+  "comments.placeholder": "Share your view or add a source…",
+  "comments.replyPlaceholder": "Reply to @{name}…",
+  "comments.send": "Post",
+  "comments.sending": "Posting…",
+  "comments.empty": "No comments yet",
+  "comments.emptyHint": "Be the first to add a considered view.",
+  "comments.loadFailed": "Comments failed to load",
+  "comments.loadMore": "Load more comments",
+  "comments.like": "Like",
+  "comments.reply": "Reply",
+  "comments.cancelReply": "Cancel",
+  "comments.replyingTo": "Replying to @{name}",
+  "comments.published": "Comment posted",
+  "comments.failed": "Comment failed to post",
+  "comments.unavailable": "Comments service unavailable"
+}

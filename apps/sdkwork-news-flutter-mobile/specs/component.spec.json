@@ -25,12 +25,13 @@
     "providedPorts": [],
     "requiredPorts": [],
     "runtimeEntrypoints": ["lib/main.dart"],
-    "sdkClients": ["AgentsSdkworkAppClient", "IamSdkworkAppClient", "McpSdkworkAppClient", "ImSdkClientBundle"],
+    "sdkClients": ["AgentsSdkworkAppClient", "IamSdkworkAppClient", "McpSdkworkAppClient", "ImSdkClientBundle", "CommentsSdkworkAppClient"],
     "sdkDependencies": [
       { "workspace": "sdkwork-agents-app-sdk", "surface": "app-api", "packageName": "sdkwork_agents_app_sdk", "status": "active" },
       { "workspace": "sdkwork-im", "surface": "im", "packageName": "sdkwork_im_flutter_mobile_chat", "status": "active" },
       { "workspace": "sdkwork-iam-app-sdk", "surface": "app-api", "packageName": "sdkwork_iam_app_sdk", "status": "active" },
-      { "workspace": "sdkwork-mcp-app-sdk", "surface": "app-api", "packageName": "sdkwork_mcp_app_sdk_generated_flutter", "status": "active" }
+      { "workspace": "sdkwork-mcp-app-sdk", "surface": "app-api", "packageName": "sdkwork_mcp_app_sdk_generated_flutter", "status": "active" },
+      { "workspace": "sdkwork-comments-app-sdk", "surface": "app-api", "packageName": "sdkwork_comments_app_sdk_flutter", "status": "active" }
     ]
   },
   "verification": { "commands": ["flutter analyze", "flutter test", "dart test"] }

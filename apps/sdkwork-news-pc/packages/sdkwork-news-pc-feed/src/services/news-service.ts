@@ -1,4 +1,4 @@
-import type { NewsApiPort } from '@sdkwork/news-pc-core/sdk';
+﻿import type { NewsApiPort } from '@sdkwork/news-pc-core/sdk';
 import type { NewsCategory, NewsItem } from '../types';
 
 export interface NewsServiceConfig {
@@ -42,7 +42,7 @@ export class NewsService {
     return this.newsApi.channels.list(params);
   }
 
-) {
+  async getChannelFeed(channelId: string, params?: { cursor?: string; limit?: string }) {
     return this.newsApi.channels.feed.list(channelId, params);
   }
 
@@ -54,7 +54,7 @@ export class NewsService {
     return this.newsApi.topics.items.list(topicId, params);
   }
 
-) {
+  async getPersonalizedFeed(params?: { cursor?: string; limit?: string }) {
     return this.newsApi.feed.personalized.list(params);
   }
 
@@ -90,7 +90,7 @@ export class NewsService {
   }
 
   async upsertReaction(itemId: string, body: { reactionType: 'like' | 'dislike' | 'laugh' | 'sad' | 'angry' | 'wow' }) {
-    return this.newsApi.reactions.upsert(itemId, body);
+    return this.newsApi.reactions.update(itemId, body);
   }
 
   async getComments(itemId: string, params?: { cursor?: string; limit?: string }) {
@@ -130,7 +130,7 @@ export class NewsService {
   }
 
   async upsertInterest(body: { targetType: 'source' | 'author' | 'topic' | 'channel' | 'tag'; targetId: string; affinityScore: number; confidence: number; source: 'explicit' | 'behavior' | 'editorial' | 'imported' }) {
-    return this.newsApi.interests.upsert(body);
+    return this.newsApi.interests.update(body);
   }
 
   async getNotificationSubscriptions(params?: { userId?: string; targetType?: string; targetId?: string; channel?: string; cursor?: string; limit?: string }) {
@@ -138,7 +138,7 @@ export class NewsService {
   }
 
   async upsertNotificationSubscription(body: { targetType: 'source' | 'author' | 'topic' | 'channel' | 'tag'; targetId: string; channel: 'push' | 'email' | 'in_app' | 'sms'; frequency: 'breaking' | 'daily' | 'weekly' | 'silent' }) {
-    return this.newsApi.notification.subscriptions.upsert(body);
+    return this.newsApi.notification.subscriptions.update(body);
   }
 
   async deleteNotificationSubscription(subscriptionId: string) {

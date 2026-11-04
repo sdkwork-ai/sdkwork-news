@@ -45,7 +45,7 @@ export function createSdkworkImNewsAgentConversationPort(
       };
     },
     async markRead(conversationId, sequence) {
-      await client.conversations.updateReadCursor(conversationId, { readSeq: sequence });
+      await client.conversations.updateReadCursor(conversationId, { readSeq: String(sequence) });
     },
     async sendText(conversationId, text) {
       const result = await client.conversations.postText(conversationId, text);
@@ -94,7 +94,7 @@ function mapHistoryMessage(message: ConversationMessageEntry): NewsConversationM
     id: message.messageId,
     occurredAt: message.occurredAt,
     role: mapSenderRole(message.sender),
-    sequence: message.messageSeq,
+    sequence: toSequenceNumber(message.messageSeq),
     status: "sent",
     ...(message.summary ? { summary: message.summary } : {}),
     text: message.body.text ?? message.body.summary ?? message.summary ?? "",
@@ -111,7 +111,7 @@ function mapRealtimeMessage(
     id: messageId,
     occurredAt: message.occurredAt ?? context.receivedAt,
     role: mapSenderRole(message.sender ?? context.sender),
-    sequence: message.messageSeq ?? context.sequence,
+    sequence: toSequenceNumber(message.messageSeq ?? context.sequence),
     status: messageType.includes("stream") ? "streaming" : "sent",
     ...(message.summary ? { summary: message.summary } : {}),
     text: message.text ?? message.body?.text ?? message.body?.summary ?? message.summary ?? "",
@@ -127,4 +127,12 @@ function mapSenderRole(sender: Sender | undefined): NewsConversationMessage["rol
     return "system";
   }
   return "user";
+}
+
+function toSequenceNumber(value: string | number | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  const numeric = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(numeric) ? numeric : undefined;
 }

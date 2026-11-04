@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component-deployment",
+  "application": "news-mini-program",
+  "parentDeploymentConfig": "../../../etc/sdkwork.deployment.config.json",
+  "materialization": {
+    "authority": "../../../etc/sdkwork.deployment.config.json",
+    "format": "json",
+    "profiles": [
+      "standalone.development",
+      "standalone.test",
+      "standalone.staging",
+      "standalone.production",
+      "cloud.production"
+    ],
+    "outputPattern": "../src/bootstrap/active-profile.json"
+  },
+  "profiles": {
+    "standalone.development": {
+      "source": "../config/mini-program/runtime-env.standalone.development.json"
+    },
+    "standalone.test": {
+      "source": "../config/mini-program/runtime-env.standalone.test.json"
+    },
+    "standalone.staging": {
+      "source": "../config/mini-program/runtime-env.standalone.staging.json"
+    },
+    "standalone.production": {
+      "source": "../config/mini-program/runtime-env.standalone.production.json"
+    },
+    "cloud.production": {
+      "source": "../config/mini-program/runtime-env.cloud.production.json"
+    }
+  }
+}

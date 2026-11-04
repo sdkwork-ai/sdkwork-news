@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/feed/index",
+    "pages/ranking/index",
+    "pages/topics/index",
+    "pages/profile/index",
+    "pages/search/index"
+  ],
+  "subpackages": [
+    {
+      "root": "subpackages/news",
+      "name": "news",
+      "pages": ["pages/article/index"]
+    }
+  ],
+  "window": {
+    "navigationBarTitleText": "SDKWork 头条",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f5f2",
+    "backgroundTextStyle": "dark",
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#8a928c",
+    "selectedColor": "#e63b2e",
+    "backgroundColor": "#fbfcfa",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/feed/index",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/ranking/index",
+        "text": "热榜",
+        "iconPath": "assets/tabbar/ranking.png",
+        "selectedIconPath": "assets/tabbar/ranking-active.png"
+      },
+      {
+        "pagePath": "pages/topics/index",
+        "text": "专题",
+        "iconPath": "assets/tabbar/topics.png",
+        "selectedIconPath": "assets/tabbar/topics-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "assets/tabbar/profile.png",
+        "selectedIconPath": "assets/tabbar/profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

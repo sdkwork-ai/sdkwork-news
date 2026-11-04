@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createTokenManager } from "@sdkwork/sdk-common";
 import {
+  createNewsBrowserRuntime,
   createNewsFeedRuntime,
   createSdkworkNewsRuntime,
   resolveNewsFeedBootstrap,
@@ -49,4 +50,61 @@ describe("sdkwork-news runtime", () => {
       VITE_SDKWORK_NEWS_APPLICATION_PUBLIC_HTTP_URL: "https://user@example.test",
     })).toThrow(/must not contain credentials/u);
   });
+
+  it("initializes every browser capability in demo mode", async () => {
+    const runtime = await createNewsBrowserRuntime({
+      environment: {
+        VITE_SDKWORK_NEWS_DEMO_MODE: "true",
+        VITE_SDKWORK_NEWS_ENVIRONMENT: "development",
+      },
+      platform: "H5",
+      storage: createMemoryStorage(),
+    });
+
+    expect(runtime.platform).toBe("H5");
+    expect(runtime.diagnostics.map((entry) => entry.mode)).toEqual([
+      "demo",
+      "demo",
+      "demo",
+      "demo",
+      "demo",
+    ]);
+    expect(runtime.news.service).toBeUndefined();
+    expect(runtime.comments.service).toBeDefined();
+  });
+
+  it("isolates production configuration failures instead of failing startup", async () => {
+    const runtime = await createNewsBrowserRuntime({
+      environment: {
+        VITE_SDKWORK_NEWS_ENVIRONMENT: "production",
+        VITE_SDKWORK_NEWS_DEMO_MODE: "false",
+      },
+      platform: "WEB",
+      storage: createMemoryStorage(),
+    });
+
+    expect(runtime.account.mode).toBe("unavailable");
+    expect(runtime.aiStore.mode).toBe("unavailable");
+    expect(runtime.comments.mode).toBe("unavailable");
+    expect(runtime.news.mode).toBe("unavailable");
+    expect(runtime.diagnostics).toHaveLength(5);
+    expect(
+      runtime.diagnostics.filter((entry) => entry.mode === "unavailable"),
+    ).toHaveLength(4);
+  });
 });
+
+function createMemoryStorage() {
+  const values = new Map<string, string>();
+  return {
+    getItem(key: string) {
+      return values.get(key) ?? null;
+    },
+    removeItem(key: string) {
+      values.delete(key);
+    },
+    setItem(key: string, value: string) {
+      values.set(key, value);
+    },
+  };
+}

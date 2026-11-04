@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/news-mp-commons",
+    "displayName": "SDKWork News Mini Program Commons",
+    "version": "0.1.0",
+    "type": "node-package",
+    "root": "sdkwork-news/apps/sdkwork-news-mini-program/packages/sdkwork-news-mp-commons",
+    "domain": "content",
+    "capability": "news-mp-commons",
+    "surface": "app",
+    "languages": ["typescript"],
+    "generated": false,
+    "manifests": ["package.json"]
+  },
+  "canonicalSpecs": [
+    { "file": "APP_MINI_PROGRAM_UI_SPEC.md", "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md", "purpose": "Package-local UI primitives." },
+    { "file": "ICON_SPEC.md", "path": "../../../../../sdkwork-specs/ICON_SPEC.md", "purpose": "Tab and navigation icon rules." },
+    { "file": "TYPESCRIPT_CODE_SPEC.md", "path": "../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md", "purpose": "Strict TypeScript rules." }
+  ],
+  "contracts": {
+    "layerRole": "frontend-commons",
+    "publicExports": ["."],
+    "providedPorts": [{ "name": "newsMiniProgramFormatting", "export": "." }],
+    "requiredPorts": [],
+    "runtimeEntrypoints": [],
+    "routeManifest": null,
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "events": [],
+    "configKeys": []
+  },
+  "verification": {
+    "commands": ["pnpm --dir apps/sdkwork-news-mini-program typecheck"]
+  }
+}

@@ -29,7 +29,7 @@ class NewsMobileShell extends StatelessWidget {
         return Scaffold(
           body: IndexedStack(
             index: index,
-            children: [assistant, news, store, account],
+            children: [news, assistant, store, account],
           ),
           bottomNavigationBar: controller.isSecondaryPage
               ? null
@@ -39,18 +39,18 @@ class NewsMobileShell extends StatelessWidget {
                       controller.select(NewsShellTab.values[value]),
                   destinations: [
                     NavigationDestination(
+                      icon: const Icon(Icons.home_outlined),
+                      selectedIcon: const Icon(Icons.home_rounded),
+                      label: strings.text('nav.home'),
+                    ),
+                    NavigationDestination(
                       icon: const Icon(Icons.smart_toy_outlined),
                       selectedIcon: const Icon(Icons.smart_toy_rounded),
                       label: strings.text('nav.assistant'),
                     ),
                     NavigationDestination(
-                      icon: const Icon(Icons.article_outlined),
-                      selectedIcon: const Icon(Icons.article),
-                      label: strings.text('nav.news'),
-                    ),
-                    NavigationDestination(
-                      icon: const Icon(Icons.storefront_outlined),
-                      selectedIcon: const Icon(Icons.storefront_rounded),
+                      icon: const Icon(Icons.explore_outlined),
+                      selectedIcon: const Icon(Icons.explore_rounded),
                       label: strings.text('nav.store'),
                     ),
                     NavigationDestination(

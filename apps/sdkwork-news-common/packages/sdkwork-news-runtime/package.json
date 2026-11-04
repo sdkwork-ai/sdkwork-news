@@ -4,7 +4,16 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
+    "@sdkwork/comments-app-sdk": "workspace:*",
+    "@sdkwork/news-account-runtime": "workspace:*",
+    "@sdkwork/news-account-service": "workspace:*",
+    "@sdkwork/news-agent-bootstrap": "workspace:*",
+    "@sdkwork/news-agent-service": "workspace:*",
+    "@sdkwork/news-ai-store-runtime": "workspace:*",
+    "@sdkwork/news-ai-store-service": "workspace:*",
     "@sdkwork/news-app-sdk": "workspace:*",
+    "@sdkwork/news-comments-sdk-adapter": "workspace:*",
+    "@sdkwork/news-comments-service": "workspace:*",
     "@sdkwork/news-contracts": "workspace:*",
     "@sdkwork/news-feed-sdk-adapter": "workspace:*",
     "@sdkwork/news-feed-service": "workspace:*",
@@ -21,6 +30,11 @@
       "types": "./src/config.ts",
       "import": "./src/config.ts",
       "default": "./src/config.ts"
+    },
+    "./browser-runtime": {
+      "types": "./src/browser-runtime.ts",
+      "import": "./src/browser-runtime.ts",
+      "default": "./src/browser-runtime.ts"
     },
     "./feed-runtime": {
       "types": "./src/feed-runtime.ts",

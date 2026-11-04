@@ -13,6 +13,7 @@ import { NewsH5Shell, type NewsH5Tab } from "@sdkwork/news-h5-shell";
 import type { NewsAgentService } from "@sdkwork/news-agent-service";
 import type { NewsAccountService } from "@sdkwork/news-account-service";
 import type { AiStoreService } from "@sdkwork/news-ai-store-service";
+import type { NewsCommentsService } from "@sdkwork/news-comments-service";
 import type { NewsFeedService } from "@sdkwork/news-feed-service";
 
 export interface NewsH5AppProps {
@@ -23,6 +24,7 @@ export interface NewsH5AppProps {
   aiStoreDemoMode: boolean;
   aiStoreService?: AiStoreService;
   assistantDemoMode: boolean;
+  commentsService?: NewsCommentsService;
   newsDemoMode: boolean;
   newsService?: NewsFeedService;
 }
@@ -35,10 +37,11 @@ export default function App({
   aiStoreDemoMode,
   aiStoreService,
   assistantDemoMode,
+  commentsService,
   newsDemoMode,
   newsService,
 }: NewsH5AppProps) {
-  const [tab, setTab] = useState<NewsH5Tab>("assistant");
+  const [tab, setTab] = useState<NewsH5Tab>("news");
   const [secondaryPage, setSecondaryPage] = useState(false);
   const changeTab = (nextTab: NewsH5Tab) => {
     setTab(nextTab);
@@ -50,6 +53,7 @@ export default function App({
     )}
     {tab === "news" && (
       <NewsH5News
+        commentsService={commentsService}
         demoMode={newsDemoMode}
         onSecondaryPageChange={setSecondaryPage}
         service={newsService}
