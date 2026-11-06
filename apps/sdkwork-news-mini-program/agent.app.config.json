@@ -17,15 +17,23 @@
     "framework": "axum",
     "appId": "sdkwork-news",
     "tenantId": "100001",
-    "organizationId": "0"
+    "organizationId": "0",
+    "accessTokenPermissionScope": [
+      "iam:self"
+    ]
   },
   "runtime": {
     "family": "mini-program",
     "framework": "weixin-mini-program",
-    "runtimes": ["MP_WEIXIN"],
+    "runtimes": [
+      "MP_WEIXIN"
+    ],
     "defaultPlatform": "MP_WEIXIN",
     "defaultArchitecture": "universal",
-    "supportedDeploymentProfiles": ["standalone", "cloud"],
+    "supportedDeploymentProfiles": [
+      "standalone",
+      "cloud"
+    ],
     "defaultDeploymentProfile": "standalone"
   },
   "media": {
@@ -40,7 +48,9 @@
         "height": 1024,
         "enabled": true,
         "url": "https://cdn.sdkwork.com/apps/sdkwork-news/assets/icon-1024.png",
-        "metadata": { "generatedPlaceholder": true }
+        "metadata": {
+          "generatedPlaceholder": true
+        }
       },
       "platform": []
     },
@@ -49,8 +59,12 @@
   },
   "publish": {
     "status": "DRAFT",
-    "platforms": ["MP_WEIXIN"],
-    "installPlatforms": ["MP_WEIXIN"],
+    "platforms": [
+      "MP_WEIXIN"
+    ],
+    "installPlatforms": [
+      "MP_WEIXIN"
+    ],
     "installSkill": false,
     "config": {
       "workspaceRoot": "apps/sdkwork-news-mini-program",
@@ -59,12 +73,16 @@
     }
   },
   "artifacts": {
-    "installConfig": { "packages": [] }
+    "installConfig": {
+      "packages": []
+    }
   },
   "release": {
     "currentVersion": "0.1.0",
     "defaultChannel": "BETA",
-    "latest": { "BETA": "0.1.0" },
+    "latest": {
+      "BETA": "0.1.0"
+    },
     "notes": [
       {
         "version": "0.1.0",

@@ -20,16 +20,28 @@
     "platform": "APP",
     "appId": "sdkwork-news",
     "organizationId": "0",
-    "tenantId": "100001"
+    "tenantId": "100001",
+    "accessTokenPermissionScope": [
+      "iam:self"
+    ]
   },
   "runtime": {
     "family": "mobile",
     "framework": "flutter",
-    "runtimes": ["APP", "APP_ANDROID", "APP_IOS"],
-    "deliveryModes": ["DIRECT_DOWNLOAD"],
+    "runtimes": [
+      "APP",
+      "APP_ANDROID",
+      "APP_IOS"
+    ],
+    "deliveryModes": [
+      "DIRECT_DOWNLOAD"
+    ],
     "defaultPlatform": "APP_ANDROID",
     "defaultArchitecture": "universal",
-    "supportedDeploymentProfiles": ["standalone", "cloud"],
+    "supportedDeploymentProfiles": [
+      "standalone",
+      "cloud"
+    ],
     "defaultDeploymentProfile": "standalone"
   },
   "media": {
@@ -44,7 +56,9 @@
         "height": 1024,
         "enabled": true,
         "url": "https://cdn.sdkwork.com/apps/sdkwork-news/assets/icon-1024.png",
-        "metadata": { "generatedPlaceholder": true }
+        "metadata": {
+          "generatedPlaceholder": true
+        }
       },
       "platform": []
     },
@@ -53,18 +67,43 @@
   },
   "publish": {
     "status": "DRAFT",
-    "platforms": ["APP", "APP_ANDROID", "APP_IOS"],
-    "installPlatforms": ["APP", "APP_ANDROID", "APP_IOS"],
+    "platforms": [
+      "APP",
+      "APP_ANDROID",
+      "APP_IOS"
+    ],
+    "installPlatforms": [
+      "APP",
+      "APP_ANDROID",
+      "APP_IOS"
+    ],
     "installSkill": false
   },
-  "artifacts": { "installConfig": { "packages": [] } },
+  "artifacts": {
+    "installConfig": {
+      "packages": []
+    }
+  },
   "release": {
     "currentVersion": "0.1.0",
     "defaultChannel": "BETA",
-    "latest": { "BETA": "0.1.0" },
-    "notes": [{ "version": "0.1.0", "channel": "BETA", "current": true, "packageIds": [] }]
+    "latest": {
+      "BETA": "0.1.0"
+    },
+    "notes": [
+      {
+        "version": "0.1.0",
+        "channel": "BETA",
+        "current": true,
+        "packageIds": []
+      }
+    ]
   },
-  "security": { "checksumRequired": true, "signatureRequired": false, "sbomRequired": true },
+  "security": {
+    "checksumRequired": true,
+    "signatureRequired": false,
+    "sbomRequired": true
+  },
   "metadata": {
     "standardOwner": "sdkwork-news",
     "deploymentConfig": "etc/sdkwork.deployment.config.json"

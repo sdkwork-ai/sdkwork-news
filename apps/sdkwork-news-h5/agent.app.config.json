@@ -14,16 +14,26 @@
     "platform": "H5",
     "appId": "sdkwork-news",
     "organizationId": "0",
-    "tenantId": "100001"
+    "tenantId": "100001",
+    "accessTokenPermissionScope": [
+      "iam:self"
+    ]
   },
   "runtime": {
     "family": "mobile",
     "framework": "react-h5",
-    "runtimes": ["H5"],
-    "deliveryModes": ["WEB_URL"],
+    "runtimes": [
+      "H5"
+    ],
+    "deliveryModes": [
+      "WEB_URL"
+    ],
     "defaultPlatform": "H5",
     "defaultArchitecture": "universal",
-    "supportedDeploymentProfiles": ["standalone", "cloud"],
+    "supportedDeploymentProfiles": [
+      "standalone",
+      "cloud"
+    ],
     "defaultDeploymentProfile": "standalone"
   },
   "media": {
@@ -38,7 +48,9 @@
         "height": 1024,
         "enabled": true,
         "url": "https://cdn.sdkwork.com/apps/sdkwork-news/assets/icon-1024.png",
-        "metadata": { "generatedPlaceholder": true }
+        "metadata": {
+          "generatedPlaceholder": true
+        }
       },
       "platform": []
     },
@@ -47,18 +59,39 @@
   },
   "publish": {
     "status": "DRAFT",
-    "platforms": ["H5"],
-    "installPlatforms": ["H5"],
+    "platforms": [
+      "H5"
+    ],
+    "installPlatforms": [
+      "H5"
+    ],
     "installSkill": false
   },
-  "artifacts": { "installConfig": { "packages": [] } },
+  "artifacts": {
+    "installConfig": {
+      "packages": []
+    }
+  },
   "release": {
     "currentVersion": "0.1.0",
     "defaultChannel": "BETA",
-    "latest": { "BETA": "0.1.0" },
-    "notes": [{ "version": "0.1.0", "channel": "BETA", "current": true, "packageIds": [] }]
+    "latest": {
+      "BETA": "0.1.0"
+    },
+    "notes": [
+      {
+        "version": "0.1.0",
+        "channel": "BETA",
+        "current": true,
+        "packageIds": []
+      }
+    ]
   },
-  "security": { "checksumRequired": true, "signatureRequired": false, "sbomRequired": true },
+  "security": {
+    "checksumRequired": true,
+    "signatureRequired": false,
+    "sbomRequired": true
+  },
   "metadata": {
     "standardOwner": "sdkwork-news",
     "deploymentConfig": "etc/sdkwork.deployment.config.json"
