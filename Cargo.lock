@@ -2089,6 +2089,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "chrono",
+ "sqlx",
  "tokio",
  "uuid",
 ]
@@ -2302,6 +2303,7 @@ name = "sdkwork-routes-news-open-api"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "sdkwork-content-news-service",
  "sdkwork-iam-web-adapter",
  "sdkwork-web-axum",
  "sdkwork-web-bootstrap",

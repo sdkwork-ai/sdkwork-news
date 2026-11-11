@@ -21,6 +21,7 @@ tracing = "0.1"
 sdkwork-iam-web-adapter = { workspace = true }
 sdkwork-web-axum = { workspace = true }
 sdkwork-web-bootstrap = { workspace = true }
+sdkwork-content-news-service = { workspace = true }
 
 [dev-dependencies]
 sdkwork-web-core = { workspace = true }

@@ -1,5 +1,6 @@
 use axum::extract::{Path, Query, State};
 use axum::Json;
+use sdkwork_content_news_service::NewsPublishedItemQueryPort;
 use serde::Deserialize;
 use serde_json::{json, Value};
 use sqlx::Row;
@@ -21,6 +22,39 @@ pub async fn list_items(
     let limit = params.page_size.unwrap_or(20).min(100);
     let status = params.status.as_deref().unwrap_or("published");
 
+    if status == "published" {
+        // Published reads are shared with `sdkwork-feeds` through the
+        // in-process published-item port (`MODULE_SPEC.md` §4.2.6): this route
+        // delegates so the predicate exists once. The port's public method is
+        // cross-tenant because this anonymous surface has no request tenant.
+        return match state.pool.list_published_items_public(limit).await {
+            Ok(items) => Json(json!(items
+                .into_iter()
+                .map(|item| json!({
+                    "id": item.id,
+                    "tenantId": item.tenant_id,
+                    "categoryId": item.category_id,
+                    "slug": item.slug,
+                    "title": item.title,
+                    "summary": item.summary,
+                    "status": item.status,
+                    "authorName": item.author_name,
+                    "featured": item.featured,
+                    "priority": item.priority,
+                    "estimatedReadMinutes": item.estimated_read_minutes,
+                    "publishedAt": item.published_at,
+                    "updatedAt": item.updated_at,
+                }))
+                .collect::<Vec<Value>>())),
+            Err(e) => {
+                tracing::error!("Failed to list items: {}", e);
+                Json(json!([]))
+            }
+        };
+    }
+
+    // Non-published statuses are outside the published projection; keep the
+    // pre-existing administrative query path for that case only.
     let result = sqlx::query(
         "SELECT id, tenant_id, category_id, slug, title, summary, status, author_name, 
                 featured, priority, estimated_read_minutes, published_at, updated_at

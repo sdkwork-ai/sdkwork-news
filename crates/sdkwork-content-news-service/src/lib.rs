@@ -1,7 +1,9 @@
 pub mod domain;
 pub mod professional;
+pub mod published_item_port;
 pub mod repository_port;
 pub mod service;
 pub use domain::*;
 pub use professional::*;
+pub use published_item_port::*;
 pub use repository_port::*;
