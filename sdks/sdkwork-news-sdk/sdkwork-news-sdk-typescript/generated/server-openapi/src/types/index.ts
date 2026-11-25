@@ -96,3 +96,4 @@ export type { TrendingListResponse } from './trending-list-response';
 export type { SearchListResponse } from './search-list-response';
 export type { TrustItemRetrieveResponse } from './trust-item-retrieve-response';
 export type { LiveEventsRetrieveResponse } from './live-events-retrieve-response';
+export type { EntitiesItemsListResponse } from './entities-items-list-response';

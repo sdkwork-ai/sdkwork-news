@@ -112,7 +112,7 @@
         "operationId": "items.list",
         "parameters": [
           {
-            "name": "categoryId",
+            "name": "category_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -6523,7 +6523,9 @@
           },
           "totalItems": {
             "type": "string",
-            "pattern": "^[0-9]+$"
+            "format": "int64",
+            "pattern": "^[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "totalPages": {
             "type": "integer",

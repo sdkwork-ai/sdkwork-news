@@ -896,6 +896,7 @@ const openRoutes = [
   route("get", "/open/v3/api/news/live/events", "live.events.list", { schema: ref("NewsLiveEventListResponse") }, true, liveEventParams()),
   route("get", "/open/v3/api/news/live/events/{eventId}", "live.events.retrieve", { schema: ref("NewsLiveEvent") }, true, [pathParam("eventId")]),
   route("get", "/open/v3/api/news/live/events/{eventId}/updates", "live.updates.list", { schema: ref("NewsLiveUpdateListResponse") }, true, [pathParam("eventId"), ...pageParams()]),
+  route("get", "/open/v3/api/news/entities/{entityType}/{entityId}/items", "entities.items.list", { schema: ref("NewsItemPage") }, true, [pathParam("entityType"), pathParam("entityId"), ...pageParams()]),
 ];
 
 const backendRoutes = [
@@ -1052,7 +1053,7 @@ function pageSizeParam() {
 }
 
 function listParams() {
-  return [queryParam("categoryId"), queryParam("q"), queryParam("status")];
+  return [queryParam("category_id"), queryParam("q"), queryParam("status")];
 }
 
 function pageParams() {

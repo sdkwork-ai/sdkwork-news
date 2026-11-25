@@ -1194,7 +1194,7 @@ export class NewsItemsManagementApi {
 /** News items.management.list */
   async list(params?: NewsItemsManagementListParams, requestOptions?: ApiRequestOptions): Promise<{ items: NewsItem[]; pageInfo: PageInfo; }> {
     const query = buildQueryString([
-      { name: 'categoryId', value: params?.categoryId, style: 'form', explode: true, allowReserved: false },
+      { name: 'category_id', value: params?.categoryId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'status', value: params?.status, style: 'form', explode: true, allowReserved: false },
     ]);

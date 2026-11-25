@@ -1,8 +1,40 @@
 import { customApiPath } from './paths';
 import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { ChannelsFeedListResponse, ChannelsListResponse, ItemsBySlugRetrieveResponse, ItemsListResponse, ItemsRelatedListResponse, ItemsRetrieveResponse, LiveEventsRetrieveResponse, SdkWorkListResponse, SearchListResponse, TopicsItemsListResponse, TopicsListResponse, TrendingListResponse, TrustItemRetrieveResponse } from '../types';
+import type { ChannelsFeedListResponse, ChannelsListResponse, EntitiesItemsListResponse, ItemsBySlugRetrieveResponse, ItemsListResponse, ItemsRelatedListResponse, ItemsRetrieveResponse, LiveEventsRetrieveResponse, SdkWorkListResponse, SearchListResponse, TopicsItemsListResponse, TopicsListResponse, TrendingListResponse, TrustItemRetrieveResponse } from '../types';
 
+
+export interface NewsEntitiesItemsListParams {
+  cursor?: string;
+  pageSize?: number;
+}
+
+export class NewsEntitiesItemsApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** News entities.items.list */
+  async list(entityType: string, entityId: string, params?: NewsEntitiesItemsListParams, requestOptions?: ApiRequestOptions): Promise<EntitiesItemsListResponse> {
+    const query = buildQueryString([
+      { name: 'cursor', value: params?.cursor, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<EntitiesItemsListResponse>(appendQueryString(customApiPath(`/news/entities/${serializePathParameter(entityType, { name: 'entityType', style: 'simple', explode: false })}/${serializePathParameter(entityId, { name: 'entityId', style: 'simple', explode: false })}/items`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any });
+  }
+}
+
+export class NewsEntitiesApi {
+  public readonly items: NewsEntitiesItemsApi;
+
+  constructor(client: HttpClient) {
+    this.items = new NewsEntitiesItemsApi(client);
+  }
+
+}
 
 export interface NewsLiveUpdatesListParams {
   cursor?: string;
@@ -455,7 +487,7 @@ export class NewsItemsApi {
 /** News items.list */
   async list(params?: NewsItemsListParams, requestOptions?: ApiRequestOptions): Promise<ItemsListResponse> {
     const query = buildQueryString([
-      { name: 'categoryId', value: params?.categoryId, style: 'form', explode: true, allowReserved: false },
+      { name: 'category_id', value: params?.categoryId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'status', value: params?.status, style: 'form', explode: true, allowReserved: false },
     ]);
@@ -480,6 +512,7 @@ export class NewsApi {
   public readonly factChecks: NewsFactChecksApi;
   public readonly corrections: NewsCorrectionsApi;
   public readonly live: NewsLiveApi;
+  public readonly entities: NewsEntitiesApi;
 
   constructor(client: HttpClient) {
     this.items = new NewsItemsApi(client);
@@ -493,6 +526,7 @@ export class NewsApi {
     this.factChecks = new NewsFactChecksApi(client);
     this.corrections = new NewsCorrectionsApi(client);
     this.live = new NewsLiveApi(client);
+    this.entities = new NewsEntitiesApi(client);
   }
 
 }

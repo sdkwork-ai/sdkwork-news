@@ -1,3 +1,4 @@
+pub mod api_response;
 pub mod handlers;
 pub mod http_route_manifest;
 pub mod routes;
@@ -128,6 +129,11 @@ pub fn open_routes() -> Vec<NewsHttpRoute> {
             HttpMethod::Get,
             "/open/v3/api/news/live/events/{eventId}/updates",
             "live.updates.list",
+        ),
+        route(
+            HttpMethod::Get,
+            "/open/v3/api/news/entities/{entityType}/{entityId}/items",
+            "entities.items.list",
         ),
     ]
 }

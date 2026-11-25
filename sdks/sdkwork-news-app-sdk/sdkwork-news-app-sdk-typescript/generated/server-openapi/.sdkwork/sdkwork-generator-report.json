@@ -11,111 +11,32 @@
   "status": "ok",
   "mode": "apply",
   "hasChanges": true,
-  "hasDestructiveChanges": true,
-  "changeFingerprint": "e94f2595a3e5e584bc3cfc61ff686038c0581a383ca7f8f03c252c8b7bd84bd5",
+  "hasDestructiveChanges": false,
+  "changeFingerprint": "94c494f23957b17ac00d3b20f384c47895cfdb671fd7fdd9aabadcee93fb0a78",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
-      "api-surface",
-      "models",
-      "runtime",
-      "build-metadata",
-      "publish-workflow",
-      "documentation"
+      "api-surface"
     ],
     "details": [
       {
         "area": "api-surface",
         "paths": [
-          "src/api/base.ts",
-          "src/api/news.ts",
-          "src/http/client.ts"
-        ]
-      },
-      {
-        "area": "models",
-        "paths": [
-          "src/types/categories-list-response.ts",
-          "src/types/channels-feed-list-response.ts",
-          "src/types/channels-list-response.ts",
-          "src/types/comments-create-response.ts",
-          "src/types/comments-create-response201.ts",
-          "src/types/comments-list-response.ts",
-          "src/types/favorites-create-response.ts",
-          "src/types/favorites-create-response201.ts",
-          "src/types/favorites-list-response.ts",
-          "src/types/feed-personalized-list-response.ts",
-          "src/types/field-error.ts",
-          "src/types/follows-create-response.ts",
-          "src/types/follows-create-response201.ts",
-          "src/types/follows-list-response.ts",
-          "src/types/history-list-response.ts",
-          "src/types/index.ts",
-          "src/types/interests-update-response.ts",
-          "src/types/interests-upsert-response.ts",
-          "src/types/items-by-slug-retrieve-response.ts",
-          "src/types/items-list-response.ts",
-          "src/types/items-related-list-response.ts",
-          "src/types/items-retrieve-response.ts",
-          "src/types/live-events-retrieve-response.ts",
-          "src/types/news-comment-page.ts",
-          "src/types/news-favorite-page.ts",
-          "src/types/news-feed-page.ts",
-          "src/types/news-follow-page.ts",
-          "src/types/news-item-page.ts",
-          "src/types/news-search-result-page.ts",
-          "src/types/notification-subscriptions-update-response.ts",
-          "src/types/notification-subscriptions-upsert-response.ts",
-          "src/types/overview-retrieve-response.ts",
-          "src/types/problem-detail.ts",
-          "src/types/reactions-update-response.ts",
-          "src/types/reactions-upsert-response.ts",
-          "src/types/search-list-response.ts",
-          "src/types/topics-items-list-response.ts",
-          "src/types/topics-list-response.ts",
-          "src/types/trending-list-response.ts",
-          "src/types/trust-item-retrieve-response.ts"
-        ]
-      },
-      {
-        "area": "runtime",
-        "paths": [
-          "src/http/client.ts"
-        ]
-      },
-      {
-        "area": "build-metadata",
-        "paths": [
-          "package.json"
-        ]
-      },
-      {
-        "area": "publish-workflow",
-        "paths": [
-          "bin/publish-core.mjs"
-        ]
-      },
-      {
-        "area": "documentation",
-        "paths": [
-          "README.md"
+          "src/api/news.ts"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface, models, runtime, build-metadata, publish-workflow, documentation. Verification is required."
+    "summary": "Detected impact areas: api-surface. Verification is required."
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "high",
+    "riskLevel": "medium",
     "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
     "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "backed-up-generated-files",
-      "deleted-generated-files",
-      "manual-review-required",
       "verification-required"
     ]
   },
@@ -127,8 +48,8 @@
         "id": "verify-check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-        "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+        "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
           "./bin/publish-core.mjs",
@@ -145,8 +66,8 @@
         "id": "verify-build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-        "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+        "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
           "./bin/publish-core.mjs",
@@ -164,14 +85,14 @@
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface, models, runtime, build-metadata, publish-workflow, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: api-surface. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-        "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+        "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
           "./bin/publish-core.mjs",
@@ -188,8 +109,8 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-        "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+        "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
           "./bin/publish-core.mjs",
@@ -210,7 +131,7 @@
     "language": "typescript",
     "sdkType": "app",
     "protocol": "http",
-    "outputPath": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+    "outputPath": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
     "packageName": "sdkwork-news-app-sdk-generated-typescript"
   },
   "versioning": {
@@ -227,72 +148,56 @@
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 40,
+    "writtenFiles": 1,
     "skippedScaffoldFiles": 2,
-    "skippedUnchangedGeneratedFiles": 92,
-    "deletedGeneratedFiles": 6,
+    "skippedUnchangedGeneratedFiles": 131,
+    "deletedGeneratedFiles": 0,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "e94f2595a3e5e584bc3cfc61ff686038c0581a383ca7f8f03c252c8b7bd84bd5",
+    "changeFingerprint": "94c494f23957b17ac00d3b20f384c47895cfdb671fd7fdd9aabadcee93fb0a78",
     "changes": {
-      "createdGeneratedFiles": [
-        "src/types/comments-create-response201.ts",
-        "src/types/favorites-create-response201.ts",
-        "src/types/follows-create-response201.ts",
-        "src/types/interests-update-response.ts",
-        "src/types/notification-subscriptions-update-response.ts",
-        "src/types/reactions-update-response.ts"
-      ],
+      "createdGeneratedFiles": [],
       "updatedGeneratedFiles": [
-        "bin/publish-core.mjs",
-        "package.json",
-        "README.md",
-        "src/api/base.ts",
-        "src/api/news.ts",
-        "src/http/client.ts",
-        "src/types/categories-list-response.ts",
-        "src/types/channels-feed-list-response.ts",
-        "src/types/channels-list-response.ts",
-        "src/types/comments-list-response.ts",
-        "src/types/favorites-list-response.ts",
-        "src/types/feed-personalized-list-response.ts",
-        "src/types/field-error.ts",
-        "src/types/follows-list-response.ts",
-        "src/types/history-list-response.ts",
-        "src/types/index.ts",
-        "src/types/items-by-slug-retrieve-response.ts",
-        "src/types/items-list-response.ts",
-        "src/types/items-related-list-response.ts",
-        "src/types/items-retrieve-response.ts",
-        "src/types/live-events-retrieve-response.ts",
-        "src/types/news-comment-page.ts",
-        "src/types/news-favorite-page.ts",
-        "src/types/news-feed-page.ts",
-        "src/types/news-follow-page.ts",
-        "src/types/news-item-page.ts",
-        "src/types/news-search-result-page.ts",
-        "src/types/overview-retrieve-response.ts",
-        "src/types/problem-detail.ts",
-        "src/types/search-list-response.ts",
-        "src/types/topics-items-list-response.ts",
-        "src/types/topics-list-response.ts",
-        "src/types/trending-list-response.ts",
-        "src/types/trust-item-retrieve-response.ts"
+        "src/api/news.ts"
       ],
       "unchangedGeneratedFiles": [
+        "bin/publish-core.mjs",
         "bin/publish.ps1",
         "bin/publish.sh",
         "bin/sdk-gen.bat",
         "bin/sdk-gen.sh",
         "CHANGELOG.md",
         "LICENSE",
+        "package.json",
+        "README.md",
         "sdkwork-sdk.json",
+        "src/api/base.ts",
         "src/api/index.ts",
         "src/api/paths.ts",
         "src/auth/index.ts",
+        "src/http/client.ts",
         "src/http/index.ts",
         "src/index.ts",
         "src/sdk.ts",
+        "src/types/categories-list-response.ts",
+        "src/types/channels-feed-list-response.ts",
+        "src/types/channels-list-response.ts",
+        "src/types/comments-create-response201.ts",
+        "src/types/comments-list-response.ts",
         "src/types/common.ts",
+        "src/types/favorites-create-response201.ts",
+        "src/types/favorites-list-response.ts",
+        "src/types/feed-personalized-list-response.ts",
+        "src/types/field-error.ts",
+        "src/types/follows-create-response201.ts",
+        "src/types/follows-list-response.ts",
+        "src/types/history-list-response.ts",
+        "src/types/index.ts",
+        "src/types/interests-update-response.ts",
+        "src/types/items-by-slug-retrieve-response.ts",
+        "src/types/items-list-response.ts",
+        "src/types/items-related-list-response.ts",
+        "src/types/items-retrieve-response.ts",
+        "src/types/live-events-retrieve-response.ts",
         "src/types/media-resource.ts",
         "src/types/news-author.ts",
         "src/types/news-breaking-alert-command.ts",
@@ -302,6 +207,7 @@
         "src/types/news-category.ts",
         "src/types/news-channel.ts",
         "src/types/news-comment-command.ts",
+        "src/types/news-comment-page.ts",
         "src/types/news-comment.ts",
         "src/types/news-correction-notice-command.ts",
         "src/types/news-correction-notice-list-response.ts",
@@ -315,16 +221,20 @@
         "src/types/news-fact-check-command.ts",
         "src/types/news-fact-check-list-response.ts",
         "src/types/news-fact-check.ts",
+        "src/types/news-favorite-page.ts",
         "src/types/news-favorite.ts",
         "src/types/news-feed-candidate-command.ts",
         "src/types/news-feed-candidate-list-response.ts",
         "src/types/news-feed-candidate.ts",
         "src/types/news-feed-item.ts",
+        "src/types/news-feed-page.ts",
         "src/types/news-follow-command.ts",
+        "src/types/news-follow-page.ts",
         "src/types/news-follow.ts",
         "src/types/news-generic-command.ts",
         "src/types/news-item-command.ts",
         "src/types/news-item-metric-snapshot.ts",
+        "src/types/news-item-page.ts",
         "src/types/news-item-status.ts",
         "src/types/news-item-trust-snapshot-command.ts",
         "src/types/news-item-trust-snapshot.ts",
@@ -347,6 +257,7 @@
         "src/types/news-report-command.ts",
         "src/types/news-schedule-command.ts",
         "src/types/news-search-event.ts",
+        "src/types/news-search-result-page.ts",
         "src/types/news-search-result.ts",
         "src/types/news-search-suggestion-command.ts",
         "src/types/news-search-suggestion-list-response.ts",
@@ -361,7 +272,11 @@
         "src/types/news-user-interest-command.ts",
         "src/types/news-user-interest-signal-list-response.ts",
         "src/types/news-user-interest-signal.ts",
+        "src/types/notification-subscriptions-update-response.ts",
+        "src/types/overview-retrieve-response.ts",
         "src/types/page-info.ts",
+        "src/types/problem-detail.ts",
+        "src/types/reactions-update-response.ts",
         "src/types/sdk-work-api-response.ts",
         "src/types/sdk-work-command-data.ts",
         "src/types/sdk-work-command-response.ts",
@@ -370,129 +285,48 @@
         "src/types/sdk-work-platform-error-code.ts",
         "src/types/sdk-work-resource-data.ts",
         "src/types/sdk-work-resource-response.ts",
+        "src/types/search-list-response.ts",
+        "src/types/topics-items-list-response.ts",
+        "src/types/topics-list-response.ts",
+        "src/types/trending-list-response.ts",
+        "src/types/trust-item-retrieve-response.ts",
         "tsconfig.json"
       ],
-      "deletedGeneratedFiles": [
-        "src/types/comments-create-response.ts",
-        "src/types/favorites-create-response.ts",
-        "src/types/follows-create-response.ts",
-        "src/types/interests-upsert-response.ts",
-        "src/types/notification-subscriptions-upsert-response.ts",
-        "src/types/reactions-upsert-response.ts"
-      ],
+      "deletedGeneratedFiles": [],
       "scaffoldedFiles": [],
       "preservedScaffoldFiles": [
         "custom/build-runtime.mjs",
         "custom/README.md"
       ],
-      "backedUpFiles": [
-        "package.json",
-        "src/api/news.ts"
-      ]
+      "backedUpFiles": []
     },
     "impact": {
       "schemaVersion": 1,
       "areas": [
-        "api-surface",
-        "models",
-        "runtime",
-        "build-metadata",
-        "publish-workflow",
-        "documentation"
+        "api-surface"
       ],
       "details": [
         {
           "area": "api-surface",
           "paths": [
-            "src/api/base.ts",
-            "src/api/news.ts",
-            "src/http/client.ts"
-          ]
-        },
-        {
-          "area": "models",
-          "paths": [
-            "src/types/categories-list-response.ts",
-            "src/types/channels-feed-list-response.ts",
-            "src/types/channels-list-response.ts",
-            "src/types/comments-create-response.ts",
-            "src/types/comments-create-response201.ts",
-            "src/types/comments-list-response.ts",
-            "src/types/favorites-create-response.ts",
-            "src/types/favorites-create-response201.ts",
-            "src/types/favorites-list-response.ts",
-            "src/types/feed-personalized-list-response.ts",
-            "src/types/field-error.ts",
-            "src/types/follows-create-response.ts",
-            "src/types/follows-create-response201.ts",
-            "src/types/follows-list-response.ts",
-            "src/types/history-list-response.ts",
-            "src/types/index.ts",
-            "src/types/interests-update-response.ts",
-            "src/types/interests-upsert-response.ts",
-            "src/types/items-by-slug-retrieve-response.ts",
-            "src/types/items-list-response.ts",
-            "src/types/items-related-list-response.ts",
-            "src/types/items-retrieve-response.ts",
-            "src/types/live-events-retrieve-response.ts",
-            "src/types/news-comment-page.ts",
-            "src/types/news-favorite-page.ts",
-            "src/types/news-feed-page.ts",
-            "src/types/news-follow-page.ts",
-            "src/types/news-item-page.ts",
-            "src/types/news-search-result-page.ts",
-            "src/types/notification-subscriptions-update-response.ts",
-            "src/types/notification-subscriptions-upsert-response.ts",
-            "src/types/overview-retrieve-response.ts",
-            "src/types/problem-detail.ts",
-            "src/types/reactions-update-response.ts",
-            "src/types/reactions-upsert-response.ts",
-            "src/types/search-list-response.ts",
-            "src/types/topics-items-list-response.ts",
-            "src/types/topics-list-response.ts",
-            "src/types/trending-list-response.ts",
-            "src/types/trust-item-retrieve-response.ts"
-          ]
-        },
-        {
-          "area": "runtime",
-          "paths": [
-            "src/http/client.ts"
-          ]
-        },
-        {
-          "area": "build-metadata",
-          "paths": [
-            "package.json"
-          ]
-        },
-        {
-          "area": "publish-workflow",
-          "paths": [
-            "bin/publish-core.mjs"
-          ]
-        },
-        {
-          "area": "documentation",
-          "paths": [
-            "README.md"
+            "src/api/news.ts"
           ]
         }
       ],
       "requiresVerification": true,
-      "summary": "Detected impact areas: api-surface, models, runtime, build-metadata, publish-workflow, documentation. Verification is required."
+      "summary": "Detected impact areas: api-surface. Verification is required."
     },
     "verificationPlan": {
       "shouldRun": true,
       "runPhase": "now",
-      "summary": "Detected impact areas: api-surface, models, runtime, build-metadata, publish-workflow, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
+      "summary": "Detected impact areas: api-surface. Verification is required. Run the required verification commands now against the generated SDK output.",
       "steps": [
         {
           "id": "check",
           "title": "Unified package check",
           "required": true,
-          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-          "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+          "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [
             "./bin/publish-core.mjs",
@@ -509,8 +343,8 @@
           "id": "build",
           "title": "Unified package build",
           "required": true,
-          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, runtime, build-metadata, publish-workflow, documentation.",
-          "workingDirectory": "E:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
+          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+          "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [
             "./bin/publish-core.mjs",
@@ -527,22 +361,16 @@
     },
     "executionDecision": {
       "schemaVersion": 1,
-      "riskLevel": "high",
+      "riskLevel": "medium",
       "nextAction": "verify",
       "requiresManualReview": false,
       "applyRequiresExpectedFingerprint": false,
       "summary": "Changes have been applied. Run the required verification plan now.",
       "reasons": [
-        "backed-up-generated-files",
-        "deleted-generated-files",
-        "manual-review-required",
         "verification-required"
       ]
     },
-    "backedUpFiles": [
-      "package.json",
-      "src/api/news.ts"
-    ],
+    "backedUpFiles": [],
     "preservedLegacyFiles": false
   }
 }

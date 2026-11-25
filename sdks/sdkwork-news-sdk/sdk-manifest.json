@@ -19,7 +19,7 @@
   "baseUrl": "http://127.0.0.1:18082",
   "standardProfile": null,
   "fixedSdkVersion": "0.1.0",
-  "ownerOnlyOperationCount": 19,
+  "ownerOnlyOperationCount": 20,
   "operations": [
     {
       "method": "GET",
@@ -45,6 +45,11 @@
       "method": "GET",
       "operationId": "digests.list",
       "path": "/open/v3/api/news/digests"
+    },
+    {
+      "method": "GET",
+      "operationId": "entities.items.list",
+      "path": "/open/v3/api/news/entities/{entityType}/{entityId}/items"
     },
     {
       "method": "GET",

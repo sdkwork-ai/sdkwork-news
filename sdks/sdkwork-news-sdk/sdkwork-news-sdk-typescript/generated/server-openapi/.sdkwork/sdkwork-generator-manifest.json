@@ -44,7 +44,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "82f75601d5f3da883a18cf23cbac68baf5ee035a87943368792fa4b6794d9465"
+      "sha256": "3c099878eb4f3a0ddba4e312fb81e1c85f8aee61e5d234029b36b04adb37cb92"
     },
     {
       "path": "sdkwork-sdk.json",
@@ -60,7 +60,7 @@
     },
     {
       "path": "src/api/news.ts",
-      "sha256": "0102a4a60ae76933854438a9f80c38341fd53f1d5db73f0f7cb75dbc44ea8f41"
+      "sha256": "a080858b19b9136a8e3bea7387974a3ccb60813dfb479984372fb7b8b028712d"
     },
     {
       "path": "src/api/paths.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "43c64e0b83f9da276fcb2db52836f3c28e409afc14b8b285a132b11e83797f66"
+      "sha256": "dc26863043ee769b1f0f1b000e341bff76f0fac2b70ccfc383e911221e8cd2a5"
     },
     {
       "path": "src/http/index.ts",
@@ -99,12 +99,16 @@
       "sha256": "f6ea44d92201138da3187960f57829052dce27f4f4a1d12f50d542e4794cece6"
     },
     {
+      "path": "src/types/entities-items-list-response.ts",
+      "sha256": "9f64de00adb82fb12828bf22bc7a6585dfb2a1c2efa784e521901f5f64d5bbd2"
+    },
+    {
       "path": "src/types/field-error.ts",
       "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "06f6cd030acac003b3dbc9b94b5098cc6063a7a4dc30da2709d1d445018048f4"
+      "sha256": "fb4d25c845b1484cc41c13c366d19f22cf81cde8e5e1efa8a67203a8f0db478b"
     },
     {
       "path": "src/types/items-by-slug-retrieve-response.ts",
@@ -484,7 +488,7 @@
     },
     {
       "path": "tsconfig.json",
-      "sha256": "7c8a6c2b00fb208ec28e1e6045194487d1b3e563d6c44cef4783fd4fe0e8ffad"
+      "sha256": "35f6f0baf03ca4245339f0a532b02c6b0c8e64d66852a2f77d38ae063b2024b8"
     }
   ],
   "scaffoldFiles": [
