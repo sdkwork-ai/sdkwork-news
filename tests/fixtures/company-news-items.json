@@ -1,0 +1,38 @@
+[
+  {
+    "id": "news-item-maotai-q3",
+    "tenantId": "100001",
+    "title": "贵州茅台发布三季报：营收同比增长12%",
+    "summary": "白酒行业龙头贵州茅台公布2026年三季报。",
+    "bodyMarkdown": "公司表示，直销渠道占比继续提升。",
+    "status": "published",
+    "publishedAt": "2026-11-20T02:00:00Z"
+  },
+  {
+    "id": "news-item-semi",
+    "tenantId": "100001",
+    "title": "半导体设备国产替代加速，中芯国际宣布扩产",
+    "summary": "国产替代主题持续升温，产业链公司加快验证。",
+    "bodyMarkdown": "多家设备厂商进入头部晶圆厂供应链。",
+    "status": "published",
+    "publishedAt": "2026-11-21T02:00:00Z"
+  },
+  {
+    "id": "news-item-macro",
+    "tenantId": "100001",
+    "title": "美联储维持利率不变，全球市场震荡",
+    "summary": "宏观数据与政策预期主导市场。",
+    "bodyMarkdown": "投资者关注后续通胀与就业数据。",
+    "status": "published",
+    "publishedAt": "2026-11-22T02:00:00Z"
+  },
+  {
+    "id": "news-item-aapl",
+    "tenantId": "100001",
+    "title": "苹果公司发布新品，$AAPL盘后上涨3%",
+    "summary": "消费电子新品发布带动供应链预期。",
+    "bodyMarkdown": "市场关注新机的出货节奏。",
+    "status": "published",
+    "publishedAt": "2026-11-23T02:00:00Z"
+  }
+]

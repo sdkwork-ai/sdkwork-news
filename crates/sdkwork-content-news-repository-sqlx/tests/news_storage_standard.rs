@@ -14,7 +14,7 @@ use sqlx::sqlite::SqlitePoolOptions;
 fn news_storage_manifest_declares_complete_news_tables_and_migrations() {
     let manifest = news_storage_capability_manifest();
     assert_eq!(manifest.name, "sdkwork-content-news-repository-sqlx");
-    assert_eq!(manifest.schema_version, "news.storage.v7");
+    assert_eq!(manifest.schema_version, "news.storage.v8");
     assert_eq!(news_database_tables(), manifest.tables);
     assert!(manifest
         .indexes
@@ -74,6 +74,12 @@ fn news_storage_manifest_declares_complete_news_tables_and_migrations() {
     assert!(manifest
         .indexes
         .contains(&"idx_news_live_event_item_event_rank"));
+    assert!(manifest
+        .indexes
+        .contains(&"idx_news_entity_link_entity_status"));
+    assert!(manifest
+        .indexes
+        .contains(&"idx_news_entity_feed_entity_score"));
     assert_eq!(manifest.migration_plan[0].name, "0001_news_foundation.sql");
     assert_eq!(
         manifest.migration_plan[1].name,
@@ -122,6 +128,13 @@ fn news_storage_manifest_declares_complete_news_tables_and_migrations() {
     assert!(manifest.migration_plan[6]
         .sql
         .contains("CREATE TABLE news_story"));
+    assert_eq!(
+        manifest.migration_plan[7].name,
+        "0008_news_entity_linking.sql"
+    );
+    assert!(manifest.migration_plan[7]
+        .sql
+        .contains("CREATE TABLE IF NOT EXISTS news_entity_link"));
 }
 
 #[test]
@@ -169,6 +182,7 @@ fn news_storage_repositories_bind_to_news_tables() {
             "news.compliance.repository",
             "news.cdn.repository",
             "news.homepage.repository",
+            "news.entity.repository",
         ]
     );
 }

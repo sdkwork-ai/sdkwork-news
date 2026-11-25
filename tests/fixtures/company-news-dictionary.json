@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.news.entity-dictionary",
+  "entities": [
+    {
+      "entityType": "company",
+      "entityKey": "company-listed-cn-600519",
+      "symbol": "600519",
+      "displayName": "贵州茅台",
+      "marketCode": "CN_A",
+      "searchNames": ["贵州茅台"]
+    },
+    {
+      "entityType": "company",
+      "entityKey": "company-listed-cn-688981",
+      "symbol": "688981",
+      "displayName": "中芯国际",
+      "marketCode": "CN_A",
+      "searchNames": ["中芯国际"]
+    },
+    {
+      "entityType": "company",
+      "entityKey": "company-listed-us-aapl",
+      "symbol": "AAPL",
+      "displayName": "苹果",
+      "marketCode": "US",
+      "searchNames": ["苹果"]
+    },
+    {
+      "entityType": "instrument",
+      "entityKey": "company-listing-us-aapl",
+      "symbol": "AAPL",
+      "displayName": "苹果公司 (AAPL)",
+      "marketCode": "US",
+      "searchNames": []
+    },
+    {
+      "entityType": "industry",
+      "entityKey": "company-industry-sw-a1a0ce113a",
+      "symbol": null,
+      "displayName": "半导体",
+      "marketCode": null,
+      "searchNames": ["半导体"]
+    },
+    {
+      "entityType": "industry",
+      "entityKey": "company-industry-sw-ed8fdd5a23",
+      "symbol": null,
+      "displayName": "白酒Ⅱ",
+      "marketCode": null,
+      "searchNames": ["白酒Ⅱ"]
+    },
+    {
+      "entityType": "sector",
+      "entityKey": "company-sector-semiconductors",
+      "symbol": null,
+      "displayName": "半导体",
+      "marketCode": null,
+      "searchNames": ["半导体", "Semiconductors"]
+    },
+    {
+      "entityType": "sector",
+      "entityKey": "company-sector-liquor",
+      "symbol": null,
+      "displayName": "白酒",
+      "marketCode": null,
+      "searchNames": ["白酒", "Liquor"]
+    },
+    {
+      "entityType": "sector",
+      "entityKey": "company-sector-domestic-substitution",
+      "symbol": null,
+      "displayName": "国产替代",
+      "marketCode": null,
+      "searchNames": ["国产替代", "Domestic Substitution"]
+    }
+  ]
+}

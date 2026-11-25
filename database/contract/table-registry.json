@@ -439,6 +439,30 @@
       "owner": "news-platform",
       "compliance_level": "L2",
       "lifecycle_status": "active"
+    },
+    {
+      "table_name": "news_entity",
+      "owner": "news-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "news_entity_link",
+      "owner": "news-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "news_entity_feed",
+      "owner": "news-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "news_entity_extraction_run",
+      "owner": "news-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
     }
   ]
 }

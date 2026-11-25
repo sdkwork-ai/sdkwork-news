@@ -35,6 +35,9 @@ impl SqliteNewsStore {
         sqlx::raw_sql(super::manifest::news_professional_migration_sql())
             .execute(&self.pool)
             .await?;
+        sqlx::raw_sql(super::manifest::news_entity_linking_migration_sql())
+            .execute(&self.pool)
+            .await?;
         Ok(())
     }
 
