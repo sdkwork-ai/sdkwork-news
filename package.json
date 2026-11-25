@@ -32,6 +32,7 @@
     "db:validate": "node ../sdkwork-specs/tools/check-database-framework-standard.mjs --root .",
     "db:entities:check": "node tools/news_entity_link_import.mjs --check",
     "db:entities:import": "node tools/news_entity_link_import.mjs --company-root ../sdkwork-company --items .cache/news-items.json --emit-sql .cache/entity-links.sql",
+    "db:entities:scan": "node tools/news_entity_link_import.mjs --scan-db --limit 500 --apply",
     "db:materialize:contract": "node ../sdkwork-specs/tools/materialize-database-contract-from-baseline.mjs --root . --baseline database/ddl/baseline/postgres/0001_news_baseline.sql --module-id news --owner news-platform --prefixes news_ --engines postgres",
     "db:plan": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . plan",
     "db:init": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . init",

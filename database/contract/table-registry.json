@@ -463,6 +463,12 @@
       "owner": "news-platform",
       "compliance_level": "L2",
       "lifecycle_status": "active"
+    },
+    {
+      "table_name": "news_event_link",
+      "owner": "news-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
     }
   ]
 }

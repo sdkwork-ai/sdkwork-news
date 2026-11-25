@@ -79,6 +79,7 @@ pub fn news_database_tables() -> Vec<&'static str> {
         "news_entity_link",
         "news_entity_feed",
         "news_entity_extraction_run",
+        "news_event_link",
     ]
 }
 
@@ -169,6 +170,9 @@ pub fn news_database_indexes() -> Vec<&'static str> {
         "idx_news_entity_feed_entity_score",
         "idx_news_entity_feed_item",
         "idx_news_entity_extraction_run_status",
+        "idx_news_event_link_entity_date",
+        "idx_news_event_link_item",
+        "idx_news_event_link_type_date",
     ]
 }
 
@@ -182,6 +186,7 @@ pub fn news_migration_names() -> Vec<&'static str> {
         "0006_news_live_coverage_foundation.sql",
         "0007_news_professional_newsroom_foundation.sql",
         "0008_news_entity_linking.sql",
+        "0009_news_event_linking.sql",
     ]
 }
 
@@ -215,6 +220,10 @@ pub fn news_professional_migration_sql() -> &'static str {
 
 pub fn news_entity_linking_migration_sql() -> &'static str {
     include_str!("../migrations/0008_news_entity_linking.sql")
+}
+
+pub fn news_event_linking_migration_sql() -> &'static str {
+    include_str!("../migrations/0009_news_event_linking.sql")
 }
 
 pub fn news_migration_plan() -> Vec<NewsStorageMigration> {
@@ -367,6 +376,14 @@ pub fn news_migration_plan() -> Vec<NewsStorageMigration> {
                 "news_entity_feed",
                 "news_entity_extraction_run",
             ],
+        ),
+        migration(
+            9,
+            "0009_news_event_linking.sql",
+            "news",
+            "migrations/0009_news_event_linking.sql",
+            news_event_linking_migration_sql(),
+            vec!["news_event_link"],
         ),
     ]
 }
@@ -574,6 +591,7 @@ pub fn news_repository_bindings() -> Vec<NewsRepositoryBinding> {
                 "news_entity_link",
                 "news_entity_feed",
                 "news_entity_extraction_run",
+                "news_event_link",
             ],
         ),
     ]
@@ -582,7 +600,7 @@ pub fn news_repository_bindings() -> Vec<NewsRepositoryBinding> {
 pub fn news_storage_capability_manifest() -> NewsStorageCapabilityManifest {
     NewsStorageCapabilityManifest {
         name: "sdkwork-content-news-repository-sqlx",
-        schema_version: "news.storage.v8",
+        schema_version: "news.storage.v9",
         tables: news_database_tables(),
         indexes: news_database_indexes(),
         migrations: news_migration_names(),

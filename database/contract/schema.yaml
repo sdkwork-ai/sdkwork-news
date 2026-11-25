@@ -2,7 +2,7 @@ schema_version: 1
 kind: sdkwork.database.schema
 database_role: authoritative-server
 module_id: news
-contract_version: 1.1.0
+contract_version: 1.2.0
 owner_team: news-platform
 compliance_level: L2
 engines:
@@ -238,5 +238,8 @@ tables:
     lifecycle_status: active
     owner: news-platform
   - name: news_entity_extraction_run
+    lifecycle_status: active
+    owner: news-platform
+  - name: news_event_link
     lifecycle_status: active
     owner: news-platform

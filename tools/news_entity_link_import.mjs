@@ -39,7 +39,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const TOOL_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(TOOL_DIR, "..");
 const DEFAULT_COMPANY_ROOT = path.resolve(REPO_ROOT, "..", "sdkwork-company");
-const EXTRACTOR_VERSION = "news-entity-linker@1";
+const EXTRACTOR_VERSION = "news-entity-linker@2";
 const TENANT_ID = "100001";
 const require = createRequire(import.meta.url);
 
@@ -60,6 +60,7 @@ function parseArgs(argv) {
   const options = {
     check: false,
     apply: false,
+    scanDb: false,
     companyRoot: DEFAULT_COMPANY_ROOT,
     dictionary: "",
     fixtureItems: "",
@@ -72,6 +73,7 @@ function parseArgs(argv) {
     const token = argv[index];
     if (token === "--check") options.check = true;
     else if (token === "--apply") options.apply = true;
+    else if (token === "--scan-db") options.scanDb = true;
     else if (token === "--company-root") options.companyRoot = path.resolve(argv[++index] ?? "");
     else if (token === "--dictionary") options.dictionary = argv[++index] ?? "";
     else if (token === "--fixture-items") options.fixtureItems = argv[++index] ?? "";
@@ -293,6 +295,59 @@ export function matchesTicker(text, ticker) {
 }
 
 /**
+ * Corporate event taxonomy carried by `news_event_link`.
+ * The set is intentionally small and stable; new event types need a migration
+ * or a documented extension because downstream timelines group by this value.
+ */
+export const EVENT_TYPES = [
+  "earnings",
+  "merger_acquisition",
+  "ipo_listing",
+  "regulatory",
+  "dividend",
+  "capital_action",
+  "product",
+  "management_change",
+];
+
+/**
+ * Detect corporate event types from an item title and summary.
+ * @param {string} title
+ * @param {string} summary
+ * @returns {string[]}
+ */
+export function detectEventTypes(title, summary = "") {
+  const text = `${title}\n${summary}`;
+  const detected = new Set();
+  if (/财报|业绩|营收|净利润|季报|年报|亏损|盈利/u.test(text)) detected.add("earnings");
+  if (/并购|收购|重组|合并|控制权|要约/u.test(text)) detected.add("merger_acquisition");
+  if (/IPO|上市|招股|过会|注册生效|发行/u.test(text)) detected.add("ipo_listing");
+  if (/处罚|立案|监管|问询|退市|风险警示|违规/u.test(text)) detected.add("regulatory");
+  if (/分红|派息|股息/u.test(text)) detected.add("dividend");
+  if (/回购|增持|减持|定增|可转债|配股|拆股/u.test(text)) detected.add("capital_action");
+  if (/新品|新产品|产品发布|发布全新|扩产|投产|量产|订单/u.test(text)) detected.add("product");
+  if (/辞任|卸任|任命|聘任|董事长|总经理|高管/u.test(text)) detected.add("management_change");
+  return [...detected];
+}
+
+/**
+ * Resolve an event date from explicit text or the publication date.
+ * @param {string} text
+ * @param {string | null | undefined} publishedAt
+ * @returns {string}
+ */
+export function eventDateOf(text, publishedAt) {
+  const match = /(20\d{2})[-年/.](\d{1,2})[-月/.](\d{1,2})/u.exec(text);
+  if (match) {
+    return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`;
+  }
+  if (publishedAt && /^\d{4}-\d{2}-\d{2}/u.test(publishedAt)) {
+    return publishedAt.slice(0, 10);
+  }
+  return "1970-01-01";
+}
+
+/**
  * @param {string} title
  * @returns {"high"|"medium"|"low"}
  */
@@ -314,6 +369,7 @@ export function linkItems(entities, items, tenantId = TENANT_ID) {
   const matchedEntities = new Map();
   const links = [];
   const feeds = [];
+  const events = [];
   for (const item of items) {
     const title = item.title ?? "";
     const summary = item.summary ?? "";
@@ -354,6 +410,9 @@ export function linkItems(entities, items, tenantId = TENANT_ID) {
       }
     }
     const itemLinks = [];
+    const checksum = sha1(`${title}|${summary}|${body}`);
+    const eventTypes = detectEventTypes(title, summary);
+    const eventDate = eventDateOf(`${title}\n${summary}`, item.publishedAt);
     for (const entry of best.values()) {
       matchedEntities.set(`${entry.entity.entityType}|${entry.entity.entityKey}`, entry.entity);
       const link = {
@@ -365,10 +424,25 @@ export function linkItems(entities, items, tenantId = TENANT_ID) {
         confidenceBps: entry.confidenceBps,
         relevanceBps: entry.confidenceBps,
         reason: entry.reason,
-        checksum: sha1(`${title}|${summary}|${body}`),
+        checksum,
       };
       links.push(link);
       itemLinks.push(link);
+      if (entry.entity.entityType === "company" || entry.entity.entityType === "instrument") {
+        for (const eventType of eventTypes) {
+          events.push({
+            id: `news-event-link-${shortHash(`${tenantId}|${item.id}|${entry.entity.entityKey}|${eventType}|${eventDate}`)}`,
+            tenantId,
+            itemId: item.id,
+            entity: entry.entity,
+            eventType,
+            eventDate,
+            materiality: materialityOf(title),
+            confidenceBps: entry.confidenceBps,
+            checksum,
+          });
+        }
+      }
       if (item.status === "published" && item.publishedAt) {
         feeds.push({
           id: `news-entity-feed-${shortHash(`${tenantId}|${entry.entity.entityKey}|${item.id}`)}`,
@@ -383,16 +457,41 @@ export function linkItems(entities, items, tenantId = TENANT_ID) {
     }
     perItem.set(item.id, itemLinks);
   }
-  return { links, feeds, entityRows: [...matchedEntities.values()], perItem };
+  return {
+    links,
+    feeds,
+    events,
+    entityRows: [...matchedEntities.values()],
+    perItem,
+    perItemEvents: new Map(
+      items.map((item) => [item.id, events.filter((event) => event.itemId === item.id)]),
+    ),
+  };
 }
 
 function buildSql(result, tenantId) {
   const now = new Date().toISOString();
   const runId = `news-entity-extraction-run-${shortHash(`${tenantId}|${now}`)}`;
+  const itemIds = [...result.perItem.keys()];
+  const itemArray = itemIds.length > 0
+    ? `ARRAY[${itemIds.map((itemId) => sqlText(itemId)).join(",")}]::text[]`
+    : "ARRAY[]::text[]";
   const lines = [
     "-- News entity-linking extraction generated by tools/news_entity_link_import.mjs.",
     `-- extractor_version: ${EXTRACTOR_VERSION}`,
     `-- generated_at: ${now}`,
+    "",
+    "-- Reconcile this extractor's derived rows for the scanned items before",
+    "-- re-inserting, so an extractor-version change cannot leave stale links.",
+    itemIds.length > 0
+      ? `DELETE FROM news_entity_link WHERE tenant_id = ${sqlText(tenantId)} AND extractor_version LIKE 'news-entity-linker@%' AND item_id = ANY(${itemArray});`
+      : "-- no items scanned",
+    itemIds.length > 0
+      ? `DELETE FROM news_event_link WHERE tenant_id = ${sqlText(tenantId)} AND extractor_version LIKE 'news-entity-linker@%' AND item_id = ANY(${itemArray});`
+      : "",
+    itemIds.length > 0
+      ? `DELETE FROM news_entity_feed WHERE tenant_id = ${sqlText(tenantId)} AND item_id = ANY(${itemArray});`
+      : "",
     "",
   ];
   if (result.entityRows.length > 0) {
@@ -465,19 +564,45 @@ function buildSql(result, tenantId) {
       "",
     );
   }
+  if (result.events.length > 0) {
+    const entityId = (entity) => `news-entity-${entity.entityType}-${shortHash(entity.entityKey)}`;
+    lines.push(
+      "INSERT INTO news_event_link (",
+      "    id, tenant_id, organization_id, item_id, entity_id, event_type,",
+      "    event_date, materiality, confidence_bps, extractor_version,",
+      "    source_checksum, status, created_at, updated_at",
+      ")",
+      "VALUES",
+      result.events
+        .map(
+          (event) =>
+            `    (${sqlText(event.id)}, ${sqlText(tenantId)}, '0', ${sqlText(event.itemId)}, ${sqlText(entityId(event.entity))}, ${sqlText(event.eventType)}, ${sqlText(event.eventDate)}, ${sqlText(event.materiality)}, ${sqlNumber(event.confidenceBps)}, ${sqlText(EXTRACTOR_VERSION)}, ${sqlText(event.checksum)}, 'active', ${sqlText(now)}, ${sqlText(now)})`,
+        )
+        .join(",\n"),
+      "ON CONFLICT (tenant_id, item_id, entity_id, event_type, event_date) DO UPDATE SET",
+      "    materiality = EXCLUDED.materiality,",
+      "    confidence_bps = EXCLUDED.confidence_bps,",
+      "    extractor_version = EXCLUDED.extractor_version,",
+      "    source_checksum = EXCLUDED.source_checksum,",
+      "    status = EXCLUDED.status,",
+      "    updated_at = EXCLUDED.updated_at;",
+      "",
+    );
+  }
   lines.push(
     "INSERT INTO news_entity_extraction_run (",
     "    id, tenant_id, organization_id, extractor_version, scope, status,",
-    "    items_scanned, links_written, feeds_written, started_at, finished_at,",
-    "    error_message, created_at, updated_at",
+    "    items_scanned, links_written, feeds_written, events_written, started_at,",
+    "    finished_at, error_message, created_at, updated_at",
     ")",
     "VALUES",
-    `    (${sqlText(runId)}, ${sqlText(tenantId)}, '0', ${sqlText(EXTRACTOR_VERSION)}, 'all', 'completed', ${result.perItem.size}, ${result.links.length}, ${result.feeds.length}, ${sqlText(now)}, ${sqlText(now)}, NULL, ${sqlText(now)}, ${sqlText(now)})`,
+    `    (${sqlText(runId)}, ${sqlText(tenantId)}, '0', ${sqlText(EXTRACTOR_VERSION)}, 'all', 'completed', ${result.perItem.size}, ${result.links.length}, ${result.feeds.length}, ${result.events.length}, ${sqlText(now)}, ${sqlText(now)}, NULL, ${sqlText(now)}, ${sqlText(now)})`,
     "ON CONFLICT (id) DO UPDATE SET",
     "    status = EXCLUDED.status,",
     "    items_scanned = EXCLUDED.items_scanned,",
     "    links_written = EXCLUDED.links_written,",
     "    feeds_written = EXCLUDED.feeds_written,",
+    "    events_written = EXCLUDED.events_written,",
     "    finished_at = EXCLUDED.finished_at,",
     "    updated_at = EXCLUDED.updated_at;",
     "",
@@ -525,18 +650,30 @@ function checkFixture() {
   if ((result.perItem.get("news-item-macro") ?? []).length !== 0) {
     failures.push("macro item must not link a company or sector");
   }
+  if ((result.perItemEvents.get("news-item-macro") ?? []).length !== 0) {
+    failures.push("macro item must not produce a corporate event");
+  }
+  if ((result.perItemEvents.get("news-item-maotai-q3") ?? []).every((event) => event.eventType !== "earnings")) {
+    failures.push("maotai earnings item must produce an earnings event");
+  }
+  if ((result.perItemEvents.get("news-item-semi") ?? []).every((event) => event.eventType !== "product")) {
+    failures.push("semi expansion item must produce a product event");
+  }
   if (result.feeds.length === 0) {
     failures.push("published fixture items must produce feed rows");
+  }
+  if (result.events.length === 0) {
+    failures.push("fixture items must produce event links");
   }
   if (failures.length > 0) {
     throw new Error(`entity-link fixture failed: ${failures.join("; ")}`);
   }
   process.stdout.write(
-    `[news_entity_link_import] check ok items=${result.perItem.size} entities=${result.entityRows.length} links=${result.links.length} feeds=${result.feeds.length}\n`,
+    `[news_entity_link_import] check ok items=${result.perItem.size} entities=${result.entityRows.length} links=${result.links.length} feeds=${result.feeds.length} events=${result.events.length}\n`,
   );
 }
 
-async function applySql(sql) {
+async function connectDatabase() {
   let pg;
   try {
     pg = require("pg");
@@ -546,7 +683,7 @@ async function applySql(sql) {
         path.resolve(REPO_ROOT, "..", "sdkwork-company", ".cache", "pg-client", "node_modules", "pg"),
       );
     } catch {
-      throw new Error("--apply requires the pg module; install it or use --emit-sql");
+      throw new Error("database mode requires the pg module; install it or use --emit-sql");
     }
   }
   const client = new pg.Client({
@@ -557,12 +694,48 @@ async function applySql(sql) {
     password: process.env.SDKWORK_DATABASE_PASSWORD ?? "",
   });
   await client.connect();
+  const schema = process.env.SDKWORK_DATABASE_SCHEMA;
+  if (schema) {
+    await client.query(`SET search_path TO ${schema.replaceAll(/[^a-zA-Z0-9_]/gu, "")}, public`);
+  }
+  return client;
+}
+
+async function applySql(sql) {
+  const client = await connectDatabase();
   try {
-    const schema = process.env.SDKWORK_DATABASE_SCHEMA;
-    if (schema) {
-      await client.query(`SET search_path TO ${schema.replaceAll(/[^a-zA-Z0-9_]/gu, "")}, public`);
-    }
     await client.query(sql);
+  } finally {
+    await client.end();
+  }
+}
+
+/**
+ * @param {number} limit
+ * @returns {Promise<Array<object>>}
+ */
+async function loadDatabaseItems(limit) {
+  const client = await connectDatabase();
+  try {
+    const result = await client.query(
+      `SELECT i.id, i.tenant_id, i.title, i.summary, i.status, i.published_at,
+              COALESCE(b.body_markdown, '') AS body_markdown
+       FROM news_item i
+       LEFT JOIN news_item_body b ON b.item_id = i.id
+       WHERE i.status = 'published' AND i.archived_at IS NULL
+       ORDER BY i.published_at DESC NULLS LAST, i.id
+       LIMIT $1`,
+      [limit],
+    );
+    return result.rows.map((row) => ({
+      id: row.id,
+      tenantId: row.tenant_id,
+      title: row.title,
+      summary: row.summary,
+      status: row.status,
+      publishedAt: row.published_at,
+      bodyMarkdown: row.body_markdown,
+    }));
   } finally {
     await client.end();
   }
@@ -575,8 +748,10 @@ async function main() {
     return;
   }
   const dictionary = loadDictionary(options);
-  const allItems = loadItems(options);
-  const items = options.limit > 0 ? allItems.slice(0, options.limit) : allItems;
+  const allItems = options.scanDb
+    ? await loadDatabaseItems(options.limit > 0 ? options.limit : 500)
+    : loadItems(options);
+  const items = options.scanDb || options.limit <= 0 ? allItems : allItems.slice(0, options.limit);
   const result = linkItems(dictionary, items, options.tenant);
   const sql = buildSql(result, options.tenant);
   if (options.emitSql) {
@@ -589,10 +764,11 @@ async function main() {
     await applySql(sql);
   }
   process.stdout.write(
-    `[news_entity_link_import] items=${items.length} entities=${result.entityRows.length} links=${result.links.length} feeds=${result.feeds.length}\n`,
+    `[news_entity_link_import] items=${items.length} entities=${result.entityRows.length} links=${result.links.length} feeds=${result.feeds.length} events=${result.events.length}\n`,
   );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }
+

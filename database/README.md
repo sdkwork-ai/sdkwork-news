@@ -5,7 +5,7 @@ Canonical lifecycle assets for `sdkwork-news` per `DATABASE_FRAMEWORK_SPEC.md`.
 - moduleId: `news`
 - serviceCode: `NEWS`
 - tablePrefix: `news_`
-- contractVersion: `1.1.0` (news.storage.v8, 77 tables)
+- contractVersion: `1.2.0` (news.storage.v9, 78 tables)
 
 ## Initialization state
 
@@ -25,13 +25,27 @@ entity tables are:
 | `news_entity` | registry for `company` / `industry` / `sector` / `instrument` keys, display name and symbol |
 | `news_entity_link` | item → entity attribution with role, confidence, extractor version and source checksum |
 | `news_entity_feed` | per-entity feed read model for published items, scored and ordered |
-| `news_entity_extraction_run` | extraction ledger: items scanned, links/feeds written, start/finish |
+| `news_entity_extraction_run` | extraction ledger: items scanned, links/feeds/events written, start/finish |
+| `news_event_link` | item → entity corporate event attribution (earnings, M&A, IPO, regulatory, dividend, capital, product, management) |
 
 `tools/news_entity_link_import.mjs` builds the dictionary from either a committed
 JSON fixture or the `sdkwork-company` seeds, matches names/tickers conservatively,
-and emits idempotent SQL for the four tables. Chinese names match literally; Latin
-names match on word boundaries; one- and two-letter tickers never match bare; the
-generic "其他/综合/未分类/Other" titles are excluded.
+and emits idempotent SQL for the entity tables and `news_event_link`. Chinese names
+match literally; Latin names match on word boundaries; one- and two-letter tickers
+never match bare; the generic "其他/综合/无分类/Other" titles are excluded.
+
+Corporate events are typed from title/summary into a small stable vocabulary:
+`earnings`, `merger_acquisition`, `ipo_listing`, `regulatory`, `dividend`,
+`capital_action`, `product`, `management_change`. Event links are written only for
+company/instrument entities, carry the publication/explicit date, and are reconciled
+per scanned item so an extractor-version change cannot leave stale rows.
+
+In addition to fixture mode the tool can scan the live table:
+
+```bash
+SDKWORK_DATABASE_* pnpm db:entities:scan
+# node tools/news_entity_link_import.mjs --scan-db --limit 500 --apply
+```
 
 ## Commands
 

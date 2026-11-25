@@ -5,6 +5,8 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  detectEventTypes,
+  eventDateOf,
   linkItems,
   matchesName,
   matchesTicker,
@@ -40,6 +42,14 @@ test("materiality raises event-style stories", () => {
   assert.equal(materialityOf("三季报净利润增长"), "medium");
 });
 
+test("corporate events are typed from title and summary", () => {
+  assert.deepEqual(detectEventTypes("三季报净利润增长", ""), ["earnings"]);
+  assert.deepEqual(detectEventTypes("拟收购标的公司控制权", ""), ["merger_acquisition"]);
+  assert.deepEqual(detectEventTypes("半导体设备扩产，发布新品", ""), ["product"]);
+  assert.equal(eventDateOf("2026年11月20日发布三季报", null), "2026-11-20");
+  assert.equal(eventDateOf("无日期", "2026-11-21T02:00:00Z"), "2026-11-21");
+});
+
 test("fixture links company, industry and sector entities", () => {
   const dictionary = fixture("company-news-dictionary.json").entities;
   const items = fixture("company-news-items.json");
@@ -62,4 +72,15 @@ test("fixture links company, industry and sector entities", () => {
   );
   assert.equal(linksFor("news-item-macro").length, 0);
   assert.equal(result.feeds.length, result.links.length);
+  assert.ok(
+    result.perItemEvents
+      .get("news-item-maotai-q3")
+      .some((event) => event.eventType === "earnings"),
+  );
+  assert.ok(
+    result.perItemEvents
+      .get("news-item-semi")
+      .some((event) => event.eventType === "product"),
+  );
+  assert.equal(result.perItemEvents.get("news-item-macro").length, 0);
 });
