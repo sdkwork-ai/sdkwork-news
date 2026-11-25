@@ -7,6 +7,8 @@ export type { NewsTopic } from './news-topic';
 export type { NewsSource } from './news-source';
 export type { NewsAuthor } from './news-author';
 export type { NewsFeedItem } from './news-feed-item';
+export type { NewsEntityEvent } from './news-entity-event';
+export type { NewsEntityEventPage } from './news-entity-event-page';
 export type { NewsFeedPage } from './news-feed-page';
 export type { NewsItemPage } from './news-item-page';
 export type { NewsCommentPage } from './news-comment-page';

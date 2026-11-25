@@ -140,7 +140,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "2a9400644edeb3cabfa6058f05d6c876da27771cc42b8117700bcafc6e5599bb"
+      "sha256": "6b9fc375930278474abfbb8314a3ae2d7194433a56b9e23fe40d5d56994dcb08"
     },
     {
       "path": "src/types/interests-update-response.ts",
@@ -241,6 +241,14 @@
     {
       "path": "src/types/news-editorial-readiness.ts",
       "sha256": "3c1ff02508635c246f2b789daabde66406c35c5af11ad62ad445f8adb134326c"
+    },
+    {
+      "path": "src/types/news-entity-event-page.ts",
+      "sha256": "0d13d3ad4afb5e260eed2a39cd0ff0bd710f59ae028e416d911da66084cd71a2"
+    },
+    {
+      "path": "src/types/news-entity-event.ts",
+      "sha256": "9d91e993584e91b237f60070bfeb3bfba0f9d5d6b8543d68170d91b6315ea7c5"
     },
     {
       "path": "src/types/news-experiment.ts",

@@ -40,6 +40,11 @@ Corporate events are typed from title/summary into a small stable vocabulary:
 company/instrument entities, carry the publication/explicit date, and are reconciled
 per scanned item so an extractor-version change cannot leave stale rows.
 
+Public reads expose both the entity feed and its event timeline:
+
+- `GET /open/v3/api/news/entities/{entityType}/{entityId}/items` — published-item feed
+- `GET /open/v3/api/news/entities/{entityType}/{entityId}/events` — corporate-event timeline
+
 In addition to fixture mode the tool can scan the live table:
 
 ```bash

@@ -121,6 +121,12 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         "news",
         "entities.items.list",
     ),
+    HttpRoute::public(
+        HttpMethod::Get,
+        "/open/v3/api/news/entities/{entityType}/{entityId}/events",
+        "news",
+        "entities.events.list",
+    ),
 ];
 
 pub fn open_route_manifest() -> HttpRouteManifest {

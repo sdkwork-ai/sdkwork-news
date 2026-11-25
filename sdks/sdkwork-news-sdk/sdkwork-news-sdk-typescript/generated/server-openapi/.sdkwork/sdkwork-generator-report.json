@@ -12,11 +12,12 @@
   "mode": "apply",
   "hasChanges": true,
   "hasDestructiveChanges": false,
-  "changeFingerprint": "442fcb6552b2b6ac17db1ca7e3b8076ce27f49969122e7143d99942d3ab795a7",
+  "changeFingerprint": "82debea3d1e05de4c67bd166d27d6782577c458ac13246a291ce1fa51496bca0",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
-      "api-surface"
+      "api-surface",
+      "models"
     ],
     "details": [
       {
@@ -24,10 +25,19 @@
         "paths": [
           "src/api/news.ts"
         ]
+      },
+      {
+        "area": "models",
+        "paths": [
+          "src/types/entities-events-list-response.ts",
+          "src/types/index.ts",
+          "src/types/news-entity-event-page.ts",
+          "src/types/news-entity-event.ts"
+        ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface. Verification is required."
+    "summary": "Detected impact areas: api-surface, models. Verification is required."
   },
   "executionDecision": {
     "schemaVersion": 1,
@@ -48,7 +58,7 @@
         "id": "verify-check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -66,7 +76,7 @@
         "id": "verify-build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -85,13 +95,13 @@
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -109,7 +119,7 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -139,25 +149,30 @@
     "localVersions": []
   },
   "stats": {
-    "totalFiles": 122,
-    "models": 98,
+    "totalFiles": 125,
+    "models": 101,
     "apis": 1,
-    "types": 100
+    "types": 103
   },
   "warnings": [],
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 1,
+    "writtenFiles": 5,
     "skippedScaffoldFiles": 2,
-    "skippedUnchangedGeneratedFiles": 119,
+    "skippedUnchangedGeneratedFiles": 118,
     "deletedGeneratedFiles": 0,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "442fcb6552b2b6ac17db1ca7e3b8076ce27f49969122e7143d99942d3ab795a7",
+    "changeFingerprint": "82debea3d1e05de4c67bd166d27d6782577c458ac13246a291ce1fa51496bca0",
     "changes": {
-      "createdGeneratedFiles": [],
+      "createdGeneratedFiles": [
+        "src/types/entities-events-list-response.ts",
+        "src/types/news-entity-event-page.ts",
+        "src/types/news-entity-event.ts"
+      ],
       "updatedGeneratedFiles": [
-        "src/api/news.ts"
+        "src/api/news.ts",
+        "src/types/index.ts"
       ],
       "unchangedGeneratedFiles": [
         "bin/publish-core.mjs",
@@ -183,7 +198,6 @@
         "src/types/common.ts",
         "src/types/entities-items-list-response.ts",
         "src/types/field-error.ts",
-        "src/types/index.ts",
         "src/types/items-by-slug-retrieve-response.ts",
         "src/types/items-list-response.ts",
         "src/types/items-related-list-response.ts",
@@ -291,7 +305,8 @@
     "impact": {
       "schemaVersion": 1,
       "areas": [
-        "api-surface"
+        "api-surface",
+        "models"
       ],
       "details": [
         {
@@ -299,21 +314,30 @@
           "paths": [
             "src/api/news.ts"
           ]
+        },
+        {
+          "area": "models",
+          "paths": [
+            "src/types/entities-events-list-response.ts",
+            "src/types/index.ts",
+            "src/types/news-entity-event-page.ts",
+            "src/types/news-entity-event.ts"
+          ]
         }
       ],
       "requiresVerification": true,
-      "summary": "Detected impact areas: api-surface. Verification is required."
+      "summary": "Detected impact areas: api-surface, models. Verification is required."
     },
     "verificationPlan": {
       "shouldRun": true,
       "runPhase": "now",
-      "summary": "Detected impact areas: api-surface. Verification is required. Run the required verification commands now against the generated SDK output.",
+      "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
       "steps": [
         {
           "id": "check",
           "title": "Unified package check",
           "required": true,
-          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
           "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [
@@ -331,7 +355,7 @@
           "id": "build",
           "title": "Unified package build",
           "required": true,
-          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
           "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-sdk\\sdkwork-news-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [

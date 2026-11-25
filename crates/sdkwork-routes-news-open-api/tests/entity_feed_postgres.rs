@@ -6,7 +6,9 @@
 //! keyset predicate, archived filter and cursor contract are exercised together.
 
 use axum::extract::{Path, Query, State};
-use sdkwork_routes_news_open_api::handlers::entity::{list_entity_items, EntityFeedParams};
+use sdkwork_routes_news_open_api::handlers::entity::{
+    list_entity_events, list_entity_items, EntityEventsParams, EntityFeedParams,
+};
 use sdkwork_routes_news_open_api::state::NewsHttpState;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::sync::Arc;
@@ -89,6 +91,17 @@ async fn entity_pool(label: &str) -> Option<PgPool> {
              '2026-01-02', '2026-01-02', '2026-01-02', '2026-01-02'),
             ('feed-archived', '100001', '0', 'entity-company-x', 'item-archived', 9500, 'high',
              '2026-01-04', '2026-01-04', '2026-01-04', '2026-01-04');
+
+        INSERT INTO news_event_link
+            (id, tenant_id, organization_id, item_id, entity_id, event_type, event_date,
+             materiality, confidence_bps, extractor_version, status, created_at, updated_at)
+        VALUES
+            ('event-new', '100001', '0', 'item-new', 'entity-company-x', 'earnings',
+             '2026-01-03', 'high', 9000, 'test', 'active', '2026-01-03', '2026-01-03'),
+            ('event-old', '100001', '0', 'item-old', 'entity-company-x', 'product',
+             '2026-01-02', 'medium', 8000, 'test', 'active', '2026-01-02', '2026-01-02'),
+            ('event-archived', '100001', '0', 'item-archived', 'entity-company-x', 'regulatory',
+             '2026-01-04', 'high', 9500, 'test', 'active', '2026-01-04', '2026-01-04');
         "#,
     ))
     .execute(&pool)
@@ -131,6 +144,33 @@ async fn entity_feed_pages_by_cursor_and_excludes_archived_items() {
     .await;
     assert_eq!(second["data"]["items"][0]["id"], "item-old");
     assert_eq!(second["data"]["pageInfo"]["hasMore"], false);
+
+    let axum::Json(events_first) = list_entity_events(
+        State(state.clone()),
+        Path(("company".to_owned(), "company-x".to_owned())),
+        Query(EntityEventsParams {
+            page: Some(1),
+            page_size: Some(1),
+        }),
+    )
+    .await;
+    assert_eq!(events_first["code"], 0);
+    assert_eq!(events_first["data"]["items"][0]["id"], "event-new");
+    assert_eq!(events_first["data"]["items"][0]["eventType"], "earnings");
+    assert_eq!(events_first["data"]["pageInfo"]["totalItems"], "2");
+    assert_eq!(events_first["data"]["pageInfo"]["hasMore"], true);
+
+    let axum::Json(events_second) = list_entity_events(
+        State(state.clone()),
+        Path(("company".to_owned(), "company-x".to_owned())),
+        Query(EntityEventsParams {
+            page: Some(2),
+            page_size: Some(1),
+        }),
+    )
+    .await;
+    assert_eq!(events_second["data"]["items"][0]["id"], "event-old");
+    assert_eq!(events_second["data"]["pageInfo"]["hasMore"], false);
 
     let axum::Json(unknown) = list_entity_items(
         State(state),

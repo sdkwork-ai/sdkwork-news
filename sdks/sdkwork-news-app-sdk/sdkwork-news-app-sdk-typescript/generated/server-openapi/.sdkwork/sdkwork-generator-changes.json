@@ -9,11 +9,14 @@
     "protocol": "http",
     "packageName": "sdkwork-news-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "94c494f23957b17ac00d3b20f384c47895cfdb671fd7fdd9aabadcee93fb0a78",
+  "changeFingerprint": "4cee20f7ddcaae91e9327532e7004c3009c113a70d7fc8e393a011250d5ca8c5",
   "changes": {
-    "createdGeneratedFiles": [],
+    "createdGeneratedFiles": [
+      "src/types/news-entity-event-page.ts",
+      "src/types/news-entity-event.ts"
+    ],
     "updatedGeneratedFiles": [
-      "src/api/news.ts"
+      "src/types/index.ts"
     ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
@@ -28,6 +31,7 @@
       "sdkwork-sdk.json",
       "src/api/base.ts",
       "src/api/index.ts",
+      "src/api/news.ts",
       "src/api/paths.ts",
       "src/auth/index.ts",
       "src/http/client.ts",
@@ -47,7 +51,6 @@
       "src/types/follows-create-response201.ts",
       "src/types/follows-list-response.ts",
       "src/types/history-list-response.ts",
-      "src/types/index.ts",
       "src/types/interests-update-response.ts",
       "src/types/items-by-slug-retrieve-response.ts",
       "src/types/items-list-response.ts",
@@ -159,29 +162,31 @@
   "impact": {
     "schemaVersion": 1,
     "areas": [
-      "api-surface"
+      "models"
     ],
     "details": [
       {
-        "area": "api-surface",
+        "area": "models",
         "paths": [
-          "src/api/news.ts"
+          "src/types/index.ts",
+          "src/types/news-entity-event-page.ts",
+          "src/types/news-entity-event.ts"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface. Verification is required."
+    "summary": "Detected impact areas: models. Verification is required."
   },
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: models. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -199,7 +204,7 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: models.",
         "workingDirectory": "D:\\sdkwork-space\\sdkwork-news\\sdks\\sdkwork-news-app-sdk\\sdkwork-news-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [

@@ -144,6 +144,27 @@ const schemas = {
       traceId: { type: "string" },
     },
   },
+  NewsEntityEvent: {
+    type: "object",
+    additionalProperties: false,
+    required: ["id", "itemId", "itemTitle", "entityType", "entityKey", "eventType", "eventDate", "materiality"],
+    properties: {
+      id: { type: "string" },
+      itemId: { type: "string" },
+      itemTitle: { type: "string" },
+      entityType: { type: "string", enum: ["company", "industry", "sector", "instrument"] },
+      entityKey: { type: "string" },
+      eventType: {
+        type: "string",
+        enum: ["earnings", "merger_acquisition", "ipo_listing", "regulatory", "dividend", "capital_action", "product", "management_change"],
+      },
+      eventDate: { type: "string", format: "date" },
+      materiality: { type: "string", enum: ["high", "medium", "low"] },
+      confidenceBps: { type: ["integer", "null"] },
+      publishedAt: { type: ["string", "null"], format: "date-time" },
+    },
+  },
+  NewsEntityEventPage: pageOf("NewsEntityEvent"),
   NewsFeedPage: pageOf("NewsFeedItem"),
   NewsItemPage: pageOf("NewsItem"),
   NewsCommentPage: pageOf("NewsComment"),
@@ -897,6 +918,7 @@ const openRoutes = [
   route("get", "/open/v3/api/news/live/events/{eventId}", "live.events.retrieve", { schema: ref("NewsLiveEvent") }, true, [pathParam("eventId")]),
   route("get", "/open/v3/api/news/live/events/{eventId}/updates", "live.updates.list", { schema: ref("NewsLiveUpdateListResponse") }, true, [pathParam("eventId"), ...pageParams()]),
   route("get", "/open/v3/api/news/entities/{entityType}/{entityId}/items", "entities.items.list", { schema: ref("NewsItemPage") }, true, [pathParam("entityType"), pathParam("entityId"), ...pageParams()]),
+  route("get", "/open/v3/api/news/entities/{entityType}/{entityId}/events", "entities.events.list", { schema: ref("NewsEntityEventPage") }, true, [pathParam("entityType"), pathParam("entityId"), ...pageParams()]),
 ];
 
 const backendRoutes = [

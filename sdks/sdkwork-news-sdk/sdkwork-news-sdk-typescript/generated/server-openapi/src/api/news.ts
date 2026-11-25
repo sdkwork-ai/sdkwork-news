@@ -1,8 +1,31 @@
 import { customApiPath } from './paths';
 import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { ChannelsFeedListResponse, ChannelsListResponse, EntitiesItemsListResponse, ItemsBySlugRetrieveResponse, ItemsListResponse, ItemsRelatedListResponse, ItemsRetrieveResponse, LiveEventsRetrieveResponse, SdkWorkListResponse, SearchListResponse, TopicsItemsListResponse, TopicsListResponse, TrendingListResponse, TrustItemRetrieveResponse } from '../types';
+import type { ChannelsFeedListResponse, ChannelsListResponse, EntitiesEventsListResponse, EntitiesItemsListResponse, ItemsBySlugRetrieveResponse, ItemsListResponse, ItemsRelatedListResponse, ItemsRetrieveResponse, LiveEventsRetrieveResponse, SdkWorkListResponse, SearchListResponse, TopicsItemsListResponse, TopicsListResponse, TrendingListResponse, TrustItemRetrieveResponse } from '../types';
 
+
+export interface NewsEntitiesEventsListParams {
+  cursor?: string;
+  pageSize?: number;
+}
+
+export class NewsEntitiesEventsApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** News entities.events.list */
+  async list(entityType: string, entityId: string, params?: NewsEntitiesEventsListParams, requestOptions?: ApiRequestOptions): Promise<EntitiesEventsListResponse> {
+    const query = buildQueryString([
+      { name: 'cursor', value: params?.cursor, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<EntitiesEventsListResponse>(appendQueryString(customApiPath(`/news/entities/${serializePathParameter(entityType, { name: 'entityType', style: 'simple', explode: false })}/${serializePathParameter(entityId, { name: 'entityId', style: 'simple', explode: false })}/events`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any });
+  }
+}
 
 export interface NewsEntitiesItemsListParams {
   cursor?: string;
@@ -29,9 +52,11 @@ export class NewsEntitiesItemsApi {
 
 export class NewsEntitiesApi {
   public readonly items: NewsEntitiesItemsApi;
+  public readonly events: NewsEntitiesEventsApi;
 
   constructor(client: HttpClient) {
     this.items = new NewsEntitiesItemsApi(client);
+    this.events = new NewsEntitiesEventsApi(client);
   }
 
 }

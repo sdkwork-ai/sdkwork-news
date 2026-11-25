@@ -135,6 +135,11 @@ pub fn open_routes() -> Vec<NewsHttpRoute> {
             "/open/v3/api/news/entities/{entityType}/{entityId}/items",
             "entities.items.list",
         ),
+        route(
+            HttpMethod::Get,
+            "/open/v3/api/news/entities/{entityType}/{entityId}/events",
+            "entities.events.list",
+        ),
     ]
 }
 

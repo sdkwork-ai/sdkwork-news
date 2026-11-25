@@ -5,7 +5,7 @@ use serde_json::{json, Value};
 use sqlx::Row;
 use std::sync::Arc;
 
-use crate::api_response::success_cursor_items;
+use crate::api_response::{success_cursor_items, success_page};
 
 const ALLOWED_ENTITY_TYPES: [&str; 4] = ["company", "industry", "sector", "instrument"];
 
@@ -13,6 +13,85 @@ const ALLOWED_ENTITY_TYPES: [&str; 4] = ["company", "industry", "sector", "instr
 pub struct EntityFeedParams {
     pub cursor: Option<String>,
     pub page_size: Option<i64>,
+}
+
+#[derive(Deserialize)]
+pub struct EntityEventsParams {
+    pub page: Option<i64>,
+    pub page_size: Option<i64>,
+}
+
+/// Public corporate-event timeline for one entity.
+///
+/// Events come from `news_event_link` and are joined back to the published item
+/// so a draft or archived story never leaks onto the timeline.
+pub async fn list_entity_events(
+    State(state): State<Arc<crate::state::NewsHttpState>>,
+    Path((entity_type, entity_id)): Path<(String, String)>,
+    Query(params): Query<EntityEventsParams>,
+) -> Json<Value> {
+    let page = params.page.unwrap_or(1).max(1);
+    let page_size = params.page_size.unwrap_or(20).clamp(1, 200);
+    if !ALLOWED_ENTITY_TYPES.contains(&entity_type.as_str()) {
+        return success_page(Vec::new(), page, page_size, 0);
+    }
+    let offset = (page - 1) * page_size;
+    let result = sqlx::query(
+        r#"
+        SELECT jsonb_build_object(
+                   'id', l.id,
+                   'itemId', l.item_id,
+                   'itemTitle', i.title,
+                   'entityType', e.entity_type,
+                   'entityKey', e.entity_key,
+                   'eventType', l.event_type,
+                   'eventDate', l.event_date,
+                   'materiality', l.materiality,
+                   'confidenceBps', l.confidence_bps,
+                   'publishedAt', i.published_at
+               ) AS item,
+               count(*) OVER() AS total
+        FROM news_event_link l
+        JOIN news_entity e
+          ON e.tenant_id = l.tenant_id
+         AND e.id = l.entity_id
+        JOIN news_item i
+          ON i.tenant_id = l.tenant_id
+         AND i.id = l.item_id
+        WHERE e.entity_type = $1
+          AND e.entity_key = $2
+          AND e.status = 'active'
+          AND l.status = 'active'
+          AND i.status = 'published'
+          AND i.archived_at IS NULL
+        ORDER BY l.event_date DESC, l.created_at DESC, l.id
+        LIMIT $3 OFFSET $4
+        "#,
+    )
+    .bind(&entity_type)
+    .bind(&entity_id)
+    .bind(page_size)
+    .bind(offset)
+    .fetch_all(&state.pool)
+    .await;
+
+    match result {
+        Ok(rows) => {
+            let total = rows
+                .first()
+                .map(|row| row.get::<i64, _>("total"))
+                .unwrap_or(0);
+            let items = rows
+                .iter()
+                .map(|row| row.get::<Value, _>("item"))
+                .collect();
+            success_page(items, page, page_size, total)
+        }
+        Err(error) => {
+            tracing::error!("Failed to list entity events: {}", error);
+            success_page(Vec::new(), page, page_size, 0)
+        }
+    }
 }
 
 /// Public per-entity news feed read model.

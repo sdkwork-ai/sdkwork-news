@@ -4043,6 +4043,128 @@
           }
         }
       },
+      "NewsEntityEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "itemId",
+          "itemTitle",
+          "entityType",
+          "entityKey",
+          "eventType",
+          "eventDate",
+          "materiality"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "itemTitle": {
+            "type": "string"
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "company",
+              "industry",
+              "sector",
+              "instrument"
+            ]
+          },
+          "entityKey": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string",
+            "enum": [
+              "earnings",
+              "merger_acquisition",
+              "ipo_listing",
+              "regulatory",
+              "dividend",
+              "capital_action",
+              "product",
+              "management_change"
+            ]
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "materiality": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "confidenceBps": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "publishedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "NewsEntityEventPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "pageInfo"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsEntityEvent"
+            }
+          },
+          "pageInfo": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "pageSize",
+              "hasMore"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "cursor"
+                ]
+              },
+              "pageSize": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 200
+              },
+              "hasMore": {
+                "type": "boolean"
+              },
+              "nextCursor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
       "NewsFeedPage": {
         "type": "object",
         "additionalProperties": false,

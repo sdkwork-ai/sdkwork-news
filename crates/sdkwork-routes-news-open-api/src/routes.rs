@@ -37,5 +37,9 @@ pub fn gateway_mount(state: Arc<NewsHttpState>) -> Router {
             "/open/v3/api/news/entities/{entityType}/{entityId}/items",
             get(handlers::entity::list_entity_items),
         )
+        .route(
+            "/open/v3/api/news/entities/{entityType}/{entityId}/events",
+            get(handlers::entity::list_entity_events),
+        )
         .with_state(state)
 }
