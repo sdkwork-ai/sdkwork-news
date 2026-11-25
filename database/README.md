@@ -50,7 +50,14 @@ In addition to fixture mode the tool can scan the live table:
 ```bash
 SDKWORK_DATABASE_* pnpm db:entities:scan
 # node tools/news_entity_link_import.mjs --scan-db --limit 500 --apply
+
+SDKWORK_DATABASE_* pnpm db:entities:worker:once   # one scheduled pass
+SDKWORK_DATABASE_* pnpm db:entities:worker        # every 300s
+# node tools/news_entity_worker.mjs --interval-seconds 300 --limit 500
 ```
+
+The worker adds bounded failure backoff, `SIGINT`/`SIGTERM` cancellation and
+structured pass logs; it does not change the importer's matching or SQL rules.
 
 ## Commands
 

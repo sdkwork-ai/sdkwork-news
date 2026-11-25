@@ -79,7 +79,10 @@
     "build:pc:staging:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment staging --deployment-profile cloud",
     "build:pc:demo:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment demo --deployment-profile cloud",
     "build:pc:prod:cloud": "node ../sdkwork-specs/tools/build-browser-client.mjs --root . --architecture pc --environment prod --deployment-profile cloud",
-    "check:release-access-token:require-anchor": "node ../sdkwork-specs/tools/check-release-access-token-env.mjs --root . --require-anchor"
+    "check:release-access-token:require-anchor": "node ../sdkwork-specs/tools/check-release-access-token-env.mjs --root . --require-anchor",
+    "db:entities:worker": "node tools/news_entity_worker.mjs",
+    "db:entities:worker:once": "node tools/news_entity_worker.mjs --once",
+    "test:contract:worker": "node --test tests/news-worker-loop.test.mjs"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
