@@ -31,7 +31,11 @@ describe("sdkwork-news workspace structure standard", () => {
       "tools",
       "plugins",
       "examples",
-      "configs",
+      // `configs/` is retired in favour of `etc/`; requiring it would force
+
+      // re-creating a directory the source-config standard rejects.
+
+      "etc",
       "deployments",
       "scripts",
       "docs",

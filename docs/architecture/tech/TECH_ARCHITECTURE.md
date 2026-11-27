@@ -78,6 +78,12 @@ PC, H5, and Flutter are independently built application roots supporting the roo
 and standalone profiles where their manifests declare support. Dependency endpoints are supplied by
 typed source configuration. No client hard-codes production URLs.
 
+## 7.1 Design Records
+
+- [2026-11-04-comments-integration](TECH-2026-11-04-comments-integration.md)
+- [2026-11-04-news-app-initialization-and-toutiao-alignment](TECH-2026-11-04-news-app-initialization-and-toutiao-alignment.md)
+
+
 ## 8. Architecture Decision Index
 
 - [ADR-20260731 IM-backed news agent conversations](../decisions/ADR-20260731-im-backed-news-agent-conversations.md)
