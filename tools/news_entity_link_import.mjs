@@ -152,6 +152,99 @@ function parseTuples(text) {
 let options = parseArgs([]);
 
 /**
+ * Derive news-matching English short names from a published legal name.
+ *
+ * News head lines write `Kweichow Moutai` or `Tencent Holdings`, never
+ * `Kweichow Moutai Co.,Ltd.` or `Tencent Holdings Limited`. Most enriched legal
+ * names therefore fail to match the way an article writes them.
+ *
+ * The derivation is deliberately conservative: it strips only trailing corporate
+ * forms and the punctuation attached to them, never interior words.
+ *
+ * @param {string} legalName
+ * @returns {string[]} candidate short names, longest first
+ */
+export function deriveEnglishShortNames(legalName) {
+  const raw = String(legalName ?? "")
+    .normalize("NFKC")
+    .replace(/[\u3000\s]+/gu, " ")
+    .trim();
+  if (!raw) return [];
+
+  // Corporate forms, strictly longest-first: `Company Limited` must be tried
+  // before `Co`, or the bare `Co` alternative consumes `Co` inside `Company`.
+  // The short European forms require a word boundary, otherwise `Chase` loses
+  // its `se`.
+  const SUFFIX =
+    /(?:\s*[,，.]?\s*(?:Company\s+Limited|Pte\s*\.?\s*Ltd\s*\.?|Co\s*\.?\s*[,.]\s*Ltd\s*\.?|Co\s*\.?\s+Ltd\s*\.?|Co\s*\.?|Company|Limited|Ltd\s*\.?|Incorporated|Inc\s*\.?|Corporation|Corp\s*\.?|PLC|plc|(?<![A-Za-z])(?:SE|AG|NV|SA|SpA)))\s*$/iu;
+  const GROUP_SUFFIX =
+    /(?:\s*,?\s*(?:Group\s+)?Holdings?(?:\s+Limited|\s+Ltd\.?|\s+Inc\.?)?)\s*$/iu;
+  const TRAILING = /[\s,，.、;；:：&\-]+$/u;
+
+  const out = [];
+  const push = (value) => {
+    const cleaned = value
+      // A trailing conjunction is left behind when `& Co.` is stripped.
+      .replace(TRAILING, "")
+      .replace(/\s{2,}/gu, " ")
+      .trim();
+    // A Latin short name needs at least three letters and must not be a
+    // generic word on its own.
+    if (cleaned.length < 3) return;
+    if (!/[A-Za-z]{3}/u.test(cleaned)) return;
+    if (!out.includes(cleaned)) out.push(cleaned);
+  };
+
+  push(raw);
+  let current = raw;
+  for (let pass = 0; pass < 4; pass += 1) {
+    const next = current.replace(SUFFIX, "").replace(TRAILING, "").trim();
+    if (next === current) break;
+    current = next;
+    push(current);
+  }
+  // A holding-company vehicle is usually referred to without `Holdings`.
+  const withoutGroup = current.replace(GROUP_SUFFIX, "");
+  if (withoutGroup !== current) push(withoutGroup);
+
+  return out;
+}
+
+/**
+ * Short names that would attribute one article to two different legal entities.
+ *
+ * A derived short form is only safe as a search name when exactly one legal
+ * entity claims it. Companies that share a legal name (an A-share and its
+ * H-share listing) are one entity, so their shared short form is fine; names
+ * such as `Costar Group` claimed by both CoStar Group Co.,Ltd. and CoStar Group
+ * Inc. must be dropped or the linker would merge two issuers.
+ *
+ * The result is scoped to the supplied map rather than cached at module level,
+ * so a caller building dictionaries from two different company roots never sees
+ * the first root's collisions.
+ *
+ * @param {Map<string, string>} englishByCompany
+ * @returns {Set<string>} lower-cased colliding candidates
+ */
+function collidingShortNames(englishByCompany) {
+  const normalize = (value) => String(value ?? "").toUpperCase().replace(/[^A-Z0-9]/gu, "");
+  const byCandidate = new Map();
+  for (const legalName of englishByCompany.values()) {
+    const entity = normalize(legalName);
+    for (const candidate of deriveEnglishShortNames(legalName)) {
+      const key = candidate.toLowerCase();
+      if (!byCandidate.has(key)) byCandidate.set(key, new Set());
+      byCandidate.get(key).add(entity);
+    }
+  }
+  return new Set(
+    [...byCandidate.entries()]
+      .filter(([, entities]) => entities.size > 1)
+      .map(([candidate]) => candidate),
+  );
+}
+
+/**
  * @param {string} companyRoot
  * @returns {Array<{ entityType: string, entityKey: string, symbol: string|null, displayName: string, marketCode: string|null, searchNames: string[] }>}
  */
@@ -187,6 +280,60 @@ export function buildDictionaryFromCompanySeeds(companyRoot) {
     .filter((fields) => fields[0]?.startsWith("company-sector-"))
     .map((fields) => ({ id: fields[0], title: fields[5], titleEn: fields[6], kind: fields[7] }));
 
+  // The company domain publishes its localized display values through
+  // `<resource>_translation` tables (see sdkwork-company
+  // docs/architecture/tech/TECH-company-database-i18n.md). Reading those
+  // instead of re-deriving names keeps one source of truth: an English article
+  // and a Chinese article resolve the same company id.
+  const englishByCompany = new Map();
+  const enByIndustry = new Map();
+  const enBySector = new Map();
+  const readTranslations = (file) => {
+    try {
+      return parseTuples(read(file));
+    } catch {
+      return [];
+    }
+  };
+  for (const fields of readTranslations("033_company_profile_translations.sql")) {
+    // (id, tenant, organization, companyId, locale, fieldName, value, ...)
+    const [, , , companyId, locale, fieldName, value] = fields;
+    if (fieldName !== "display_name" || locale !== "en-US") continue;
+    if (!companyId?.startsWith("company-")) continue;
+    if (value) englishByCompany.set(companyId, value);
+  }
+  for (const fields of readTranslations("032_company_dictionary_translations.sql")) {
+    // (id, tenant, organization, <subject>Id, locale, fieldName, value, ...)
+    const [id, , , subjectId, locale, fieldName, value] = fields;
+    if (fieldName !== "title" || !value) continue;
+    // The zh-CN title is already the base-table projection, so only the English
+    // values add new matching surface here.
+    if (locale === "en-US" && id?.includes("-industry-")) enByIndustry.set(subjectId, value);
+    if (locale === "en-US" && id?.includes("-sector-")) enBySector.set(subjectId, value);
+  }
+
+  const colliding = collidingShortNames(englishByCompany);
+
+  /**
+   * Every name an article may use for a company: the published Chinese name, the
+   * English legal name, and the short English forms head lines actually write.
+   * A short form claimed by two different legal entities is excluded.
+   */
+  const companySearchNames = (companyId, displayName) => {
+    const names = [displayName];
+    const english = englishByCompany.get(companyId);
+    if (english) {
+      for (const candidate of deriveEnglishShortNames(english)) {
+        if (colliding.has(candidate.toLowerCase())) continue;
+        names.push(candidate);
+      }
+      // The legal name itself is authoritative even when a shorter form is
+      // ambiguous, so it is always searchable.
+      if (!names.includes(english)) names.push(english);
+    }
+    return [...new Set(names.filter(Boolean))];
+  };
+
   const companyNames = new Map();
   for (const profile of [...profiles, ...demoProfiles]) {
     companyNames.set(profile.id, profile.name);
@@ -210,7 +357,7 @@ export function buildDictionaryFromCompanySeeds(companyRoot) {
       symbol: primary?.ticker ?? null,
       displayName: profile.name,
       marketCode: primary?.marketCode ?? null,
-      searchNames: [profile.name],
+      searchNames: companySearchNames(profile.id, profile.name),
     });
   }
   for (const listing of listings) {
@@ -234,7 +381,7 @@ export function buildDictionaryFromCompanySeeds(companyRoot) {
       symbol: null,
       displayName: industry.title,
       marketCode: null,
-      searchNames: [industry.title],
+      searchNames: [industry.title, enByIndustry.get(industry.id)].filter(Boolean),
     });
   }
   for (const sector of sectors) {
@@ -245,7 +392,7 @@ export function buildDictionaryFromCompanySeeds(companyRoot) {
       symbol: null,
       displayName: sector.title,
       marketCode: null,
-      searchNames: [sector.title, sector.titleEn].filter(Boolean),
+      searchNames: [sector.title, sector.titleEn, enBySector.get(sector.id)].filter(Boolean),
     });
   }
   return entities;

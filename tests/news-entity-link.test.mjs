@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  deriveEnglishShortNames,
   detectEventTypes,
   eventDateOf,
   linkItems,
@@ -48,6 +49,63 @@ test("corporate events are typed from title and summary", () => {
   assert.deepEqual(detectEventTypes("半导体设备扩产，发布新品", ""), ["product"]);
   assert.equal(eventDateOf("2026年11月20日发布三季报", null), "2026-11-20");
   assert.equal(eventDateOf("无日期", "2026-11-21T02:00:00Z"), "2026-11-21");
+});
+
+test("English short names strip the corporate form a head line omits", () => {
+  // News writes `Kweichow Moutai`, the filing writes `Kweichow Moutai Co.,Ltd.`.
+  assert.deepEqual(deriveEnglishShortNames("Kweichow Moutai Co.,Ltd."), [
+    "Kweichow Moutai Co.,Ltd",
+    "Kweichow Moutai",
+  ]);
+  assert.deepEqual(deriveEnglishShortNames("Tencent Holdings Limited"), [
+    "Tencent Holdings Limited",
+    "Tencent Holdings",
+    "Tencent",
+  ]);
+  assert.deepEqual(deriveEnglishShortNames("Apple Inc."), ["Apple Inc", "Apple"]);
+  // `Company Limited` must be consumed before the bare `Co` alternative.
+  assert.deepEqual(deriveEnglishShortNames("BYD Company Limited"), [
+    "BYD Company Limited",
+    "BYD",
+  ]);
+  // `Chase` must not lose its `se` to the European `SE` form.
+  assert.deepEqual(deriveEnglishShortNames("JPMorgan Chase & Co."), [
+    "JPMorgan Chase & Co",
+    "JPMorgan Chase",
+  ]);
+});
+
+test("English short names never drop interior words or emit fragments", () => {
+  // Only trailing corporate forms are stripped.
+  const names = deriveEnglishShortNames("Semiconductor Manufacturing International Corporation");
+  assert.ok(names.includes("Semiconductor Manufacturing International Corporation"));
+  // A name with no corporate form yields itself only.
+  assert.deepEqual(deriveEnglishShortNames("RH"), []);
+  assert.deepEqual(deriveEnglishShortNames(""), []);
+});
+
+test("a headline naming an issuer in English still resolves to one company", () => {
+  const dictionary = [
+    {
+      entityType: "company",
+      entityKey: "company-listed-cn-600519",
+      symbol: "600519",
+      displayName: "贵州茅台",
+      marketCode: "CN_A",
+      searchNames: ["贵州茅台", ...deriveEnglishShortNames("Kweichow Moutai Co.,Ltd.")],
+    },
+  ];
+  const items = [
+    {
+      id: "news-item-maotai-en",
+      title: "Kweichow Moutai reports third-quarter revenue growth",
+    },
+  ];
+  const result = linkItems(dictionary, items);
+  const links = result.perItem.get("news-item-maotai-en") ?? [];
+  assert.equal(links.length, 1);
+  assert.equal(links[0].entity.entityKey, "company-listed-cn-600519");
+  assert.equal(links[0].role, "subject");
 });
 
 test("fixture links company, industry and sector entities", () => {
