@@ -10,21 +10,45 @@
     "domain": "content",
     "capability": "news-mp-core",
     "surface": "app",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "canonicalSpecs": [
-    { "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "path": "../../../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "purpose": "Mini-program root and package architecture." },
-    { "file": "APP_MINI_PROGRAM_UI_SPEC.md", "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md", "purpose": "Mini-program package and UI rules." },
-    { "file": "TYPESCRIPT_CODE_SPEC.md", "path": "../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md", "purpose": "Strict TypeScript rules." }
+    {
+      "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "purpose": "Mini-program root and package architecture."
+    },
+    {
+      "file": "APP_MINI_PROGRAM_UI_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md",
+      "purpose": "Mini-program package and UI rules."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "Strict TypeScript rules."
+    }
   ],
   "contracts": {
-    "layerRole": "runtime-core",
-    "publicExports": ["."],
+    "layerRole": "frontend-core",
+    "publicExports": [
+      "."
+    ],
     "providedPorts": [
-      { "name": "newsMiniProgramServicePort", "export": "." },
-      { "name": "newsMiniProgramHostPort", "export": "." }
+      {
+        "name": "newsMiniProgramServicePort",
+        "export": "."
+      },
+      {
+        "name": "newsMiniProgramHostPort",
+        "export": "."
+      }
     ],
     "requiredPorts": [],
     "runtimeEntrypoints": [],
@@ -32,9 +56,17 @@
     "sdkClients": [],
     "sdkDependencies": [],
     "events": [],
-    "configKeys": ["SDKWORK_ENVIRONMENT", "SDKWORK_DEPLOYMENT_PROFILE", "SDKWORK_PROFILE_ID", "SDKWORK_RUNTIME_TARGET", "SDKWORK_ACCESS_TOKEN"]
+    "configKeys": [
+      "SDKWORK_ENVIRONMENT",
+      "SDKWORK_DEPLOYMENT_PROFILE",
+      "SDKWORK_PROFILE_ID",
+      "SDKWORK_RUNTIME_TARGET",
+      "SDKWORK_ACCESS_TOKEN"
+    ]
   },
   "verification": {
-    "commands": ["pnpm --dir apps/sdkwork-news-mini-program typecheck"]
+    "commands": [
+      "pnpm --dir apps/sdkwork-news-mini-program typecheck"
+    ]
   }
 }

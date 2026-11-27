@@ -9,19 +9,42 @@
     "root": "sdkwork-news/apps/sdkwork-news-common/packages/sdkwork-news-comments-service",
     "domain": "content",
     "capability": "news-comments-service",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "canonicalSpecs": [
-    { "file": "APP_SDK_INTEGRATION_SPEC.md", "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md", "purpose": "Dependency SDK composition and ports." },
-    { "file": "FRONTEND_SPEC.md", "path": "../../../../../sdkwork-specs/FRONTEND_SPEC.md", "purpose": "UI-service-SDK layering." },
-    { "file": "PAGINATION_SPEC.md", "path": "../../../../../sdkwork-specs/PAGINATION_SPEC.md", "purpose": "Server-page comments." }
+    {
+      "file": "APP_SDK_INTEGRATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md",
+      "purpose": "Dependency SDK composition and ports."
+    },
+    {
+      "file": "FRONTEND_SPEC.md",
+      "path": "../../../../../sdkwork-specs/FRONTEND_SPEC.md",
+      "purpose": "UI-service-SDK layering."
+    },
+    {
+      "file": "PAGINATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/PAGINATION_SPEC.md",
+      "purpose": "Server-page comments."
+    }
   ],
   "contracts": {
-    "layerRole": "frontend-service",
-    "publicExports": ["."],
-    "providedPorts": [{ "name": "newsCommentsService", "export": "." }],
+    "layerRole": "frontend-feature",
+    "publicExports": [
+      "."
+    ],
+    "providedPorts": [
+      {
+        "name": "newsCommentsService",
+        "export": "."
+      }
+    ],
     "requiredPorts": [],
     "runtimeEntrypoints": [],
     "routeManifest": null,
@@ -31,6 +54,8 @@
     "configKeys": []
   },
   "verification": {
-    "commands": ["pnpm --filter @sdkwork/news-comments-service test"]
+    "commands": [
+      "pnpm --filter @sdkwork/news-comments-service test"
+    ]
   }
 }

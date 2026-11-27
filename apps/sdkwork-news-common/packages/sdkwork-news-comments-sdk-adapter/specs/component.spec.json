@@ -9,32 +9,68 @@
     "root": "sdkwork-news/apps/sdkwork-news-common/packages/sdkwork-news-comments-sdk-adapter",
     "domain": "content",
     "capability": "news-comments-sdk-adapter",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "canonicalSpecs": [
-    { "file": "APP_SDK_INTEGRATION_SPEC.md", "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md", "purpose": "Generated app SDK consumption." },
-    { "file": "SDK_SPEC.md", "path": "../../../../../sdkwork-specs/SDK_SPEC.md", "purpose": "SDK facade ownership." }
+    {
+      "file": "APP_SDK_INTEGRATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md",
+      "purpose": "Generated app SDK consumption."
+    },
+    {
+      "file": "SDK_SPEC.md",
+      "path": "../../../../../sdkwork-specs/SDK_SPEC.md",
+      "purpose": "SDK facade ownership."
+    }
   ],
   "contracts": {
-    "layerRole": "sdk-adapter",
-    "publicExports": ["."],
-    "providedPorts": [{ "name": "newsCommentsService", "export": "." }],
+    "layerRole": "sdk-facade",
+    "publicExports": [
+      "."
+    ],
+    "providedPorts": [
+      {
+        "name": "newsCommentsService",
+        "export": "."
+      }
+    ],
     "requiredPorts": [
-      { "name": "commentsAppSdk", "export": ".", "provider": "@sdkwork/comments-app-sdk" },
-      { "name": "newsCommentsServiceContracts", "export": ".", "provider": "@sdkwork/news-comments-service" }
+      {
+        "name": "commentsAppSdk",
+        "export": ".",
+        "provider": "@sdkwork/comments-app-sdk"
+      },
+      {
+        "name": "newsCommentsServiceContracts",
+        "export": ".",
+        "provider": "@sdkwork/news-comments-service"
+      }
     ],
     "runtimeEntrypoints": [],
     "routeManifest": null,
-    "sdkClients": ["CommentsAppSdkClient"],
+    "sdkClients": [
+      "CommentsAppSdkClient"
+    ],
     "sdkDependencies": [
-      { "workspace": "sdkwork-comments-app-sdk", "surface": "app-api", "packageName": "@sdkwork/comments-app-sdk", "status": "active" }
+      {
+        "workspace": "sdkwork-comments-app-sdk",
+        "surface": "app-api",
+        "packageName": "@sdkwork/comments-app-sdk",
+        "status": "active"
+      }
     ],
     "events": [],
     "configKeys": []
   },
   "verification": {
-    "commands": ["pnpm --filter @sdkwork/news-comments-sdk-adapter test"]
+    "commands": [
+      "pnpm --filter @sdkwork/news-comments-sdk-adapter test"
+    ]
   }
 }

@@ -10,19 +10,44 @@
     "domain": "content",
     "capability": "news-mp-host",
     "surface": "app",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "canonicalSpecs": [
-    { "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "path": "../../../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md", "purpose": "Platform host adapter boundary." },
-    { "file": "APP_MINI_PROGRAM_UI_SPEC.md", "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md", "purpose": "Host error normalization." }
+    {
+      "file": "MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/MINI_PROGRAM_APP_ARCHITECTURE_SPEC.md",
+      "purpose": "Platform host adapter boundary."
+    },
+    {
+      "file": "APP_MINI_PROGRAM_UI_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_MINI_PROGRAM_UI_SPEC.md",
+      "purpose": "Host error normalization."
+    }
   ],
   "contracts": {
-    "layerRole": "platform-host",
-    "publicExports": ["."],
-    "providedPorts": [{ "name": "weixinNewsMiniProgramHost", "export": "." }],
-    "requiredPorts": [{ "name": "newsMiniProgramHost", "export": ".", "provider": "@sdkwork/news-mp-core" }],
+    "layerRole": "frontend-host",
+    "publicExports": [
+      "."
+    ],
+    "providedPorts": [
+      {
+        "name": "weixinNewsMiniProgramHost",
+        "export": "."
+      }
+    ],
+    "requiredPorts": [
+      {
+        "name": "newsMiniProgramHost",
+        "export": ".",
+        "provider": "@sdkwork/news-mp-core"
+      }
+    ],
     "runtimeEntrypoints": [],
     "routeManifest": null,
     "sdkClients": [],
@@ -31,6 +56,8 @@
     "configKeys": []
   },
   "verification": {
-    "commands": ["pnpm --dir apps/sdkwork-news-mini-program typecheck"]
+    "commands": [
+      "pnpm --dir apps/sdkwork-news-mini-program typecheck"
+    ]
   }
 }

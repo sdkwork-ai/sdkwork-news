@@ -10,32 +10,69 @@
     "domain": "content",
     "capability": "news-flutter-comments-sdk-adapter",
     "surface": "app",
-    "languages": ["dart"],
+    "languages": [
+      "dart"
+    ],
     "generated": false,
-    "manifests": ["pubspec.yaml"]
+    "manifests": [
+      "pubspec.yaml"
+    ]
   },
   "canonicalSpecs": [
-    { "file": "APP_SDK_INTEGRATION_SPEC.md", "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md", "purpose": "Generated app SDK consumption." },
-    { "file": "DART_CODE_SPEC.md", "path": "../../../../../sdkwork-specs/DART_CODE_SPEC.md", "purpose": "Adapter package rules." }
+    {
+      "file": "APP_SDK_INTEGRATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md",
+      "purpose": "Generated app SDK consumption."
+    },
+    {
+      "file": "DART_CODE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/DART_CODE_SPEC.md",
+      "purpose": "Adapter package rules."
+    }
   ],
   "contracts": {
-    "layerRole": "sdk-adapter",
-    "publicExports": ["."],
-    "providedPorts": [{ "name": "newsCommentsRepository", "export": "." }],
+    "layerRole": "sdk-facade",
+    "publicExports": [
+      "."
+    ],
+    "providedPorts": [
+      {
+        "name": "newsCommentsRepository",
+        "export": "."
+      }
+    ],
     "requiredPorts": [
-      { "name": "commentsFlutterSdk", "export": ".", "provider": "sdkwork_comments_app_sdk_flutter" },
-      { "name": "newsCommentsRepositoryContracts", "export": ".", "provider": "sdkwork_news_flutter_mobile_comments" }
+      {
+        "name": "commentsFlutterSdk",
+        "export": ".",
+        "provider": "sdkwork_comments_app_sdk_flutter"
+      },
+      {
+        "name": "newsCommentsRepositoryContracts",
+        "export": ".",
+        "provider": "sdkwork_news_flutter_mobile_comments"
+      }
     ],
     "runtimeEntrypoints": [],
     "routeManifest": null,
-    "sdkClients": ["SdkworkAppClient"],
+    "sdkClients": [
+      "SdkworkAppClient"
+    ],
     "sdkDependencies": [
-      { "workspace": "sdkwork-comments-app-sdk", "surface": "app-api", "packageName": "sdkwork_comments_app_sdk_flutter", "status": "active" }
+      {
+        "workspace": "sdkwork-comments-app-sdk",
+        "surface": "app-api",
+        "packageName": "sdkwork_comments_app_sdk_flutter",
+        "status": "active"
+      }
     ],
     "events": [],
     "configKeys": []
   },
   "verification": {
-    "commands": ["flutter analyze", "flutter test"]
+    "commands": [
+      "flutter analyze",
+      "flutter test"
+    ]
   }
 }
