@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.news.article-source",
+  "generatedAt": "2026-11-28T00:00:00Z",
+  "tenantId": "100001",
+  "source": "eastmoney-column-articles",
+  "url": "https://np-listapi.eastmoney.com/comm/web/getNewsByColumns",
+  "columns": [
+    {
+      "id": "345",
+      "category": "markets"
+    },
+    {
+      "id": "346",
+      "category": "markets"
+    },
+    {
+      "id": "347",
+      "category": "company"
+    },
+    {
+      "id": "348",
+      "category": "markets"
+    },
+    {
+      "id": "349",
+      "category": "markets"
+    }
+  ],
+  "pagesPerColumn": 12,
+  "articles": 2290,
+  "articlesWithoutBody": 0,
+  "averageBodyLength": 1226,
+  "seedFiles": [
+    "database/seeds/common/004_news_articles.sql",
+    "database/seeds/common/005_news_article_bodies.sql"
+  ]
+}

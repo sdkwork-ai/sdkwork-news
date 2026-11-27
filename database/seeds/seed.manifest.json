@@ -19,7 +19,9 @@
     "minimal": {
       "common": [
         "common/002_news_catalog.sql",
-        "common/003_news_items.sql"
+        "common/003_news_items.sql",
+        "common/004_news_articles.sql",
+        "common/005_news_article_bodies.sql"
       ],
       "locales": {
         "zh-CN": []
@@ -29,7 +31,9 @@
       "common": [
         "001_bootstrap.sql",
         "common/002_news_catalog.sql",
-        "common/003_news_items.sql"
+        "common/003_news_items.sql",
+        "common/004_news_articles.sql",
+        "common/005_news_article_bodies.sql"
       ],
       "locales": {
         "zh-CN": []

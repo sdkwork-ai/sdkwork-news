@@ -84,7 +84,9 @@
     "db:entities:worker:once": "node tools/news_entity_worker.mjs --once",
     "test:contract:worker": "node --test tests/news-worker-loop.test.mjs",
     "db:news:items": "node tools/news_item_import.mjs",
-    "db:news:items:check": "node tools/news_item_import.mjs --check"
+    "db:news:items:check": "node tools/news_item_import.mjs --check",
+    "db:news:articles:import": "node tools/news_article_import.mjs",
+    "db:news:articles:check": "node tools/news_article_import.mjs --check"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
