@@ -5,9 +5,9 @@
   "tenantId": "100001",
   "source": "eastmoney-flash",
   "feed": "https://newsapi.eastmoney.com/kuaixun/v1/getlist_102_ajaxResult_50_",
-  "pagesRequested": 20,
-  "rawItems": 1000,
-  "items": 1000,
+  "pagesRequested": 200,
+  "rawItems": 10000,
+  "items": 9999,
   "categories": 5,
   "sources": 2,
   "seedFiles": [
@@ -17,7 +17,7 @@
     },
     {
       "path": "database/seeds/common/003_news_items.sql",
-      "checksum": "sha256:7ea135b31dd38d83e136ea9dc52346069fb91e2b95f39385096a28cc79b32788"
+      "checksum": "sha256:d52035f45e906e23bf8574e349d5b040696529a9c1b9fcb2c24dfb5ed3f314a7"
     }
   ]
 }

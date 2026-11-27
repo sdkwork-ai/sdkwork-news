@@ -35,7 +35,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SEED_DIR = path.join(ROOT, "database", "seeds", "common");
 const CATALOG_OUTPUT = path.join(SEED_DIR, "002_news_catalog.sql");
 const ITEMS_OUTPUT = path.join(SEED_DIR, "003_news_items.sql");
-const CACHE_PATH = path.join(ROOT, ".cache", "news-flash.json");
+const CACHE_DIR = path.join(ROOT, ".cache", "news-flash");
 const MANIFEST = path.join(ROOT, "database", "imports", "news-items", "source.manifest.json");
 
 const TENANT = "100001";
@@ -46,8 +46,18 @@ const HEADERS = {
   "User-Agent": "Mozilla/5.0 (compatible; SDKWorkNews/1.0)",
   Referer: "https://finance.eastmoney.com/",
 };
-const DEFAULT_PAGES = 20;
-const MAX_ATTEMPTS = 4;
+/**
+ * Pages to read. The feed holds roughly 1,000 pages (~85 days) and stops advancing
+ * past there, so this is a depth choice rather than a hard bound. 200 pages is
+ * about two weeks of flash news and keeps the committed seed comparable in size to
+ * the other generated seeds.
+ */
+const DEFAULT_PAGES = 200;
+const MAX_ATTEMPTS = 6;
+/** Base backoff for a rate-limited page, doubled per attempt. */
+const RETRY_BASE_MS = 1000;
+/** Polite gap between pages so a long run does not trip the limiter. */
+const PAGE_INTERVAL_MS = 100;
 
 /** Category dictionary. Flash items map to `finance-flash`. */
 const CATEGORIES = [
@@ -136,35 +146,54 @@ function toSlug(id, title) {
   return `em-${id}-${digest}`;
 }
 
-async function fetchPages(pages, options) {
-  if (options.offline && existsSync(CACHE_PATH)) {
-    return JSON.parse(readFileSync(CACHE_PATH, "utf8"));
+async function fetchPage(page, options) {
+  const cachePath = path.join(CACHE_DIR, `page-${page}.json`);
+  if (!options.refresh && existsSync(cachePath)) {
+    try {
+      return JSON.parse(readFileSync(cachePath, "utf8"));
+    } catch {
+      // fall through to fetch
+    }
   }
-  const collected = [];
-  for (let page = 1; page <= pages; page += 1) {
-    let payload = null;
-    let lastError = null;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
-      try {
-        const response = await fetch(`${FEED_BASE}${page}_.html`, { headers: HEADERS });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const text = await response.text();
-        // The payload is a `var ajaxResult={...};` assignment, not strict JSON.
-        payload = JSON.parse(text.slice(text.indexOf("=") + 1).replace(/;\s*$/u, ""));
-        lastError = null;
-        break;
-      } catch (error) {
-        lastError = error;
-        if (attempt < MAX_ATTEMPTS) await sleep(400 * 2 ** (attempt - 1));
+  // A missing cache entry offline is a gap, not an empty page: returning an empty
+  // list would look like the feed ended and silently shorten the snapshot.
+  if (options.offline) {
+    throw new Error(`offline cache miss for page ${page}; run without --offline`);
+  }
+
+  let lastError = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    try {
+      const response = await fetch(`${FEED_BASE}${page}_.html`, { headers: HEADERS });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const body = await response.text();
+      // The payload is a `var ajaxResult={...};` assignment, not strict JSON.
+      const payload = JSON.parse(body.slice(body.indexOf("=") + 1).replace(/;\s*$/u, ""));
+      const rows = payload.LivesList ?? [];
+      mkdirSync(CACHE_DIR, { recursive: true });
+      writeFileSync(cachePath, `${JSON.stringify(rows)}\n`);
+      return rows;
+    } catch (error) {
+      lastError = error;
+      if (attempt < MAX_ATTEMPTS) {
+        await sleep(Math.min(RETRY_BASE_MS * 2 ** (attempt - 1), 12000));
       }
     }
-    if (lastError) throw new Error(`flash page ${page}: ${lastError.message}`);
-    const list = payload.LivesList ?? [];
-    if (list.length === 0) break;
-    collected.push(...list);
   }
-  mkdirSync(path.dirname(CACHE_PATH), { recursive: true });
-  writeFileSync(CACHE_PATH, `${JSON.stringify(collected)}\n`);
+  throw new Error(`flash page ${page}: ${lastError?.message ?? "unknown"}`);
+}
+
+async function fetchPages(pages, options) {
+  const collected = [];
+  for (let page = 1; page <= pages; page += 1) {
+    if (page > 1) await sleep(PAGE_INTERVAL_MS);
+    const rows = await fetchPage(page, options);
+    if (rows.length === 0) break;
+    collected.push(...rows);
+    if (page % 25 === 0) {
+      process.stderr.write(`[news_items] page=${page} rows=${collected.length}\n`);
+    }
+  }
   return collected;
 }
 
@@ -303,6 +332,13 @@ async function main() {
 
   const raw = await fetchPages(options.pages, options);
   const items = normalize(raw);
+  if (items.length === 0) {
+    throw new Error(
+      "no news items were collected; refusing to overwrite the existing seed " +
+        "(check the page range, or run without --offline to populate the cache)",
+    );
+  }
+
   const itemsSql = renderItems(items);
   writeFileSync(CATALOG_OUTPUT, catalogSql, "utf8");
   writeFileSync(ITEMS_OUTPUT, itemsSql, "utf8");
