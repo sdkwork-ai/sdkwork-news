@@ -98,8 +98,6 @@ importers:
 
   ../sdkwork-app-topology: {}
 
-  ../sdkwork-appbase/packages/common/foundation/sdkwork-appbase-component-core: {}
-
   ../sdkwork-appbase/packages/common/foundation/sdkwork-runtime-bootstrap:
     dependencies:
       '@sdkwork/utils':

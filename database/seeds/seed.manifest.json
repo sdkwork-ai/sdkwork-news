@@ -17,14 +17,19 @@
   ],
   "profiles": {
     "minimal": {
-      "common": [],
+      "common": [
+        "common/002_news_catalog.sql",
+        "common/003_news_items.sql"
+      ],
       "locales": {
         "zh-CN": []
       }
     },
     "standard": {
       "common": [
-        "001_bootstrap.sql"
+        "001_bootstrap.sql",
+        "common/002_news_catalog.sql",
+        "common/003_news_items.sql"
       ],
       "locales": {
         "zh-CN": []

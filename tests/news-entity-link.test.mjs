@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import {
   deriveEnglishShortNames,
+  isCorroborated,
+  needsCorroboration,
   detectEventTypes,
   eventDateOf,
   linkItems,
@@ -106,6 +108,48 @@ test("a headline naming an issuer in English still resolves to one company", () 
   assert.equal(links.length, 1);
   assert.equal(links[0].entity.entityKey, "company-listed-cn-600519");
   assert.equal(links[0].role, "subject");
+});
+
+test("a bare short company name that is a common noun needs explicit attribution", () => {
+  // 机器人 (300024) is also the everyday word "robot".
+  assert.equal(needsCorroboration("机器人"), true);
+  assert.equal(needsCorroboration("贵州茅台"), false);
+  assert.equal(needsCorroboration("Apple"), false);
+
+  // A humanoid-robot story is not a story about Siasun Robot, even though it
+  // mentions 机器人, 股份 and 涨停.
+  const bareTitle = "人形机器人概念再度拉升 维宏股份等十余股涨停";
+  assert.equal(isCorroborated(bareTitle, bareTitle, "机器人", "300024"), false);
+
+  const etfTitle = "机器人量产有望加速，机器人ETF鹏华涨超8%";
+  assert.equal(isCorroborated(etfTitle, etfTitle, "机器人", "300024"), false);
+
+  // The forms a finance desk actually uses do attribute the company.
+  assert.equal(isCorroborated("机器人：拟收购标的资产", "机器人：拟收购标的资产", "机器人", "300024"), true);
+  assert.equal(
+    isCorroborated("机器人(300024)午后涨停", "机器人(300024)午后涨停", "机器人", "300024"),
+    true,
+  );
+  assert.equal(isCorroborated("机器人公告称拟回购", "机器人公告称拟回购", "机器人", "300024"), true);
+
+  // End to end: only the explicit article is attributed to the company.
+  const dictionary = [
+    {
+      entityType: "company",
+      entityKey: "company-listed-cn-300024",
+      symbol: "300024",
+      displayName: "机器人",
+      marketCode: "CN_A",
+      searchNames: ["机器人"],
+    },
+  ];
+  const items = [
+    { id: "news-item-robot-commonnoun", title: bareTitle },
+    { id: "news-item-robot-company", title: "机器人：拟收购标的资产" },
+  ];
+  const result = linkItems(dictionary, items);
+  assert.equal((result.perItem.get("news-item-robot-commonnoun") ?? []).length, 0);
+  assert.equal((result.perItem.get("news-item-robot-company") ?? []).length, 1);
 });
 
 test("fixture links company, industry and sector entities", () => {

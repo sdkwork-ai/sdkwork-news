@@ -82,7 +82,9 @@
     "check:release-access-token:require-anchor": "node ../sdkwork-specs/tools/check-release-access-token-env.mjs --root . --require-anchor",
     "db:entities:worker": "node tools/news_entity_worker.mjs",
     "db:entities:worker:once": "node tools/news_entity_worker.mjs --once",
-    "test:contract:worker": "node --test tests/news-worker-loop.test.mjs"
+    "test:contract:worker": "node --test tests/news-worker-loop.test.mjs",
+    "db:news:items": "node tools/news_item_import.mjs",
+    "db:news:items:check": "node tools/news_item_import.mjs --check"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

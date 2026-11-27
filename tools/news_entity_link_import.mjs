@@ -407,6 +407,62 @@ function isCjkName(value) {
 }
 
 /**
+ * Whether a matched name needs corroboration before it can attribute an article.
+ *
+ * Short Chinese names collide with common vocabulary far too often to trust on
+ * their own. English and four-plus-character Chinese names are distinctive enough
+ * to stand alone.
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+export function needsCorroboration(name) {
+  return isCjkName(name) && name.length <= 3;
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
+/**
+ * Whether the article attributes a short company name to the company itself.
+ *
+ * A bag-of-words check is not enough here. `机器人` is the everyday word "robot",
+ * and business headlines almost always mention 公司 / 股份 / 涨停 somewhere, so a
+ * proximity rule still attributes every humanoid-robot story to Siasun Robot
+ * (300024). What actually distinguishes a company reference is one of the forms a
+ * finance desk uses:
+ *
+ * - the security code in brackets: `机器人(300024)`, `机器人（SZ300024）`
+ * - the name opening the headline with a colon: `机器人：拟收购…`
+ * - the name directly bound to a disclosure verb: `机器人公告`, `机器人披露`
+ *
+ * Anything else is treated as the common noun and the article is not linked.
+ *
+ * @param {string} title
+ * @param {string} text
+ * @param {string} name
+ * @param {string|null} ticker
+ * @returns {boolean}
+ */
+export function isCorroborated(title, text, name, ticker) {
+  const escaped = escapeRegExp(name);
+  if (ticker) {
+    const code = escapeRegExp(ticker);
+    // `机器人(300024)`, `机器人（300024）`, `机器人(SZ300024)`.
+    const bracket = new RegExp(`${escaped}\\s*[（(]\\s*[A-Z]{0,2}${code}\\s*[）)]`, "u");
+    if (bracket.test(text)) return true;
+  }
+  // `机器人：…` / `机器人: …` at the start of the headline.
+  const lead = new RegExp(`^\\s*${escaped}\\s*[：:]`, "u");
+  if (lead.test(title)) return true;
+  // `机器人公告…` / `机器人披露…` / `机器人发布…` directly bound to the name.
+  const bound = new RegExp(`${escaped}\\s*(公告|披露|发布|股份|复牌|停牌)`, "u");
+  if (bound.test(text)) return true;
+  return false;
+}
+
+/**
  * @param {string} text
  * @param {string} name
  * @returns {boolean}
@@ -530,6 +586,16 @@ export function linkItems(entities, items, tenantId = TENANT_ID) {
       let inTitle = false;
       for (const name of entity.searchNames ?? []) {
         if (!matchesName(text, name)) continue;
+        // A short company name that is also a common noun must be corroborated by
+        // a ticker or a company-designating word nearby, or it would attribute
+        // every article about robots to 机器人 (300024).
+        if (
+          entity.entityType === "company" &&
+          needsCorroboration(name) &&
+          !isCorroborated(title, text, name, entity.symbol)
+        ) {
+          continue;
+        }
         const typeWeight =
           entity.entityType === "company" ? 10000 : entity.entityType === "industry" ? 7000 : 6500;
         const lengthPenalty = name.length <= 3 ? 1000 : 0;

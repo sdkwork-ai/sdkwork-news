@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.news.item-source",
+  "generatedAt": "2026-11-28T00:00:00Z",
+  "tenantId": "100001",
+  "source": "eastmoney-flash",
+  "feed": "https://newsapi.eastmoney.com/kuaixun/v1/getlist_102_ajaxResult_50_",
+  "pagesRequested": 20,
+  "rawItems": 1000,
+  "items": 1000,
+  "categories": 5,
+  "sources": 2,
+  "seedFiles": [
+    {
+      "path": "database/seeds/common/002_news_catalog.sql",
+      "checksum": "sha256:cd1e07038dff5a51d105ae8c083ba7710f13761fdeedcabc5bfb782f33bdc54e"
+    },
+    {
+      "path": "database/seeds/common/003_news_items.sql",
+      "checksum": "sha256:7ea135b31dd38d83e136ea9dc52346069fb91e2b95f39385096a28cc79b32788"
+    }
+  ]
+}
