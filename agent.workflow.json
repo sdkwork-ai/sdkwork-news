@@ -14,6 +14,12 @@
   },
   "dependencies": [
     {
+      "id": "sdkwork-account",
+      "repository": "sdkwork-ai/sdkwork-account",
+      "refInput": "SDKWORK_ACCOUNT_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
       "id": "sdkwork-agents",
       "repository": "sdkwork-ai/sdkwork-agents",
       "refInput": "SDKWORK_AGENTS_REF",
@@ -77,6 +83,12 @@
       "id": "sdkwork-mcp",
       "repository": "sdkwork-ai/sdkwork-mcp",
       "refInput": "SDKWORK_MCP_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    },
+    {
+      "id": "sdkwork-order",
+      "repository": "sdkwork-ai/sdkwork-order",
+      "refInput": "SDKWORK_ORDER_REF",
       "tokenSecret": "SDKWORK_RELEASE_TOKEN"
     },
     {
